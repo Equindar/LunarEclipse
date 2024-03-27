@@ -46,7 +46,7 @@
     "@jest/globals": "^29.7.0",
     "@next/bundle-analyzer": "^14.1.0",
     "@nkzw/eslint-config": "^1.10.0",
-    "@size-limit/file": "^11.0.1",
+    "@size-limit/file": "^11.1.2",
     "@size-limit/webpack": "^11.0.1",
     "@size-limit/webpack-why": "^11.0.1",
     "@tailwindcss/typography": "^0.5.10",
