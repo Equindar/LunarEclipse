@@ -1,5 +1,5 @@
 # --- Setup base image
-FROM node:20.10.0-alpine AS base
+FROM node:20.15.0-alpine AS base
 
 
 # --- Setup dependencies image from origin 'base'
