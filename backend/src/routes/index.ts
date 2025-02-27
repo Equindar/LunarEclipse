@@ -13,9 +13,9 @@ const router = express.Router();
  * @param no params required
  * @returns the status of the server
  */
-    router.use('/monsters', getMonsters);
-    router.use('/auth', auth);
-    router.get('/login', getStatus);
-    router.get('/status', getStatus);
+router.use('/monsters', getMonsters);
+router.use('/auth', auth);
+router.get('/login', getStatus);
+router.get('/status', getStatus);
 
 export default router;
