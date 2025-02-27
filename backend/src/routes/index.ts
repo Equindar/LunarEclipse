@@ -1,6 +1,6 @@
 import express from 'express';
 import { getStatus } from '../controllers/status/status';
-import monsters from './monsters/monsters';
+import { getMonsters } from '../controllers/monsters/monsters';
 import auth from './auth';
 
 /**
@@ -13,7 +13,7 @@ const router = express.Router();
  * @param no params required
  * @returns the status of the server
  */
-router.use('/monsters', monsters);
+router.use('/monsters', getMonsters);
 router.use('/auth', auth);
 router.get('/login', getStatus);
 router.get('/status', getStatus);
