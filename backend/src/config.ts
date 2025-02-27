@@ -6,7 +6,8 @@ export const environment = process.env.NODE_ENV;
 export const port = process.env.PORT || 3001;
 export const timezone = process.env.TZ;
 
-export const db = {
+export const database = {
+  url: process.env.DB_URL,
   name: process.env.DB_NAME || '',
   host: process.env.DB_HOST || '',
   port: process.env.DB_PORT || '',

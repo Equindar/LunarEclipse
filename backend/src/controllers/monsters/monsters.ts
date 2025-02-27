@@ -1,7 +1,10 @@
 import { Request, Response } from 'express';
+import { db } from 'database';
+import { usersTable } from 'database/schema';
 
-export function getMonsters(_req: Request, res: Response) {
-  res.json([]);
+export async function getMonsters(_req: Request, res: Response) {
+  const response = await db.select().from(usersTable)
+  res.json(response);
   res.statusCode = 200;
 };
 

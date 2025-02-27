@@ -1,7 +1,6 @@
 import express, { Request, Response, NextFunction } from 'express';
 import Logger from './core/Logger';
 import cors from 'cors';
-import { corsUrl } from './config';
 import routes from './routes';
 
 process.on('uncaughtException', (e) => {
@@ -10,7 +9,7 @@ process.on('uncaughtException', (e) => {
 
 const app = express();
 
-app.use(cors({ origin: corsUrl, optionsSuccessStatus: 200 }));
+app.use(cors({ origin: process.env.CORS_URL, optionsSuccessStatus: 200 }));
 
 // Routes
 app.use('/', routes);
