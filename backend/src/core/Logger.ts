@@ -28,12 +28,11 @@ const dailyRotateFile = new DailyRotateFile({
   maxFiles: '14d',
   format: format.combine(
     format.timestamp(),
-    format.errors({ stack: true }),
     format.json(),
   ),
 });
 // Logger
-const test = new DailyRotateFile({
+const ErrorLogger = new DailyRotateFile({
   level: "error",
   // @ts-ignore
   filename: dir + '/%DATE% error.log',
@@ -51,7 +50,7 @@ const test = new DailyRotateFile({
   ),
 });
 // Events
-dailyRotateFile.on('new', (filename) => { console.log(`new file ${filename} created...`) })
+dailyRotateFile.on('new', (filename) => { ConsoleLogger.log('info', `${filename} created...`) })
 
 export const ConsoleLogger = createLogger({
   level: logLevel,
@@ -75,10 +74,10 @@ export default createLogger({
     format.simple(),
   ),
   transports: [
-    new transports.Console(),
     dailyRotateFile,
-    test
+    ConsoleLogger,
+    ErrorLogger
   ],
-  exceptionHandlers: [dailyRotateFile, test],
+  exceptionHandlers: [dailyRotateFile, ErrorLogger],
   exitOnError: false, // do not exit on handled exceptions
 });

@@ -14,6 +14,8 @@
     "build:clean": "npm run clean && npm run build",
     "dev": "nodemon",
     "dev:update-deps": "rimraf package-lock.json node_modules && npm install",
+    "db:gen": "drizzle-kit generate:mysql",
+    "db:migrate": "npx ts-node ./src/database/migrate.ts",
     "doc:gen": "npx typedoc --entryPointStrategy expand ./src",
     "lint": "eslint . --ext .ts",
     "lint:fix": "npm run lint -- --fix",

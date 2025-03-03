@@ -1,7 +1,7 @@
 import { configDotenv } from 'dotenv';
 configDotenv({ path: `.env.${process.env.NODE_ENV}` });
 
-export const configDatabase = {
+const configDatabase = {
   url: process.env.DB_URL as string,
   name: process.env.DB_NAME,
   host: process.env.DB_HOST,
@@ -9,3 +9,6 @@ export const configDatabase = {
   user: process.env.DB_USER,
   password: process.env.DB_USER_PWD
 };
+
+export default configDatabase;
+

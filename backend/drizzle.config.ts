@@ -1,12 +1,12 @@
-import 'dotenv';
-import { configDatabase } from './src/database/config';
+import { configDotenv } from 'dotenv';
+configDotenv({ path: `.env.development` });
 import { defineConfig } from 'drizzle-kit';
 
 export default defineConfig({
-  out: './drizzle',
+  out: './src/database',
   schema: './src/database/schema.ts',
   dialect: 'mysql',
   dbCredentials: {
-    url: configDatabase.url!
+    url: process.env.DB_URL as string,
   },
 });

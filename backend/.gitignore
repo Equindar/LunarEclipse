@@ -30,3 +30,4 @@ temp
 
 # --- enviroment files (*.local)
 .env*.local
+.env.production
