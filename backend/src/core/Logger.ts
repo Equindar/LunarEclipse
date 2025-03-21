@@ -23,17 +23,18 @@ const dailyRotateFile = new DailyRotateFile({
   filename: dir + '/%DATE%.log',
   datePattern: 'YYYY-MM-DD',
   zippedArchive: true,
-  handleExceptions: true,
   maxSize: '20m',
   maxFiles: '14d',
   format: format.combine(
-    format.timestamp(),
+    format.timestamp({
+      format: 'YYYY-MM-DD HH:mm:ss.SSS Z'
+    }),
     format.json(),
   ),
 });
 // Logger
 const ErrorLogger = new DailyRotateFile({
-  level: "error",
+  level: 'error',
   // @ts-ignore
   filename: dir + '/%DATE% error.log',
   datePattern: 'YYYY-MM-DD',
@@ -60,7 +61,6 @@ export const ConsoleLogger = createLogger({
       format: 'YYYY-MM-DD HH:mm:ss.SSS Z'
     }),
     format.align(),
-    format.errors({ stack: true }),
     format.printf((info) => `[${info.timestamp}] ${info.level}: ${info.message}`)
   ),
   transports: [new transports.Console()],
@@ -78,6 +78,6 @@ export default createLogger({
     ConsoleLogger,
     ErrorLogger
   ],
-  exceptionHandlers: [dailyRotateFile, ErrorLogger],
+  exceptionHandlers: [ErrorLogger, ConsoleLogger],
   exitOnError: false, // do not exit on handled exceptions
 });

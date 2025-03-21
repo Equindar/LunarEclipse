@@ -14,8 +14,8 @@ app.use(cors({ origin: process.env.CORS_URL, optionsSuccessStatus: 200 }));
 // Routes
 app.use('/', routes);
 
-app.get('/', (request: Request, response: Response) => {
-  response.send(request.query);
-});
+// app.get('/', (request: Request, response: Response) => {
+//   response.send(request.query);
+// });
 
 export default app;
