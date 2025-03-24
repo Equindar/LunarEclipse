@@ -2,7 +2,6 @@ import express, { Errback, NextFunction, Request, Response } from 'express';
 import { getStatus } from '../controllers/status/status';
 import { getMonsters } from '../controllers/monsters/monsters';
 import auth from './auth';
-import { ConsoleLogger } from 'core/Logger';
 
 /**
  * Router Instance of express
