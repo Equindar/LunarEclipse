@@ -33,7 +33,7 @@
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
     "i18next": "^23.9.0",
-    "i18next-browser-languagedetector": "7.2.0",
+    "i18next-browser-languagedetector": "7.2.2",
     "i18next-http-backend": "^3.0.2",
     "i18next-resources-to-backend": "^1.2.0",
     "lucide-react": "^0.379.0",
