@@ -1,9 +1,0 @@
-[submodule "docs/LunarEclipse-DevNotes"]
-	path = docs/LunarEclipse-DevNotes
-	url = https://github.com/Equindar/LunarEclipse-DevNotes.git
-[submodule "backend/LunarEclipse-NotificationService"]
-	path = backend/LunarEclipse-NotificationService
-	url = https://github.com/Equindar/LunarEclipse-NotificationService.git
-[submodule "frontend/LunarEclipse-ChatService"]
-	path = frontend/LunarEclipse-ChatService
-	url = https://github.com/Equindar/LunarEclipse-ChatService.git
