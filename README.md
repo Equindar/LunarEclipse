@@ -11,7 +11,7 @@ Immerse yourself in a captivating medieval fantasy world where you as a player e
 
 ## Getting started
 
-While having a [frontend](/frontend/README.md), [backend](/backend/README.md), and database located in this repository, its recommended to checkout the ReadMe notes for each component.
+Right now, im getting started :D
 
 ## Contributing
 

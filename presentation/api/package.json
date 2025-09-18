@@ -1,0 +1,21 @@
+{
+  "name": "lunareclipse-api",
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "ts-node-dev --respawn --transpile-only src/server.ts",
+    "start": "node build/server.js",
+    "build": "tsc -p tsconfig.json",
+    "format": "prettier --write .",
+    "format:check": "prettier --cache --check .",
+    "test": "jest --passWithNoTests",
+    "test:watch": "jest --watchAll",
+    "test:coverage": "jest --coverage"
+  },
+  "dependencies": {
+    "express": "^4.19.0"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.21",
+    "@types/node": "^24.3.1"
+  }
+}

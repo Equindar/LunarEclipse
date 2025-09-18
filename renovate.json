@@ -1,16 +1,13 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": ["config:recommended"],
+  "extends": [
+    "config:recommended"
+  ],
   "schedule": "on the first day of the month",
   "commitMessagePrefix": "chore(deps):",
   "automerge": true,
   "major": {
     "automerge": false
   },
-  "packageRules": [
-    {
-      "matchPackageNames": ["typedoc"],
-      "automerge": false
-    }
-  ]
+  "packageRules": []
 }

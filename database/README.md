@@ -1,3 +1,0 @@
-# LunarEclipse - Database
-
-... yet nothing here, thats sad!...

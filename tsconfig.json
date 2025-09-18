@@ -1,0 +1,14 @@
+{
+    "files": [],
+    "references": [
+        {
+            "path": "./presentation/api/"
+        },
+        {
+            "path": "./presentation//web"
+        },
+        {
+            "path": "./features"
+        }
+    ]
+}
