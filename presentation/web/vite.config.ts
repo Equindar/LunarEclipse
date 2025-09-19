@@ -10,7 +10,7 @@ export default defineConfig({
   build: {
     outDir: './build',
   },
-  plugins: [react(), svgr(), i18nHotReload(),],
+  plugins: [react(), svgr(), i18nHotReload()],
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),

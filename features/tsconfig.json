@@ -1,11 +1,13 @@
 {
-    "extends": "../tsconfig.base.json",
-    "compilerOptions": {
-        "composite": true,
-        "outDir": "build"
-    },
-    "include": [
-        "**/*.ts",
-        "**/*.tsx"
-    ]
+  "extends": "../tsconfig.base.json",
+  "compilerOptions": {
+    "composite": true,
+    "outDir": "build",
+    "declaration": true,
+    "declarationMap": true
+  },
+  "include": [
+    "**/*.ts",
+    "**/*.tsx"
+  ]
 }

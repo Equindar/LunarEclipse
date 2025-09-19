@@ -1,6 +1,6 @@
 import i18n from 'i18next';
 import LanguageDetector from 'i18next-browser-languagedetector';
-import HttpBackend, { HttpBackendOptions } from 'i18next-http-backend'
+import HttpBackend, { HttpBackendOptions } from 'i18next-http-backend';
 import { initReactI18next } from 'react-i18next';
 import { getOptions } from './settings';
 
@@ -11,21 +11,20 @@ import { getOptions } from './settings';
 if (import.meta.hot) {
   import.meta.hot.on('locales-update', () => {
     i18n.reloadResources().then(() => {
-      i18n.changeLanguage(i18n.language)
-    })
-  })
+      i18n.changeLanguage(i18n.language);
+    });
+  });
 }
 
-
 i18n
-.use(HttpBackend)
-.use(LanguageDetector)
-.use(initReactI18next)
-.init<HttpBackendOptions>({
+  .use(HttpBackend)
+  .use(LanguageDetector)
+  .use(initReactI18next)
+  .init<HttpBackendOptions>({
     backend: {
       loadPath: '/i18n/{{lng}}/{{ns}}.json',
     },
-  ...getOptions
-});
+    ...getOptions,
+  });
 
 export default i18n;

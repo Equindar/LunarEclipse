@@ -27,7 +27,7 @@ const dailyRotateFile = new DailyRotateFile({
   maxFiles: '14d',
   format: format.combine(
     format.timestamp({
-      format: 'YYYY-MM-DD HH:mm:ss.SSS Z'
+      format: 'YYYY-MM-DD HH:mm:ss.SSS Z',
     }),
     format.json(),
   ),
@@ -44,24 +44,26 @@ const ErrorLogger = new DailyRotateFile({
   maxFiles: '14d',
   format: format.combine(
     format.timestamp({
-      format: 'YYYY-MM-DD HH:mm:ss.SSS Z'
+      format: 'YYYY-MM-DD HH:mm:ss.SSS Z',
     }),
     format.errors({ stack: true }),
-    format.printf((info) => `[${info.timestamp}] ${info.level}: ${info.message}`)
+    format.printf((info) => `[${info.timestamp}] ${info.level}: ${info.message}`),
   ),
 });
 // Events
-dailyRotateFile.on('new', (filename) => { ConsoleLogger.log('info', `${filename} created...`) })
+dailyRotateFile.on('new', (filename) => {
+  ConsoleLogger.log('info', `${filename} created...`);
+});
 
 export const ConsoleLogger = createLogger({
   level: logLevel,
   format: format.combine(
     format.colorize({ all: true }),
     format.timestamp({
-      format: 'YYYY-MM-DD HH:mm:ss.SSS Z'
+      format: 'YYYY-MM-DD HH:mm:ss.SSS Z',
     }),
     format.align(),
-    format.printf((info) => `[${info.timestamp}] ${info.level}: ${info.message}`)
+    format.printf((info) => `[${info.timestamp}] ${info.level}: ${info.message}`),
   ),
   transports: [new transports.Console()],
 });
@@ -69,15 +71,8 @@ export const ConsoleLogger = createLogger({
 // --- Default-Logger
 export default createLogger({
   level: logLevel,
-  format: format.combine(
-    format.errors({ stack: true }),
-    format.simple(),
-  ),
-  transports: [
-    dailyRotateFile,
-    ConsoleLogger,
-    ErrorLogger
-  ],
+  format: format.combine(format.errors({ stack: true }), format.simple()),
+  transports: [dailyRotateFile, ConsoleLogger, ErrorLogger],
   exceptionHandlers: [ErrorLogger, ConsoleLogger],
   exitOnError: false, // do not exit on handled exceptions
 });

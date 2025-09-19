@@ -9,8 +9,6 @@
     "build:storybook": "storybook build -o build/storybook",
     "dev": "vite",
     "dev:clean": "rimraf package-lock.json node_modules && npm install && npm run dev",
-    "format": "prettier --write .",
-    "format:check": "prettier --cache --check .",
     "i18n:update": "i18next-resources-for-ts interface -i ./public/i18n/en -o ./src/types/i18next.resources.d.ts",
     "lint": "eslint .",
     "preview": "vite preview",

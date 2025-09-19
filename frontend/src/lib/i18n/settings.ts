@@ -16,6 +16,6 @@ export function getOptions() {
     ns: defaultNS,
     interpolation: {
       escapeValue: false, // react already safes from xss
-    }
+    },
   };
 }

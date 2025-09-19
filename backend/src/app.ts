@@ -3,7 +3,6 @@ import cors from 'cors';
 import routes from './routes';
 import loggingMiddleware from './middlewares/LogMiddleware';
 
-
 // process.on('uncaughtException', (e) => {
 //   Logger.error(e);
 // });

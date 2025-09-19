@@ -14,3 +14,5 @@ logs/
 coverage/
 public/
 *.md
+backend/
+frontend/

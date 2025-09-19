@@ -13,5 +13,6 @@ app
   .listen(3001, () => {
     Logger.info(`server running on port: ${port}`);
   })
-  .on('error', (e) => {Logger.error(e)});
-
+  .on('error', (e) => {
+    Logger.error(e);
+  });

@@ -23,6 +23,5 @@ router.use('/status', getStatus);
 //     ConsoleLogger.log('error', err)
 //     res.render('error', { error: err });
 //   }
-  
 
 export default router;

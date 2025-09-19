@@ -82,12 +82,8 @@
           "name": "characters_users_FK",
           "tableFrom": "characters",
           "tableTo": "users",
-          "columnsFrom": [
-            "ID"
-          ],
-          "columnsTo": [
-            "ID"
-          ],
+          "columnsFrom": ["ID"],
+          "columnsTo": ["ID"],
           "onDelete": "restrict",
           "onUpdate": "restrict"
         },
@@ -95,12 +91,8 @@
           "name": "characters_worlds_FK",
           "tableFrom": "characters",
           "tableTo": "worlds",
-          "columnsFrom": [
-            "ID"
-          ],
-          "columnsTo": [
-            "ID"
-          ],
+          "columnsFrom": ["ID"],
+          "columnsTo": ["ID"],
           "onDelete": "restrict",
           "onUpdate": "restrict"
         }
@@ -108,9 +100,7 @@
       "uniqueConstraints": {
         "characters_unique": {
           "name": "characters_unique",
-          "columns": [
-            "Name"
-          ]
+          "columns": ["Name"]
         }
       },
       "checkConstraint": {}
@@ -155,12 +145,8 @@
           "name": "character_traits_characters_FK",
           "tableFrom": "character_traits",
           "tableTo": "characters",
-          "columnsFrom": [
-            "ID"
-          ],
-          "columnsTo": [
-            "ID"
-          ],
+          "columnsFrom": ["ID"],
+          "columnsTo": ["ID"],
           "onDelete": "restrict",
           "onUpdate": "restrict"
         },
@@ -168,12 +154,8 @@
           "name": "character_traits_traits_FK",
           "tableFrom": "character_traits",
           "tableTo": "traits",
-          "columnsFrom": [
-            "ID"
-          ],
-          "columnsTo": [
-            "ID"
-          ],
+          "columnsFrom": ["ID"],
+          "columnsTo": ["ID"],
           "onDelete": "restrict",
           "onUpdate": "restrict"
         }
@@ -238,12 +220,8 @@
           "name": "items__rarity_FK",
           "tableFrom": "items",
           "tableTo": "_rarity",
-          "columnsFrom": [
-            "ID"
-          ],
-          "columnsTo": [
-            "ID"
-          ],
+          "columnsFrom": ["ID"],
+          "columnsTo": ["ID"],
           "onDelete": "restrict",
           "onUpdate": "restrict"
         }
@@ -251,9 +229,7 @@
       "uniqueConstraints": {
         "items_unique": {
           "name": "items_unique",
-          "columns": [
-            "Name"
-          ]
+          "columns": ["Name"]
         }
       },
       "checkConstraint": {}
@@ -379,12 +355,8 @@
           "name": "monsters__rarity_FK",
           "tableFrom": "monsters",
           "tableTo": "_rarity",
-          "columnsFrom": [
-            "ID"
-          ],
-          "columnsTo": [
-            "ID"
-          ],
+          "columnsFrom": ["ID"],
+          "columnsTo": ["ID"],
           "onDelete": "restrict",
           "onUpdate": "restrict"
         }
@@ -392,9 +364,7 @@
       "uniqueConstraints": {
         "monsters_unique": {
           "name": "monsters_unique",
-          "columns": [
-            "Name"
-          ]
+          "columns": ["Name"]
         }
       },
       "checkConstraint": {}
@@ -447,9 +417,7 @@
       "uniqueConstraints": {
         "traits_unique": {
           "name": "traits_unique",
-          "columns": [
-            "Name"
-          ]
+          "columns": ["Name"]
         }
       },
       "checkConstraint": {}
@@ -523,9 +491,7 @@
       "uniqueConstraints": {
         "Users_unique": {
           "name": "Users_unique",
-          "columns": [
-            "Username"
-          ]
+          "columns": ["Username"]
         }
       },
       "checkConstraint": {}
@@ -586,9 +552,7 @@
       "uniqueConstraints": {
         "worlds_unique": {
           "name": "worlds_unique",
-          "columns": [
-            "Name"
-          ]
+          "columns": ["Name"]
         }
       },
       "checkConstraint": {}
@@ -632,9 +596,7 @@
       "uniqueConstraints": {
         "_rarity_unique": {
           "name": "_rarity_unique",
-          "columns": [
-            "Name"
-          ]
+          "columns": ["Name"]
         }
       },
       "checkConstraint": {}

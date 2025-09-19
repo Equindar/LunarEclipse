@@ -2,7 +2,6 @@
     "name": "lunareclipse",
     "version": "0.1.0",
     "description": "A browsergame, written in typescript",
-    "main": "index.ts",
     "repository": {
         "type": "git",
         "url": "git+https://github.com/Equindar/LunarEclipse.git"
@@ -18,6 +17,10 @@
         "features/*",
         "infrastructure/*"
     ],
+    "scripts": {
+        "format": "prettier --write .",
+        "format:check": "prettier --cache --check ."
+    },
     "dependencies": {
         "dotenv": "^16.4.5",
         "prettier": "^3.3.3",

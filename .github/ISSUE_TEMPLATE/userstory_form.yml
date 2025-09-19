@@ -1,8 +1,8 @@
 name: User Story Template
 description: Create a user story
-title: "User-Story"
-labels: ["userstory"]
-projects: ["Equindar/2"]
+title: 'User-Story'
+labels: ['userstory']
+projects: ['Equindar/2']
 assignees:
   - Equindar
 body:
