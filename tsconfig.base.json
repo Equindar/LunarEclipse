@@ -23,8 +23,8 @@ tsconfig.base.json:
             "@features/*": [
                 "./features/*"
             ],
-            "@infrastructure/*": [
-                "./infrastructure/*"
+            "@apps/*": [
+                "./apps/*"
             ]
         },
         /* Emit additional JavaScript to ease support for importing CommonJS modules. This enables 'allowSyntheticDefaultImports' for type compatibility. */

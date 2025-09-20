@@ -1,6 +1,6 @@
 import i18n from '@/lib/i18n';
 import { useTranslation } from 'react-i18next';
-import { ModeToggle } from '../ModeToggle';
+import { ModeToggle } from '../ModeToggle.js';
 
 const lngs: Record<string, { nativeName: string }> = {
   en: { nativeName: 'English' },

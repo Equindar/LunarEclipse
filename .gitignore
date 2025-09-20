@@ -32,6 +32,8 @@ temp
 .DS_Store
 *.save
 *.save.*
+/backend
+/frontend
 
 # --- enviroment files (*.local)
 */**/.env

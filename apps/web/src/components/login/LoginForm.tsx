@@ -2,10 +2,10 @@ import { cn } from '@/lib/utils';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
-import { Button } from '../ui/button';
-import { Card } from '../ui/card';
-import { Input } from '../ui/input';
-import { Label } from '../ui/label';
+import { Button } from '../ui/button.js';
+import { Card } from '../ui/card.js';
+import { Input } from '../ui/input.js';
+import { Label } from '../ui/label.js';
 
 export function LoginForm({ className, ...props }: React.ComponentPropsWithoutRef<'form'>) {
   const { t } = useTranslation(['main']);

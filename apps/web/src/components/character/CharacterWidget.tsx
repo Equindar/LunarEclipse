@@ -1,6 +1,6 @@
 import ProgressBar from '@/components/ProgressBar/ProgressBar';
 import { Character } from '@/types/Character';
-import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
+import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar.js';
 
 interface CharacterWidgetProps {
   character?: Character;

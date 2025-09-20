@@ -1,7 +1,7 @@
 import { RouterProvider } from 'react-router-dom';
-import { ThemeProvider } from './components/ThemeProvider';
-import router from './routes/router';
-import './lib/i18n';
+import { ThemeProvider } from './components/ThemeProvider.js';
+import router from './routes/router.js';
+import './lib/i18n/index.js';
 import { Suspense } from 'react';
 
 function App() {

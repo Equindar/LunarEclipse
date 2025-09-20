@@ -11,16 +11,16 @@ tsconfig.json im Root
     "files": [],
     "references": [
         {
-            "path": "./presentation/api"
+            "path": "./apps/api"
         },
         {
-            "path": "./presentation/web"
+            "path": "./apps/web"
         },
         {
-            "path": "./features"
+            "path": "./apps/bot"
         },
         {
-            "path": "./infrastructure"
-        }
+            "path": "./packages/features"
+        },
     ]
 }

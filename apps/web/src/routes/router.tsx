@@ -4,10 +4,10 @@ import Inventory from '@/pages/Inventory';
 import Lobby from '@/pages/Lobby';
 import Test from '@/pages/Test';
 import { createBrowserRouter, RouteObject } from 'react-router-dom';
-import Layout from '../layouts/Layout';
-import HomePage from '../pages/HomePage';
-import LandingPage from '../pages/LandingPage';
-import NotFoundPage from '../pages/NotFoundPage';
+import Layout from '../layouts/Layout.js';
+import HomePage from '../pages/HomePage.js';
+import LandingPage from '../pages/LandingPage.js';
+import NotFoundPage from '../pages/NotFoundPage.js';
 
 const routes: RouteObject[] = [
   {

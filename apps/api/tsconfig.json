@@ -32,10 +32,7 @@
   ],
   "references": [
     {
-      "path": "../../features"
-    },
-    {
-      "path": "../../infrastructure"
-    },
+      "path": "../../packages/features"
+    }
   ]
 }
