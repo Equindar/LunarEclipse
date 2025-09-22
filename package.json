@@ -13,10 +13,9 @@
     },
     "homepage": "https://github.com/Equindar/LunarEclipse#readme",
     "workspaces": [
-        "apps/api/*",
-        "apps/bot/*",
-        "apps/web/*",
-        "packages/*"
+        "apps/api",
+        "apps/bot",
+        "apps/web"
     ],
     "scripts": {
         "format": "prettier --write .",
