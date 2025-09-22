@@ -37,13 +37,13 @@ jobs:
           docker build \
             -f apps/bot/Dockerfile \
             --build-arg NODE_ENV=production \
-            -t ghcr.io/equindar/IMAGE_NAME:$VERSION \
+            -t ghcr.io/equindar/$IMAGE_NAME:$VERSION \
             -t $IMAGE_NAME:latest \
             .
 
       # Push Docker image to GitHub Container Registry
       - name: Push Docker image
         run: |
-          docker push ghcr.io/equindar/IMAGE_NAME:$VERSION
-          docker push ghcr.io/equindar/IMAGE_NAME:latest
+          docker push ghcr.io/equindar/$IMAGE_NAME:$VERSION
+          docker push ghcr.io/equindar/$IMAGE_NAME:latest
           
