@@ -1,5 +1,6 @@
-import requestLogger from 'infrastructure/utilities/requestLogger';
+
 import morgan from 'morgan';
+import requestLogger from '../utils/requestLogger';
 
 
 const morganMiddleware = morgan(
