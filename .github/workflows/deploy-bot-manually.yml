@@ -1,11 +1,12 @@
 name: Deploy DiscordBot (Docker)
 
 on:
-  push:
-    branches:
-      - production
-    tags:
-      - "v*.*.*"
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Version (z. B. v1.0.0)"
+        required: true
+
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
@@ -31,18 +32,14 @@ jobs:
       # Build Docker image
       - name: Build Docker image
         run: |
-          VERSION=${{ github.ref_name }}
+          VERSION=${{ github.event.inputs.version }}
           IMAGE_NAME=${{ vars.APPS_BOT_IMAGE_NAME }}
 
           docker build \
           -f apps/bot/Dockerfile \
           --build-arg NODE_ENV=production \
           -t ghcr.io/equindar/IMAGE_NAME:$VERSION
-          -t $IMAGE_NAME:latest \
 
-      # Push Docker image to GitHub Container Registry
       - name: Push Docker image
         run: |
           docker push ghcr.io/equindar/IMAGE_NAME:$VERSION
-          docker push ghcr.io/equindar/IMAGE_NAME:latest
-          
