@@ -15,7 +15,8 @@
     "workspaces": [
         "apps/api",
         "apps/bot",
-        "apps/web"
+        "apps/web",
+        "packages"
     ],
     "scripts": {
         "format": "prettier --write .",

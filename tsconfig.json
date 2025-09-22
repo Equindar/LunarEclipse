@@ -20,7 +20,7 @@ tsconfig.json im Root
             "path": "./apps/bot"
         },
         {
-            "path": "./packages/features"
+            "path": "./packages"
         },
     ]
 }
