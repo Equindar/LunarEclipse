@@ -25,6 +25,4 @@ COPY --from=builder /app/apps/bot/package.json ./
 
 RUN npm ci --omit=dev
 
-COPY --from=builder /app/build ./build
-
 CMD ["node", "build/index.js"]
