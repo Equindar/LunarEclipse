@@ -28,15 +28,12 @@ jobs:
       # Build Docker image
       - name: Build Docker image
         run: |
-          VERSION=${{ github.event.inputs.version }}
-          IMAGE_NAME=${{ vars.APPS_BOT_IMAGE_NAME }}
-
           docker build \
             -f apps/bot/Dockerfile \
             --build-arg NODE_ENV=production \
-            -t ghcr.io/equindar/$IMAGE_NAME:$VERSION \
+            -t ghcr.io/equindar/${{ vars.APPS_BOT_IMAGE_NAME }}:${{ github.event.inputs.version }} \
             .
 
       - name: Push Docker image
         run: |
-          docker push ghcr.io/equindar/$IMAGE_NAME:$VERSION
+          docker push ghcr.io/equindar/${{ vars.APPS_BOT_IMAGE_NAME }}:${{ github.event.inputs.version }}
