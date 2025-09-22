@@ -1,0 +1,27 @@
+name: Deploy DiscordBot (Docker)
+
+on:
+  push:
+    branches:
+      - production
+  workflow_dispatch:
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Log in to GitHub Container Registry
+        run: |
+          docker login --username equindar --password ${{ secrets.GH_PAT }} ghcr.io
+
+      - name: Build Docker image
+        run: |
+          docker build ./apps/bot --tag ghcr.io/${{ github.repository_owner }}/${{ vars.APPS_BOT_IMAGE_NAME }}:latest
+
+      - name: Push Docker image
+        run: |
+          docker push ghcr.io/${{ github.repository_owner }}/${{ vars.APPS_BOT_IMAGE_NAME }}:latest

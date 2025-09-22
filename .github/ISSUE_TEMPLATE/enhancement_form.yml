@@ -1,8 +1,8 @@
 name: Enhancement Template
 description: Request an enhancement or a new feature
-title: "Enhancement / New Feature"
-labels: ["enhancement"]
-projects: ["Equindar/2"]
+title: 'Enhancement / New Feature'
+labels: ['enhancement']
+projects: ['Equindar/2']
 assignees:
   - Equindar
 body:

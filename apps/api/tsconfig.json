@@ -1,0 +1,38 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "composite": true,
+    // --- Paths
+    /* Specify the root folder within your source files. */
+    "rootDir": ".",
+    /* Specify an output folder for all emitted files. */
+    "outDir": "./build",
+    /* Specify a set of entries that re-map imports to additional lookup locations. */
+    "paths": {
+      "@/*": [
+        "./src/*"
+      ],
+      "@types/*": [
+        "./src/types/*"
+      ],
+      "@utils/*": [
+        "src/utils/*"
+      ],
+    },
+    "declaration": true,
+    "declarationMap": true
+  },
+  "include": [
+    "src",
+  ],
+  "exclude": [
+    "build",
+    "node_modules",
+    "**/*.test.ts"
+  ],
+  "references": [
+    {
+      "path": "../../packages/features"
+    }
+  ]
+}

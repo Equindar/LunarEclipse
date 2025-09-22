@@ -1,0 +1,24 @@
+{
+  "useTabs": false,
+  "semi": true,
+  "trailingComma": "all",
+  "singleQuote": true,
+  "printWidth": 100,
+  "tabWidth": 2,
+  "overrides": [
+    {
+      "files": [
+        "*.jsonc",
+        "devcontainer.json",
+        "jsconfig.json",
+        "language-configuration.json",
+        "tsconfig.json",
+        ".eslintrc"
+      ],
+      "options": {
+        "parser": "json",
+        "trailingComma": "none"
+      }
+    }
+  ]
+}

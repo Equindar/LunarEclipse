@@ -2,34 +2,33 @@ name: Close stale issues and PRs
 
 on:
   schedule: # Run 5 minutes after midnight daily.
-  - cron: '5 0 * * *'
+    - cron: '5 0 * * *'
 
 jobs:
   stale:
-
     runs-on: ubuntu-latest
     permissions:
       issues: write
 
     steps:
-    - uses: actions/stale@v9
-      with:
-        start-date: '2024-01-01T00:00:00Z' # ISO 8601
-        repo-token: ${{ secrets.GITHUB_TOKEN }}
-        # Labels
-        stale-issue-label: 'stale'
-        stale-pr-label: 'stale'
-        # Label Exceptions
-        exempt-issue-labels: 'awaiting-approval,critical,need-more-info'
-        exempt-pr-labels: 'awaiting-approval,critical'
-        # Configure generated messages 
-        stale-issue-message: 'This issue is stale because it has been open 60 days with no activity. Remove stale label or comment or this will be closed in 5 days.'
-        stale-pr-message: 'This PR is stale because it has been open 45 days with no activity. Remove stale label or comment or this will be closed in 10 days.'
-        close-issue-message: 'This issue was closed because it has been stalled for 5 days with no activity.'
-        close-pr-message: 'This PR was closed because it has been stalled for 10 days with no activity.'
-        # Configure deadlines
-        days-before-issue-stale: 60
-        days-before-pr-stale: 45
-        days-before-issue-close: 5
-        days-before-pr-close: 10
-        operations-per-run: 50
+      - uses: actions/stale@v9
+        with:
+          start-date: '2024-01-01T00:00:00Z' # ISO 8601
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          # Labels
+          stale-issue-label: 'stale'
+          stale-pr-label: 'stale'
+          # Label Exceptions
+          exempt-issue-labels: 'awaiting-approval,critical,need-more-info'
+          exempt-pr-labels: 'awaiting-approval,critical'
+          # Configure generated messages
+          stale-issue-message: 'This issue is stale because it has been open 60 days with no activity. Remove stale label or comment or this will be closed in 5 days.'
+          stale-pr-message: 'This PR is stale because it has been open 45 days with no activity. Remove stale label or comment or this will be closed in 10 days.'
+          close-issue-message: 'This issue was closed because it has been stalled for 5 days with no activity.'
+          close-pr-message: 'This PR was closed because it has been stalled for 10 days with no activity.'
+          # Configure deadlines
+          days-before-issue-stale: 60
+          days-before-pr-stale: 45
+          days-before-issue-close: 5
+          days-before-pr-close: 10
+          operations-per-run: 50

@@ -1,0 +1,41 @@
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# --- dependencies
+*/**/node_modules
+/node_modules
+
+
+# --- logging
+*/**/analyze
+*/**/logs
+*.log
+*storybook.log
+
+# --- documentation
+
+# --- caching
+*/**/cache
+
+# --- authentification / keys
+*.pem
+keys/*
+!keys/*.md
+
+# --- production artifacts
+*/**/build
+
+# --- testing / coverage
+*/**/coverage
+
+# --- temporary files
+temp
+.DS_Store
+*.save
+*.save.*
+/backend
+/frontend
+
+# --- enviroment files (*.local)
+*/**/.env
+.env*.local
+.env.production

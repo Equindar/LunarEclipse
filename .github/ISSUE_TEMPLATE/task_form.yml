@@ -1,8 +1,8 @@
 name: Task Template
 description: Create a new task
-title: "Task"
-labels: ["task"]
-projects: ["Equindar/2"]
+title: 'Task'
+labels: ['task']
+projects: ['Equindar/2']
 body:
   - type: textarea
     id: task-description

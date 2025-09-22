@@ -1,49 +1,49 @@
-- name: "bug"
-  color: "d73a4a"
+- name: 'bug'
+  color: 'd73a4a'
   description: "Something isn't working"
-- name: "dependencies"
-  color: "333333"
-  description: "Pull requests that update a dependency file"
-- name: "documentation"
-  color: "0075ca"
-  description: "Improvements or additions to documentation"
-- name: "duplicate"
-  color: "cfd8d7"
-  description: "This issue or pull request already exists"
-- name: "enhancement"
-  color: "a22eef"
-  description: "Issue Type: Enhancement"
-- name: "github-actions"
-  description: "Pull requests that update GitHub Actions code"
-  color: "000000"
-  from_name: "github_actions"
-- name: "good-first-issue"
-  description: "Good for newcomers to start contributing"
-  color: "7057ff"
-- name: "help-wanted"
-  description: "Extra attention is needed"
-  color: "008672"
-- name: "invalid"
+- name: 'dependencies'
+  color: '333333'
+  description: 'Pull requests that update a dependency file'
+- name: 'documentation'
+  color: '0075ca'
+  description: 'Improvements or additions to documentation'
+- name: 'duplicate'
+  color: 'cfd8d7'
+  description: 'This issue or pull request already exists'
+- name: 'enhancement'
+  color: 'a22eef'
+  description: 'Issue Type: Enhancement'
+- name: 'github-actions'
+  description: 'Pull requests that update GitHub Actions code'
+  color: '000000'
+  from_name: 'github_actions'
+- name: 'good-first-issue'
+  description: 'Good for newcomers to start contributing'
+  color: '7057ff'
+- name: 'help-wanted'
+  description: 'Extra attention is needed'
+  color: '008672'
+- name: 'invalid'
   description: "This doesn't seem right"
-  color: "e4e669"
-- name: "need-more-info"
-  description: "This issue needs more information to clarify"
-  color: "aec257"
-- name: "question"
-  description: "Further information is requested"
-  color: "d876e3"
-- name: "stale"
-  description: "This issue became stale because of inactivity"
-  color: "ef9e5b"
-- name: "task"
-  description: "Issue Type: New Task"
-  color: "36267f"
-- name: "userstory"
-  description: "Issue Type: User Story"
-  color: "aa079f"
-- name: "wont-fix"
-  description: "This will not be worked on"
-  color: "ffffff"
-- name: "refactoring"
-  description: "Code changes that do not effect the application behavior"
-  color: "ffffff"
+  color: 'e4e669'
+- name: 'need-more-info'
+  description: 'This issue needs more information to clarify'
+  color: 'aec257'
+- name: 'question'
+  description: 'Further information is requested'
+  color: 'd876e3'
+- name: 'stale'
+  description: 'This issue became stale because of inactivity'
+  color: 'ef9e5b'
+- name: 'task'
+  description: 'Issue Type: New Task'
+  color: '36267f'
+- name: 'userstory'
+  description: 'Issue Type: User Story'
+  color: 'aa079f'
+- name: 'wont-fix'
+  description: 'This will not be worked on'
+  color: 'ffffff'
+- name: 'refactoring'
+  description: 'Code changes that do not effect the application behavior'
+  color: 'ffffff'

@@ -7,10 +7,5 @@
   "major": {
     "automerge": false
   },
-  "packageRules": [
-    {
-      "matchPackageNames": ["typedoc"],
-      "automerge": false
-    }
-  ]
+  "packageRules": []
 }

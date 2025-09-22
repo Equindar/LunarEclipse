@@ -1,0 +1,26 @@
+/* ---
+
+tsconfig.json im Root
+- Dient als Build-/IDE-Einstiegspunkt.
+- Kann Projekt-Referenzen (references) auf alle Unterprojekte enthalten.
+- Wird von tsc -b (Build Mode) benutzt, um das gesamte Monorepo auf einmal zu bauen.
+- Hilft auch IDEs (VS Code), die Code-Navigation über Projekte hinweg zu verstehen.
+
+--- */
+{
+    "files": [],
+    "references": [
+        {
+            "path": "./apps/api"
+        },
+        {
+            "path": "./apps/web"
+        },
+        {
+            "path": "./apps/bot"
+        },
+        {
+            "path": "./packages/features"
+        },
+    ]
+}

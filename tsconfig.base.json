@@ -1,0 +1,45 @@
+/* ---
+
+tsconfig.base.json:
+- Enthält nur geteilte Defaults für Compiler-Optionen.
+- Wird in allen Unterprojekten mit extends eingebunden.
+- Wird nie direkt von tsc gebaut.
+- Hat in der Regel kein files / include / exclude.
+
+--- */
+{
+    "compilerOptions": {
+        /* Set the JavaScript language version for emitted JavaScript and include compatible library declarations. */
+        "target": "ES2022",
+        /* Specify what module code is generated. */
+        "module": "nodenext",
+        /* Specify how TypeScript looks up a file from a given module specifier. */
+        "moduleResolution": "nodenext",
+        // --- Paths
+        /* Specify the base directory to resolve non-relative module names. */
+        "baseUrl": ".",
+        /* Specify a set of entries that re-map imports to additional lookup locations. */
+        "paths": {
+            "@features/*": [
+                "./features/*"
+            ],
+            "@apps/*": [
+                "./apps/*"
+            ]
+        },
+        /* Emit additional JavaScript to ease support for importing CommonJS modules. This enables 'allowSyntheticDefaultImports' for type compatibility. */
+        "esModuleInterop": true,
+        /* Enable importing .json files. */
+        "resolveJsonModule": true,
+        /* Enable all strict type-checking options. */
+        "strict": true,
+        /* Skip type checking all .d.ts files. */
+        "skipLibCheck": true,
+        /* Disable emitting comments. */
+        "removeComments": true,
+        /* Ensure that casing is correct in imports. */
+        "forceConsistentCasingInFileNames": true,
+        /* When type checking, take into account 'null' and 'undefined'. */
+        "strictNullChecks": true,
+    }
+}

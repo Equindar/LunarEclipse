@@ -1,7 +1,0 @@
-{
-  "h1": "A simple example",
-  "title": "Home",
-  "to-client-page": "To client page",
-  "to-second-page": "To second page",
-  "welcome": "Welcome to Next.js 13/14 <1>with the new app directory features</1> and i18next"
-}

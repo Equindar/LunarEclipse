@@ -15,4 +15,4 @@ changelog:
         - bug
     - title: Other Changes
       labels:
-        - "*"
+        - '*'
