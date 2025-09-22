@@ -1,5 +1,4 @@
 import BlogPage from '@/pages/BlogPage';
-import Canvas from '@/pages/Canvas';
 import Inventory from '@/pages/Inventory';
 import Lobby from '@/pages/Lobby';
 import Test from '@/pages/Test';
@@ -22,7 +21,6 @@ const routes: RouteObject[] = [
       { element: <BlogPage />, path: '/blog' },
       { element: <Lobby />, path: '/lobby' },
       { element: <Inventory />, path: '/inventory' },
-      { element: <Canvas />, path: '/canvas' },
 
       //   { action: handleLogin, element: <LoginForm />, path: '/login' },
       //            { path: "/signup", element: <SignupPage /> },

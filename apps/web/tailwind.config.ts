@@ -1,5 +1,5 @@
 /** @type {import('tailwindcss').Config} */
-import '../../frontend/src/assets/themes/default';
+import './src/assets/themes/default';
 
 const colors = require('tailwindcss/colors');
 
