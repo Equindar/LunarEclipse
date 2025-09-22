@@ -34,7 +34,7 @@ jobs:
           docker build \
             -f apps/api/Dockerfile \
             --build-arg NODE_ENV=production \
-            -t ghcr.io/equindar/IMAGE_NAME:$VERSION
+            -t ghcr.io/equindar/IMAGE_NAME:$VERSION \
             -t $IMAGE_NAME:latest \
             .
 
