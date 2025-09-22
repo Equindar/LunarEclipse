@@ -23,6 +23,6 @@ WORKDIR /app
 COPY --from=builder /app/apps/bot/build ./build
 COPY --from=builder /app/apps/bot/package.json ./
 
-RUN npm ci --omit=dev
+RUN npm install --omit=dev
 
 CMD ["node", "build/index.js"]
