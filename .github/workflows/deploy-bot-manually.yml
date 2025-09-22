@@ -1,4 +1,4 @@
-name: Deploy DiscordBot (Docker)
+name: Deploy DiscordBot manually
 
 on:
   workflow_dispatch:
@@ -36,10 +36,10 @@ jobs:
           IMAGE_NAME=${{ vars.APPS_BOT_IMAGE_NAME }}
 
           docker build \
-          -f apps/bot/Dockerfile \
-          --build-arg NODE_ENV=production \
-          -t ghcr.io/equindar/IMAGE_NAME:$VERSION
-          .
+            -f apps/bot/Dockerfile \
+            --build-arg NODE_ENV=production \
+            -t ghcr.io/equindar/IMAGE_NAME:$VERSION
+            .
 
       - name: Push Docker image
         run: |

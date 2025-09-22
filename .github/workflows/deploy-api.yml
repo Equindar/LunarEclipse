@@ -32,10 +32,11 @@ jobs:
           IMAGE_NAME=${{ vars.APPS_API_IMAGE_NAME }}
 
           docker build \
-          -f apps/api/Dockerfile \
-          --build-arg NODE_ENV=production \
-          -t ghcr.io/equindar/IMAGE_NAME:$VERSION
-          -t $IMAGE_NAME:latest \
+            -f apps/api/Dockerfile \
+            --build-arg NODE_ENV=production \
+            -t ghcr.io/equindar/IMAGE_NAME:$VERSION
+            -t $IMAGE_NAME:latest \
+            .
 
       # Push Docker image to GitHub Container Registry
       - name: Push Docker image

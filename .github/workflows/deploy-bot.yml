@@ -1,4 +1,4 @@
-name: Deploy DiscordBot (Docker)
+name: Deploy DiscordBot
 
 on:
   push:
@@ -35,11 +35,11 @@ jobs:
           IMAGE_NAME=${{ vars.APPS_BOT_IMAGE_NAME }}
 
           docker build \
-          -f apps/bot/Dockerfile \
-          --build-arg NODE_ENV=production \
-          -t ghcr.io/equindar/IMAGE_NAME:$VERSION
-          -t $IMAGE_NAME:latest \
-          .
+            -f apps/bot/Dockerfile \
+            --build-arg NODE_ENV=production \
+            -t ghcr.io/equindar/IMAGE_NAME:$VERSION
+            -t $IMAGE_NAME:latest \
+            .
 
       # Push Docker image to GitHub Container Registry
       - name: Push Docker image
