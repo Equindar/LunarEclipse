@@ -25,7 +25,7 @@ keys/*
 */**/build
 
 # --- testing / coverage
-/coverage
+*/**/coverage
 
 # --- temporary files
 temp

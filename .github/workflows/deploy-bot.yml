@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - production
+  workflow_dispatch:
 
 jobs:
   build-and-deploy:
@@ -19,8 +20,8 @@ jobs:
 
       - name: Build Docker image
         run: |
-          docker build . --tag ghcr.io/${{ github.repository_owner }}/${{ vars.IMAGE_NAME }}:latest
+          docker build ./apps/bot --tag ghcr.io/${{ github.repository_owner }}/${{ vars.APPS_BOT_IMAGE_NAME }}:latest
 
       - name: Push Docker image
         run: |
-          docker push ghcr.io/${{ github.repository_owner }}/${{ vars.IMAGE_NAME }}:latest
+          docker push ghcr.io/${{ github.repository_owner }}/${{ vars.APPS_BOT_IMAGE_NAME }}:latest
