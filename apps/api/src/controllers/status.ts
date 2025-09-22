@@ -7,6 +7,4 @@ export async function getStatus(_req: Request, res: Response) {
   res.appendHeader('API-Version', '1.0');
   res.json({ online: true, latency: value });
   res.statusCode = 200;
-
-  logger.debug("endpoint: status");
 }

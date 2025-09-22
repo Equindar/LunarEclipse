@@ -3,3 +3,5 @@ declare namespace NodeJS {
         NODE_ENV: "development" | "production" | "test";
     }
 }
+
+export type apiVersion = string['1.0' | '2.0'];

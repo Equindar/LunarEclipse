@@ -2,8 +2,6 @@ import dotenv from 'dotenv';
 import logger from './utils/apiLogger';
 import app from './app';
 
-
-
 // --- Init
 dotenv.config();
 const { PORT } = process.env;

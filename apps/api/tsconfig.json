@@ -30,6 +30,10 @@
     "node_modules",
     "**/*.test.ts"
   ],
+  /* Specify multiple folders that act like './node_modules/@types'. */
+  "typeRoots": [
+    "./src/types"
+  ],
   "references": [
     {
       "path": "../../packages/features"
