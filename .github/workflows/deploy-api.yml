@@ -1,23 +1,19 @@
-name: Deploy DiscordBot (Docker)
+name: Deploy API (Docker)
 
 on:
-  workflow_dispatch:
-    inputs:
-      version:
-        description: "Version (z. B. v1.0.0)"
-        required: true
+  push:
+    branches:
+      - production
+    tags:
+      - "v*.*.*"
 
 jobs:
-  build-and-deploy:
+  build-api:
     runs-on: ubuntu-latest
 
     defaults:
       run:
-        working-directory: ./apps/bot
-
-    permissions:
-      contents: read
-      packages: write
+        working-directory: ./apps/api
 
     steps:
       # Checkout code
@@ -32,15 +28,17 @@ jobs:
       # Build Docker image
       - name: Build Docker image
         run: |
-          VERSION=${{ github.event.inputs.version }}
-          IMAGE_NAME=${{ vars.APPS_BOT_IMAGE_NAME }}
+          VERSION=${{ github.ref_name }}
+          IMAGE_NAME=${{ vars.APPS_API_IMAGE_NAME }}
 
           docker build \
-          -f apps/bot/Dockerfile \
+          -f apps/api/Dockerfile \
           --build-arg NODE_ENV=production \
           -t ghcr.io/equindar/IMAGE_NAME:$VERSION
-          .
+          -t $IMAGE_NAME:latest \
 
+      # Push Docker image to GitHub Container Registry
       - name: Push Docker image
         run: |
           docker push ghcr.io/equindar/IMAGE_NAME:$VERSION
+          docker push ghcr.io/equindar/IMAGE_NAME:latest

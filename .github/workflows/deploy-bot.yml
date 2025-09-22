@@ -39,6 +39,7 @@ jobs:
           --build-arg NODE_ENV=production \
           -t ghcr.io/equindar/IMAGE_NAME:$VERSION
           -t $IMAGE_NAME:latest \
+          .
 
       # Push Docker image to GitHub Container Registry
       - name: Push Docker image
