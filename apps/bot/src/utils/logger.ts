@@ -11,7 +11,7 @@ if (!fs.existsSync(logDir)) {
 
 
 // --- Default-Logger
-export const logger = createLogger({
+const logger = createLogger({
     level: process.env.NODE_ENV === "production" ? "info" : "debug",
     format: format.combine(
         format.timestamp({
@@ -59,3 +59,5 @@ export const logger = createLogger({
         }),
     ],
 });
+
+export default logger;

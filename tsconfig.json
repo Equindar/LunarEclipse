@@ -21,6 +21,6 @@ tsconfig.json im Root
         },
         {
             "path": "./packages"
-        },
+        }
     ]
 }

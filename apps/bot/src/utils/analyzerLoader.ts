@@ -1,7 +1,7 @@
 import { readdirSync } from 'fs';
 import path from 'path';
 import { MessageAnalyzer } from '../types/MessageAnalyzer';
-import { logger } from './logger';
+import logger from './logger';
 
 export function loadAnalyzers(): MessageAnalyzer[] {
   logger.info('Analyzers werden geladen...');

@@ -1,5 +1,5 @@
 import { Notifier } from '../types/Notifier';
-import { logger } from '../utils/logger';
+import logger from '../utils/logger';
 
 export class ErrorHandler {
   private notifiers: Notifier[];

@@ -1,21 +1,25 @@
 import dotenv from 'dotenv';
 import logger from './utils/apiLogger';
-import app from './app';
+import createApi from './app';
 
 // --- Init
 dotenv.config();
-const { PORT } = process.env;
+const { PORT, API_NAME } = process.env;
 
-if (!PORT) {
+if (!PORT || !API_NAME) {
   throw new Error('Missing enviroment variables');
 }
 
+logger.debug(`detected env: ${process.env.NODE_ENV}`);
+logger.info(`Logger assigned level: ${logger.level}`);
+
+// Start API
+const app = createApi(API_NAME);
+// Mapping to Port
 app.listen(PORT, () => {
-  logger.info(`'Server running on http://localhost:${PORT}`);
+  logger.info(`Server running on http://localhost:${PORT}`);
 });
 
-logger.debug(`detected env: ${process.env.NODE_ENV}`);
-logger.info(`logger assigned level: ${logger.level}`);
 
 // --- Error-Handling: unhandled Rejection/Exceptions
 process.on('unhandledRejection', (reason, promise) => {

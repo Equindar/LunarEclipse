@@ -1,7 +1,7 @@
 import { SlashCommandBuilder } from 'discord.js';
 import { Command } from '../types/Command';
 import { isServerOwner } from '../utils/isServerOwner';
-import { logger } from '../utils/logger';
+import logger from '../utils/logger';
 import { errorHandler } from '..';
 
 let shutdownCommand: Command = {

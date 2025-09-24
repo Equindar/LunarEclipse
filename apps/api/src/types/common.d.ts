@@ -4,4 +4,3 @@ declare namespace NodeJS {
     }
 }
 
-export type apiVersion = string['1.0' | '2.0'];

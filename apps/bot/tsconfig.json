@@ -40,7 +40,7 @@
   ],
   "references": [
     {
-      "path": "../../packages/features"
+      "path": "../../packages"
     }
   ]
 }

@@ -1,6 +1,6 @@
 import { ChatInputCommandInteraction } from 'discord.js';
 import { Command } from '../types/Command';
-import { logger } from './logger';
+import logger from './logger';
 
 export function inGuild(command: Command): Command {
   return {

@@ -1,5 +1,5 @@
 import { MessageAnalyzer } from '../../types/MessageAnalyzer';
-import { logger } from '../../utils/logger';
+import logger from '../../utils/logger';
 
 const keywords: string[] = ['hilfe', 'admin', 'server', 'offline'];
 

@@ -7,6 +7,8 @@
     "rootDir": ".",
     /* Specify an output folder for all emitted files. */
     "outDir": "./build",
+    /* Specify the base directory to resolve non-relative module names. */
+    "baseUrl": ".",
     /* Specify a set of entries that re-map imports to additional lookup locations. */
     "paths": {
       "@/*": [
@@ -18,12 +20,14 @@
       "@utils/*": [
         "src/utils/*"
       ],
+      "@packages/*": [
+        "../../packages/*"
+      ],
     },
-    "declaration": true,
-    "declarationMap": true
   },
   "include": [
-    "src",
+    "src/**/*.ts",
+    "src/types/**/*.d.ts",
   ],
   "exclude": [
     "build",
@@ -32,11 +36,14 @@
   ],
   /* Specify multiple folders that act like './node_modules/@types'. */
   "typeRoots": [
-    "./src/types"
+    "src/types",
+    "./node_modules/@types",
   ],
   "references": [
     {
-      "path": "../../packages/features"
+      "path": "../../packages"
     }
-  ]
+  ],
+  // WorkAround for ts-jest with module: nodenext + moduleresolution: nodenext
+  "noEmitOnError": false
 }

@@ -6,6 +6,7 @@
     "start": "node build/server.js",
     "build": "tsc -p tsconfig.json",
     "test": "jest --passWithNoTests",
+    "test:e2e": "jest --testPathPattern=test/e2e",
     "test:watch": "jest --watchAll",
     "test:coverage": "jest --coverage"
   },
@@ -16,7 +17,9 @@
   "devDependencies": {
     "@types/express": "^4.17.21",
     "@types/morgan": "^1.9.10",
-    "@types/node": "^24.3.1"
+    "@types/node": "^24.3.1",
+    "@types/supertest": "^6.0.3",
+    "supertest": "^7.1.4"
   },
   "types": "./src/types/*"
 }

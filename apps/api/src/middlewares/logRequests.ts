@@ -1,7 +1,7 @@
 import morgan from 'morgan';
 import requestLogger from '../utils/requestLogger';
 
-const morganMiddleware = morgan(
+const logRequests = morgan(
     ':method :url :status :res[content-length] - :response-time ms',
     {
         stream: {
@@ -10,4 +10,4 @@ const morganMiddleware = morgan(
     },
 );
 
-export default morganMiddleware;
+export default logRequests;

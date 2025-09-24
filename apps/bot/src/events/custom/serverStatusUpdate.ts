@@ -1,5 +1,6 @@
 import { CustomEvent } from '../../types/CustomEvent';
 import { EmbedBuilder, TextChannel } from 'discord.js';
+import logger from '../../utils/logger';
 
 interface ServerStatusData {
   online: boolean;
@@ -10,6 +11,7 @@ const event: CustomEvent<'serverStatusUpdate'> = {
   name: 'serverStatusUpdate',
   async execute(channel: TextChannel, data: ServerStatusData) {
     // Bestehende Nachricht holen oder neu senden
+    logger.debug("customEvent: serverStatusUpdate");
     const messages = await channel.messages.fetch({ limit: 10 });
     const statusMessage = messages.find(
       (m) => m.embeds.length && m.embeds[0].title === 'Server Status',

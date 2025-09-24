@@ -1,43 +1,31 @@
 import { Response } from "express";
+import { ApiResponse, ErrorResponseContract, SuccessResponseContract } from "./apiResponses";
 
-export interface NewApiResponse<T = unknown> extends Response {
-  apiVersion: string,
-  statusCode: number,
-  success: boolean,
-  data?: T,
-  errorMessage?: string
+export class SuccessResponse<T>
+    implements SuccessResponseContract<T> {
+    constructor(
+        public readonly apiVersion: string,
+        public readonly data: T,
+        public readonly statusCode = 200,
+        public readonly success: true = true
+    ) { }
+
+    send(res: Response): Response<ApiResponse<T>> {
+        return res.status(this.statusCode).json(this);
+    }
 }
 
-// Standard ApiResponse
-export default abstract class ApiResponse<T = unknown> {
-  constructor(
-    public readonly statusCode: number,
-    public readonly success: boolean,
-    public readonly apiVersion: string,
-    public readonly data?: T,
-    public readonly errorMessage?: string
-  ) { }
+export class ErrorResponse
+    implements ErrorResponseContract {
+    constructor(
+        public readonly apiVersion: string,
+        public readonly errorMessage: string,
+        public readonly statusCode = 400,
+        public readonly success: false = false,
+        public readonly data: null = null
+    ) { }
 
-  send(res: Response): Response {
-    return res.status(this.statusCode).json(this);
-  }
+    send(res: Response): Response<ApiResponse<null>> {
+        return res.status(this.statusCode).json(this);
+    }
 }
-
-// Erfolg
-export class SuccessResponse<T> extends ApiResponse<T> {
-  constructor(apiVersion: string, data: T, statusCode = 200) {
-    super(statusCode, true, apiVersion, data, undefined);
-  }
-}
-
-// Fehler
-export class ErrorResponse extends ApiResponse<null> {
-  constructor(apiVersion: string, errorMessage: string, statusCode = 400) {
-    super(statusCode, false, apiVersion, undefined, errorMessage);
-  }
-}
-
-export class UnsupportedVersionResponse extends ErrorResponse {
-
-}
-

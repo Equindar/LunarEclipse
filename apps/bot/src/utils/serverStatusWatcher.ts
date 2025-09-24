@@ -1,5 +1,5 @@
 import { Client, TextChannel, EmbedBuilder } from 'discord.js';
-import { logger } from './logger';
+import logger from './logger';
 
 interface ServerStatusData {
     online: boolean;
@@ -43,7 +43,7 @@ export async function startServerStatusWatcher(client: Client) {
                     try {
                         const msg = await channel.messages.fetch(statusMessageId);
                         await msg.edit({ embeds: [embed] });
-                        logger.debug(`Status-Nachricht editiert: [Status: ${data.online ? 'Online' : 'Offline'}, Latency:  ${data.latency}ms (${Math.round(avg * 10) / 10}ms)]`);
+                        logger.debug(`Status-Nachricht editiert: [Status: ${data.online ? 'Online' : 'Offline'}, Latency: ${data.latency}ms (${Math.round(avg * 10) / 10}ms)]`);
                     } catch (err) {
                         logger.error('Konnte bestehende Status-Nachricht nicht updaten:', err);
                     }

@@ -3,8 +3,9 @@ import { loadCommands } from './handlers/commandHandler';
 import { ErrorHandler } from './handlers/errorHandler';
 import { DiscordNotifier } from './addons/notifiers/DiscordNotifier';
 import dotenv = require('dotenv');
-import { logger } from './utils/logger';
 import createClient from './client';
+import logger from './utils/logger';
+
 
 // --- Init
 dotenv.config();

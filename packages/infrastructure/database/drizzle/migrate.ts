@@ -3,7 +3,6 @@ import { migrate } from "drizzle-orm/mysql2/migrator";
 import mysql from "mysql2/promise";
 import configuration from "./config";
 
-
 const main = async () => {
   const connection = await mysql.createConnection(configuration);
 
