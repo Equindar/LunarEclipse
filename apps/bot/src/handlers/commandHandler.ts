@@ -1,11 +1,8 @@
 import { Client, Collection, REST, Routes } from 'discord.js';
 import { readdirSync } from 'fs';
-import path = require("path");
+import path = require('path');
 import { Command } from '../types/Command';
 import logger from '../utils/logger';
-
-
-
 
 export async function loadCommands(client: Client) {
   const commandsPath = path.join(__dirname, '..', 'commands');
@@ -32,15 +29,17 @@ export async function loadCommands(client: Client) {
   try {
     logger.info('Slash Commands werden registriert...');
 
-    if (process.env.NODE_ENV === "production") {
-      await rest.put(
-        Routes.applicationCommands(process.env.DISCORD_CLIENT_ID!),
-        { body: commands.map(cmd => cmd.data.toJSON()) }
-      );
+    if (process.env.NODE_ENV === 'production') {
+      await rest.put(Routes.applicationCommands(process.env.DISCORD_CLIENT_ID!), {
+        body: commands.map((cmd) => cmd.data.toJSON()),
+      });
     } else {
       await rest.put(
-        Routes.applicationGuildCommands(process.env.DISCORD_CLIENT_ID!, process.env.DISCORD_SERVER_ID!),
-        { body: commands.map(cmd => cmd.data.toJSON()) }
+        Routes.applicationGuildCommands(
+          process.env.DISCORD_CLIENT_ID!,
+          process.env.DISCORD_SERVER_ID!,
+        ),
+        { body: commands.map((cmd) => cmd.data.toJSON()) },
       );
     }
 

@@ -27,9 +27,7 @@
       "compositePrimaryKeys": {
         "Test_id": {
           "name": "Test_id",
-          "columns": [
-            "id"
-          ]
+          "columns": ["id"]
         }
       },
       "uniqueConstraints": {},

@@ -5,31 +5,32 @@ import getErrorMessage from '../utils/getErrorMessage';
 import CustomError from '../types/customError';
 
 export default function handleErrors(
-    error: unknown,
-    req: Request,
-    res: Response,
-    next: NextFunction
+  error: unknown,
+  req: Request,
+  res: Response,
+  next: NextFunction,
 ) {
-    if (res.headersSent || configuration.logging.level === 'debug') {
-        next(error);
-        return;
-    }
+  if (res.headersSent || configuration.logging.level === 'debug') {
+    next(error);
+    return;
+  }
 
-    if (error instanceof CustomError) {
-        logger.error(error.message);
-        res.status(error.statusCode).json({
-            error: {
-                message: error.message,
-                code: error.code,
-            },
-        });
-        return;
-    }
-
-    res.status(500).json({
-        error: {
-            message: getErrorMessage(error) ||
-                "Ooops, an error occurred. Please view the logs for more details.",
-        },
+  if (error instanceof CustomError) {
+    logger.error(error.message);
+    res.status(error.statusCode).json({
+      error: {
+        message: error.message,
+        code: error.code,
+      },
     });
+    return;
+  }
+
+  res.status(500).json({
+    error: {
+      message:
+        getErrorMessage(error) ||
+        'Ooops, an error occurred. Please view the logs for more details.',
+    },
+  });
 }

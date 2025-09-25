@@ -2,7 +2,6 @@ import type { NextFunction, Request, Response } from 'express';
 import { ErrorResponse } from '../types/responses';
 import logger from '../utils/apiLogger';
 
-
 /**
  * Middleware to extract the API version from the request headers.
  * It first checks the 'X-API-Version' header, and if it's not present,
@@ -16,23 +15,21 @@ import logger from '../utils/apiLogger';
  * app.use(extractVersion('2')); // Sets the default version to '2' if not provided
  */
 export default function extractVersion(defaultVersion = '1') {
-    return (req: Request, res: Response, next: NextFunction) => {
-        let version = req.headers['x-api-version'];
-        if (version && (!/^\d+$/.test(version as string) || version === '0')) {
-            return new ErrorResponse(
-                version.toString(),
-                'Invalid X-API-Version header format',
-                400
-            ).send(res);
-        }
+  return (req: Request, res: Response, next: NextFunction) => {
+    let version = req.headers['x-api-version'];
+    if (version && (!/^\d+$/.test(version as string) || version === '0')) {
+      return new ErrorResponse(version.toString(), 'Invalid X-API-Version header format', 400).send(
+        res,
+      );
+    }
 
-        if (!version) {
-            const accept = req.get('accept') || '';
-            const m = accept.match(/application\/vnd\.myapp\.v(\d+)\+json/);
-            version = m ? m[1] : undefined;
-        }
-        req.apiVersion = (version as string) || defaultVersion;
-        logger.debug(`[REQ] detected APIversion: v${req.apiVersion}`)
-        next();
-    };
+    if (!version) {
+      const accept = req.get('accept') || '';
+      const m = accept.match(/application\/vnd\.myapp\.v(\d+)\+json/);
+      version = m ? m[1] : undefined;
+    }
+    req.apiVersion = (version as string) || defaultVersion;
+    logger.debug(`[REQ] detected APIversion: v${req.apiVersion}`);
+    next();
+  };
 }

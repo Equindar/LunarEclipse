@@ -4,10 +4,11 @@
     "composite": true,
     "outDir": "build",
     "declaration": true,
-    "declarationMap": true
+    "declarationMap": true,
+    "typeRoots": ["**/*.d.ts", "./node_modules/@types"]
   },
-  "include": [
-    "**/*.ts",
-    "**/*.tsx"
-  ]
+  "include": ["**/*.ts", "**/*.tsx", "**/*.d.ts"]
+  // "exclude": [
+  //   "build",
+  // ],
 }

@@ -25,7 +25,9 @@ export function hasRole(roleIdOrName: string) {
           content: `Du benötigst die Rolle **${roleIdOrName}**, um diesen Command auszuführen.`,
           ephemeral: true,
         });
-        logger.warn(`Command ${command.data.name} darf nur von der Rolle '${roleIdOrName}' genutzt werden.`);
+        logger.warn(
+          `Command ${command.data.name} darf nur von der Rolle '${roleIdOrName}' genutzt werden.`,
+        );
         return;
       }
 

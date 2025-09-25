@@ -1,4 +1,4 @@
-import { Request as ExpressRequest } from "express";
+import { Request as ExpressRequest } from 'express';
 
 export interface BaseRequestContract {
   apiVersion?: string;
@@ -14,7 +14,7 @@ export class ApiRequest implements BaseRequestContract {
 
   // Zugriff auf Felder (nutzt die augmentierten Felder)
   get apiVersion(): string {
-    return this.req.apiVersion ?? "unknown";
+    return this.req.apiVersion ?? 'unknown';
   }
 
   header(name: string): string | undefined {

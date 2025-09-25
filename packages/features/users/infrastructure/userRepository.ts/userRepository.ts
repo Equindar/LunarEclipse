@@ -1,1 +1,0 @@
-const connection = await mysql.createConnection(configuration);

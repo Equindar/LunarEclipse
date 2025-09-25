@@ -11,10 +11,9 @@ let shutdownCommand: Command = {
   async execute(interaction) {
     try {
       await interaction.reply('Bot wird heruntergefahren...');
-      logger.info("Shutdown wird durchgeführt.");
+      logger.info('Shutdown wird durchgeführt.');
       process.exit(0);
-    }
-    catch (error) {
+    } catch (error) {
       await interaction.reply({ content: 'Berunterfahren fehlgeschlagen' });
       errorHandler.handle(error, this.data.name);
     }

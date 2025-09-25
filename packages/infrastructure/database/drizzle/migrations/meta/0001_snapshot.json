@@ -61,9 +61,7 @@
       "uniqueConstraints": {
         "monsters_unique": {
           "name": "monsters_unique",
-          "columns": [
-            "Name"
-          ]
+          "columns": ["Name"]
         }
       },
       "checkConstraint": {}
@@ -116,9 +114,7 @@
       "uniqueConstraints": {
         "users_unique": {
           "name": "users_unique",
-          "columns": [
-            "Nickname"
-          ]
+          "columns": ["Nickname"]
         }
       },
       "checkConstraint": {}

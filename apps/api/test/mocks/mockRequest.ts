@@ -1,5 +1,3 @@
-import { Request } from "express";
+import { Request } from 'express';
 
-export const mockRequest = {
-
-} as unknown as Request
+export const mockRequest = {} as unknown as Request;

@@ -1,16 +1,16 @@
 {
-    "name": "lunareclipse-packages",
-    "version": "1.0.0",
-    "scripts": {
-        "build": "tsc -p tsconfig.json",
-        "db:gen": "drizzle-kit generate",
-        "db:migrate": "tsx src/drizzle/migrate.ts"
-    },
-    "devDependencies": {
-        "drizzle-kit": "^0.31.4"
-    },
-    "dependencies": {
-        "drizzle-orm": "^0.44.5",
-        "mysql2": "^3.14.4"
-    }
+  "name": "lunareclipse-packages",
+  "version": "1.0.0",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "db:gen": "drizzle-kit generate",
+    "db:migrate": "tsx src/drizzle/migrate.ts"
+  },
+  "devDependencies": {
+    "drizzle-kit": "^0.31.4"
+  },
+  "dependencies": {
+    "drizzle-orm": "^0.44.5",
+    "mysql2": "^3.14.4"
+  }
 }

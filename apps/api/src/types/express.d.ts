@@ -1,8 +1,8 @@
-declare global {
-} namespace Express {
-    interface Request {
-        apiVersion: string;
-        userId?: string;
-        permissions?: string[];
-    }
+declare global {}
+namespace Express {
+  interface Request {
+    apiVersion: string;
+    userId?: string;
+    permissions?: string[];
+  }
 }

@@ -5,7 +5,7 @@ on:
     branches:
       - production
     tags:
-      - "v*.*.*"
+      - 'v*.*.*'
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
@@ -39,4 +39,3 @@ jobs:
         run: |
           docker push ghcr.io/equindar/${{ vars.APPS_BOT_IMAGE_NAME }}:${{ github.event.inputs.version }}
           docker push ghcr.io/equindar/${{ vars.APPS_BOT_IMAGE_NAME }}:latest
-          

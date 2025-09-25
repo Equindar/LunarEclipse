@@ -12,15 +12,9 @@
     /* Specify a set of entries that re-map imports to additional lookup locations. */
     // "paths": {},
     /* Specify multiple folders that act like './node_modules/@types'. */
-    "typeRoots": [
-      "src/types",
-      "./node_modules/@types",
-      "../../packages/**/*.d.ts"
-    ],
+    "typeRoots": ["src/types", "./node_modules/@types", "../../packages/**/*.d.ts"]
   },
-  "include": [
-    "src"
-  ],
+  "include": ["src"],
   // "exclude": [
   //   "build",
   //   "node_modules",
@@ -28,7 +22,7 @@
   // ],
   "references": [
     {
-      "path": "../../packages",
+      "path": "../../packages"
     }
   ],
   // WorkAround for ts-jest with module: nodenext + moduleresolution: nodenext

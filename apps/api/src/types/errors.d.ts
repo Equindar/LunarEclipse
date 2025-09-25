@@ -1,1 +1,1 @@
-type ErrorCode = "ERR_NF" | "ERR_VALID" | "ERR_API";
+type ErrorCode = 'ERR_NF' | 'ERR_VALID' | 'ERR_API';

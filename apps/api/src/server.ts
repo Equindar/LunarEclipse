@@ -2,7 +2,6 @@ import dotenv from 'dotenv';
 import createApi from './app';
 import logger from './utils/apiLogger';
 
-
 // --- Init
 dotenv.config();
 const { PORT, API_NAME } = process.env;
@@ -20,7 +19,6 @@ const app = createApi(API_NAME);
 app.listen(PORT, () => {
   logger.info(`Server running on http://localhost:${PORT}`);
 });
-
 
 // --- Error-Handling: unhandled Rejection/Exceptions
 process.on('unhandledRejection', (reason, promise) => {

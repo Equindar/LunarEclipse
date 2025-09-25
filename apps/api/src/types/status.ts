@@ -1,4 +1,4 @@
 export interface Status {
-    online: boolean;
-    latency: number;
+  online: boolean;
+  latency: number;
 }

@@ -1,9 +1,7 @@
-
-import event from "@/events/messageCreate";
-import { logger } from "@/utils/logger";
-import { Message, OmitPartialGroupDMChannel } from "discord.js";
-import { mockMessage } from "test/mocks/mockMessage";
-
+import event from '@/events/messageCreate';
+import { logger } from '@/utils/logger';
+import { Message, OmitPartialGroupDMChannel } from 'discord.js';
+import { mockMessage } from 'test/mocks/mockMessage';
 
 // --- ToDo: issue #12
 

@@ -1,3 +1,3 @@
-import CustomError from "../types/customError";
+import CustomError from '../types/customError';
 
-export default class EntityNotFoundError extends CustomError<ErrorCode> { }
+export default class EntityNotFoundError extends CustomError<ErrorCode> {}

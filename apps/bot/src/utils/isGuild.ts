@@ -23,7 +23,9 @@ export function isGuild(guildIdentifier: string) {
           content: `Dieser Command ist server-spezifisch für **${guildIdentifier}**.`,
           ephemeral: true,
         });
-        logger.warn(`Command ${command.data.name} darf nur auf Server '${guildIdentifier}' genutzt werden.`);
+        logger.warn(
+          `Command ${command.data.name} darf nur auf Server '${guildIdentifier}' genutzt werden.`,
+        );
         return;
       }
 

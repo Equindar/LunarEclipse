@@ -14,6 +14,8 @@ export class ErrorHandler {
       await notifier.notify(message, error);
     }
 
-    logger.error(`${context ? context : ""}${message} \n${error instanceof Error ? error.stack : undefined}`);
+    logger.error(
+      `${context ? context : ''}${message} \n${error instanceof Error ? error.stack : undefined}`,
+    );
   }
 }

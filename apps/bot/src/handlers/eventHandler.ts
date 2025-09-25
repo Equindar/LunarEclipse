@@ -4,8 +4,6 @@ import { Event } from '../types/Event';
 import path from 'path';
 import logger from '../utils/logger';
 
-
-
 function getEventFiles(dir: string): string[] {
   const files: string[] = [];
   const items = readdirSync(dir);

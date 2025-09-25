@@ -6,7 +6,6 @@ import dotenv = require('dotenv');
 import createClient from './client';
 import logger from './utils/logger';
 
-
 // --- Init
 dotenv.config();
 const { DISCORD_TOKEN, DISCORD_CLIENT_ID } = process.env;
@@ -29,7 +28,7 @@ export const errorHandler = new ErrorHandler(
   try {
     await client.login(DISCORD_TOKEN);
   } catch (error) {
-    logger.error("Login fehlgeschlagen: ", error);
+    logger.error('Login fehlgeschlagen: ', error);
   }
 })();
 
