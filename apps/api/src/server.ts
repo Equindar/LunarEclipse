@@ -1,6 +1,7 @@
 import dotenv from 'dotenv';
-import logger from './utils/apiLogger';
 import createApi from './app';
+import logger from './utils/apiLogger';
+
 
 // --- Init
 dotenv.config();

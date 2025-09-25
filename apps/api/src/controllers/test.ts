@@ -10,8 +10,8 @@ export async function getTest(_req: Request, res: Response) {
     return res.status(401).json({ statusCode: 401, success: false, apiVersion, errorMessage: "Missing token" });
   }
 
+
   logger.info(`Token: ${authReq.getBearerToken()}`)
   logger.info(`Version (Req): ${authReq.apiVersion}`)
-
   return res.status(200).send({});
 }

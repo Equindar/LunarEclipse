@@ -1,5 +1,6 @@
-import { User } from "@packages/features/users/domain/user";
+
 import { Request, Response } from "express";
+import { User } from "packages/features/users/core/user";
 
 
 const user: User = {

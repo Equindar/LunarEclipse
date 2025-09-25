@@ -1,8 +1,9 @@
 import express from 'express';
-import logger from './utils/apiLogger';
 import router from './routes';
+import extractVersion from './middlewares/extractVersion';
 import logRequests from './middlewares/logRequests';
-import { extractVersion } from './middlewares/extractVersion';
+import handleErrors from './middlewares/handleErrors';
+import logger from './utils/apiLogger';
 
 export default function createApi(app_name: string) {
     // --- Init
@@ -15,13 +16,12 @@ export default function createApi(app_name: string) {
         // Middlewares
         app.use(extractVersion('1'));
         app.use(logRequests);
+
         // Router
-        app.use(router);
+        app.use('/api', router);
+
         // Error Handling Middleware
-        app.use((err: unknown, req: express.Request, res: express.Response, next: express.NextFunction) => {
-            logger.error(err);
-            res.status(500).json({ error: "Internal Server Error" });
-        });
+        app.use(handleErrors);
 
     } catch (error) {
         logger.error("Start fehlgeschlagen", error);

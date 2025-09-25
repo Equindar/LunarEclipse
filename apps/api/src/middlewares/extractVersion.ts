@@ -1,5 +1,6 @@
 import type { NextFunction, Request, Response } from 'express';
 import { ErrorResponse } from '../types/responses';
+import logger from '../utils/apiLogger';
 
 
 /**
@@ -14,7 +15,7 @@ import { ErrorResponse } from '../types/responses';
  * @example
  * app.use(extractVersion('2')); // Sets the default version to '2' if not provided
  */
-export function extractVersion(defaultVersion = '1') {
+export default function extractVersion(defaultVersion = '1') {
     return (req: Request, res: Response, next: NextFunction) => {
         let version = req.headers['x-api-version'];
         if (version && (!/^\d+$/.test(version as string) || version === '0')) {
@@ -31,6 +32,7 @@ export function extractVersion(defaultVersion = '1') {
             version = m ? m[1] : undefined;
         }
         req.apiVersion = (version as string) || defaultVersion;
+        logger.debug(`[REQ] detected APIversion: v${req.apiVersion}`)
         next();
     };
 }
