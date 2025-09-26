@@ -3,6 +3,7 @@ import logger from '../utils/apiLogger';
 import configuration from '../config';
 import getErrorMessage from '../utils/getErrorMessage';
 import CustomError from '../types/customError';
+import { UnauthorizedError } from 'express-oauth2-jwt-bearer';
 
 export default function handleErrors(
   error: unknown,
@@ -21,6 +22,17 @@ export default function handleErrors(
       error: {
         message: error.message,
         code: error.code,
+      },
+    });
+    return;
+  }
+
+  if (error instanceof UnauthorizedError) {
+    logger.error(error.message);
+    res.status(error.statusCode).json({
+      error: {
+        message: error.message,
+        code: "code" in error ? error.code : "ERR_AUTH",
       },
     });
     return;

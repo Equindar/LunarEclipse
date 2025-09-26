@@ -3,8 +3,10 @@ import { User } from 'packages/features/users/core/user';
 
 const user: User = {
   id: '1',
-  name: 'equindar',
-};
+  nickname: 'equindar',
+  password: 'bad-password',
+  status: 'active',
+}
 
 export async function getUser(_req: Request, res: Response<User>) {
   res.appendHeader('Test', 'test');

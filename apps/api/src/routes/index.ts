@@ -1,11 +1,12 @@
 import express from 'express';
 import { getStatus } from '../controllers/statusController';
-import { getTest } from '../controllers/test';
+import test from './v1/temp/test';
 // --- Init
 
 const router = express.Router();
+const authRouter = express.Router();
 
 router.use('/status', getStatus);
-router.use('/test', getTest);
+router.use('/test', test);
 
 export default router;

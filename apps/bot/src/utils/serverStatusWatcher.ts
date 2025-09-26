@@ -2,8 +2,10 @@ import { Client, TextChannel, EmbedBuilder } from 'discord.js';
 import logger from './logger';
 
 interface ServerStatusData {
-  online: boolean;
-  latency: number;
+  data: {
+    online: boolean;
+    latency: number;
+  }
 }
 
 let lastData: ServerStatusData | null = null;
@@ -17,11 +19,11 @@ export async function startServerStatusWatcher(client: Client) {
   setInterval(async () => {
     try {
       const response = await fetch(process.env.SERVER_STATUS_API_ENDPOINT!);
-      const data: ServerStatusData = await response.json();
+      const result: ServerStatusData = await response.json();
 
       // nur triggern, wenn sich etwas geändert hat
-      if (!lastData || data.online !== lastData.online || data.latency !== lastData.latency) {
-        lastData = data;
+      if (!lastData || result.data.online !== lastData.data.online || result.data.latency !== lastData.data.latency) {
+        lastData = result;
 
         if (performance.length >= 60) {
           performance.shift();
@@ -30,10 +32,10 @@ export async function startServerStatusWatcher(client: Client) {
 
         const embed = new EmbedBuilder()
           .setTitle('LunarEclipse Server')
-          .setColor(data.online ? 0x00ff00 : 0xff0000)
+          .setColor(result.data.online ? 0x00ff00 : 0xff0000)
           .addFields(
-            { name: 'Status', value: data.online ? '🟢 Online' : '🔴 Offline', inline: true },
-            { name: 'Latenz', value: `${data.latency} ms`, inline: true },
+            { name: 'Status', value: result.data.online ? '🟢 Online' : '🔴 Offline', inline: true },
+            { name: 'Latenz', value: `${result.data.latency} ms`, inline: true },
             { name: '\u200B', value: `ø ${Math.round(avg * 10) / 10} ms`, inline: true },
           )
           .setTimestamp()
@@ -44,7 +46,7 @@ export async function startServerStatusWatcher(client: Client) {
             const msg = await channel.messages.fetch(statusMessageId);
             await msg.edit({ embeds: [embed] });
             logger.debug(
-              `Status-Nachricht editiert: [Status: ${data.online ? 'Online' : 'Offline'}, Latency: ${data.latency}ms (${Math.round(avg * 10) / 10}ms)]`,
+              `Status-Nachricht editiert: [Status: ${result.data.online ? 'Online' : 'Offline'}, Latency: ${result.data.latency}ms (${Math.round(avg * 10) / 10}ms)]`,
             );
           } catch (err) {
             logger.error('Konnte bestehende Status-Nachricht nicht updaten:', err);
@@ -53,7 +55,7 @@ export async function startServerStatusWatcher(client: Client) {
           const newMsg = await channel.send({ embeds: [embed] });
         }
       }
-      performance.push(data.latency);
+      performance.push(result.data.latency);
     } catch (err) {
       logger.error('Fehler beim Abrufen des Serverstatus:', err);
     }

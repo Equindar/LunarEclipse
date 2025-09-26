@@ -3,6 +3,7 @@ import { StatusLookup } from './interfaces/statusLookup';
 
 export class StatusLookupV1 implements StatusLookup {
   async execute(): Promise<Status> {
-    return { online: true, latency: 100 };
+    let value: number = Math.floor(Math.random() * 100);
+    return { online: true, latency: value };
   }
 }

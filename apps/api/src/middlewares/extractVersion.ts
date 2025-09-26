@@ -1,6 +1,6 @@
 import type { NextFunction, Request, Response } from 'express';
-import { ErrorResponse } from '../types/responses';
 import logger from '../utils/apiLogger';
+import UnsupportedApiVersionError from '../errors/UnsupportedAPIVersion';
 
 /**
  * Middleware to extract the API version from the request headers.
@@ -18,9 +18,11 @@ export default function extractVersion(defaultVersion = '1') {
   return (req: Request, res: Response, next: NextFunction) => {
     let version = req.headers['x-api-version'];
     if (version && (!/^\d+$/.test(version as string) || version === '0')) {
-      return new ErrorResponse(version.toString(), 'Invalid X-API-Version header format', 400).send(
-        res,
-      );
+      throw new UnsupportedApiVersionError({
+        message: 'Invalid X-API-Version header format',
+        statusCode: 400,
+        code: 'ERR_API'
+      });
     }
 
     if (!version) {

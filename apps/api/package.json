@@ -11,11 +11,16 @@
     "test:coverage": "jest --coverage"
   },
   "dependencies": {
+    "@types/cors": "^2.8.19",
+    "cors": "^2.8.5",
     "express": "^4.19.0",
+    "express-oauth2-jwt-bearer": "^1.7.1",
+    "jsonwebtoken": "^9.0.2",
     "morgan": "^1.10.1"
   },
   "devDependencies": {
     "@types/express": "^4.17.21",
+    "@types/jsonwebtoken": "^9.0.10",
     "@types/morgan": "^1.9.10",
     "@types/node": "^24.3.1",
     "@types/supertest": "^6.0.3",
