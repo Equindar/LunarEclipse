@@ -6,6 +6,6 @@ import * as schema from "packages/infrastructure/database/drizzle/migrations/sch
 const getUserImpl = async () => {
     const connection = await mysql.createConnection(configuration);
     const db = drizzle(connection, { schema, mode: "default" });
-    return db.select().from(schema.monsters)
+    return db.select().from(schema.users)
 }
 export default getUserImpl;
