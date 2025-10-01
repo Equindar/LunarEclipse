@@ -22,7 +22,7 @@
         "format:check": "prettier --cache --check ."
     },
     "dependencies": {
-        "dotenv": "^16.4.5",
+        "dotenv": "^17.2.3",
         "prettier": "^3.3.3",
         "winston": "^3.17.0",
         "winston-daily-rotate-file": "^5.0.0"
