@@ -16,7 +16,7 @@ logger.info(`Logger assigned level: ${logger.level}`);
 // Start API
 const app = createApi(API_NAME);
 // Mapping to Port
-app.listen(PORT, () => {
+app!.listen(PORT, () => {
   logger.info(`Server running on http://localhost:${PORT}`);
 });
 

@@ -2,7 +2,7 @@
   "name": "lunareclipse-api",
   "version": "1.0.0",
   "scripts": {
-    "dev": "ts-node-dev --respawn --transpile-only src/server.ts",
+    "dev": "ts-node-dev -r tsconfig-paths/register --respawn --transpile-only src/server.ts",
     "start": "node build/server.js",
     "build": "tsc -p tsconfig.json",
     "test": "jest --passWithNoTests",
@@ -15,6 +15,7 @@
     "cors": "^2.8.5",
     "express": "^4.19.0",
     "express-oauth2-jwt-bearer": "^1.7.1",
+    "joi": "^18.0.1",
     "jsonwebtoken": "^9.0.2",
     "morgan": "^1.10.1"
   },

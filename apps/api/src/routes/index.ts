@@ -1,12 +1,22 @@
-import express from 'express';
-import { getStatus } from '../controllers/statusController';
-import test from './v1/temp/test';
-// --- Init
+import { Request, Response, NextFunction, Router } from "express";
+import { VersionStrategy } from "../types/versionStrategy";
 
-const router = express.Router();
-const authRouter = express.Router();
+export default class apiRouter {
+    private strategies: Map<string, VersionStrategy> = new Map();
 
-router.use('/status', getStatus);
-router.use('/test', test);
+    register(version: string, strategy: VersionStrategy) {
+        this.strategies.set(version, strategy);
+    }
 
-export default router;
+    useVersion() {
+        return (req: Request, res: Response, next: NextFunction) => {
+            const strategy = this.strategies.get(req.apiVersion);
+            if (!strategy) {
+                return res.status(400).json({ error: "Unsupported API version blabla" });
+            }
+
+            const router: Router = strategy.getRouter();
+            return router(req, res, next);
+        };
+    }
+}
