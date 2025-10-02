@@ -1,4 +1,4 @@
-import express from 'express';
+import express, { Application, Router } from 'express';
 import cors from 'cors';
 import extractVersion from './middlewares/extractVersion';
 import logRequests from './middlewares/logRequests';
@@ -7,20 +7,34 @@ import logger from './utils/apiLogger';
 import { v1Strategy } from './strategies/v1Strategy';
 import { v2Strategy } from './strategies/v2Strategy';
 import apiRouter from './routes';
+import drizzleClient from '@infrastructure/database/client';
 
-export default function createApi(app_name: string) {
+export type Database = Awaited<ReturnType<typeof drizzleClient>>
+  ;
 
-  try {
-    // --- Init
-    const app = express();
-    logger.info(`'${app_name}' wurde gestartet.`);
+export default class Api {
+  public readonly name: string;
+  public readonly app: Application;
+  public database: Database | null = null;
 
-    app.disable('x-powered-by');
+  // --- Init
+  constructor(name: string) {
+    this.name = name;
+    // Express Instance
+    this.app = express();
+  }
 
+  public async connectDataBase() {
+    this.database = await drizzleClient();
+  }
+
+  public init() {
+    // --- Settings
+    this.app.disable('x-powered-by');
 
     // --- Routing
     // Middlewares
-    app
+    this.app
       .use(express.urlencoded({ extended: true }))
       .use(express.json())
       .use(cors())
@@ -30,17 +44,21 @@ export default function createApi(app_name: string) {
     // Router
     // Strategy setup
     const router = new apiRouter();
-    router.register("1", new v1Strategy());
-    router.register("2", new v2Strategy());
+    if (this.database !== null || undefined) {
+      router.register("1", new v1Strategy(this.database!));
+      router.register("2", new v2Strategy());
+    }
 
-    app.use("/api", router.useVersion());
+    this.app.use("/api", router.useVersion());
 
     // Error Handling Middleware
-    app.use(handleErrors);
+    this.app.use(handleErrors);
+  }
 
-    return app;
-  } catch (error) {
-    logger.error('Start fehlgeschlagen', error);
+  listen(port: number) {
+    this.app.listen(port, () => {
+      logger.info(`Server running on http://localhost:${port}`);
+    })
   }
 
 }

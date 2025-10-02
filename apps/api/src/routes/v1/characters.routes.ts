@@ -1,17 +1,22 @@
-import express from "express";
+import express, { Router } from "express";
 import CharactersController from "../../controllers/characters.controller";
+import { Database } from "../../app";
+import logger from "../../utils/apiLogger";
 
+export default function createCharacterRouter(database: Database) {
+    // --- Init 
+    // Router
+    const router = Router();
+    // Controller for UseCases
+    const controller = new CharactersController(database);
 
-const controller = new CharactersController();
+    router.get("/", controller.onListCharacters);
+    // router.get("/:id", controller.onGetCharacter);
 
-const router = express.Router();
+    router.get("/new/:id", controller.onGetCharacter_new);
 
-router.get("/", controller.onListCharacters);
-// router.get("/:id", controller.onGetCharacter);
+    // router.post("/", controller.onCreateCharacter);
+    router.patch("/:id", controller.onUpdateCharacter);
 
-router.get("/new/:id", controller.onGetCharacter_new);
-
-// router.post("/", controller.onCreateCharacter);
-router.patch("/:id", controller.onUpdateCharacter);
-
-export default router;
+    return router;
+}

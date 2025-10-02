@@ -1,8 +1,6 @@
 import { Request, Response } from 'express';
 import getMonsterImpl from '@features/monsters/data/getMonster.impl'
 
-
-
 export const listMonsters = async (req: Request, res: Response) => {
     res.status(200).send("listMonsters");
 }

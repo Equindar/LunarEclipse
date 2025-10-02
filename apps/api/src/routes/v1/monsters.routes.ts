@@ -3,17 +3,21 @@ import { createMonster } from "../../controllers/monstersController";
 import validateRequests from "../../middlewares/validateRequests";
 import { createMonsterSchema } from "../../data/validation/monsters.requestSchemas";
 import { getMonster } from "../../controllers/monsters.controller";
+import { Database } from "../../app";
 
-const router = Router();
+export default function createCharacterRouter(database: Database) {
+    // --- Init 
+    // Router
+    const router = Router();
+    // Controller for UseCases
 
+    router.get("/", (_req: Request, res: Response) => {
+        return res.status(200).send({ monsters: [] });
+    });
 
-router.get("/", (_req: Request, res: Response) => {
-    return res.status(200).send({ monsters: [] });
-});
+    router.get("/:id", getMonster);
 
-router.get("/:id", getMonster);
+    router.post("/", validateRequests(createMonsterSchema), createMonster);
 
-
-router.post("/", validateRequests(createMonsterSchema), createMonster);
-
-export default router;
+    return router;
+}

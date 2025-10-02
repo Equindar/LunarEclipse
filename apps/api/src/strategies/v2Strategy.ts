@@ -4,6 +4,7 @@ import path from "path";
 import { readdirSync } from "fs";
 
 export class v2Strategy implements VersionStrategy {
+
     getRouter(): Router {
         const router = Router();
         const routesPath = path.join(__dirname, "../routes/v2");
