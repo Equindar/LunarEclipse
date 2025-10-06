@@ -9,8 +9,7 @@ import { v2Strategy } from './strategies/v2Strategy';
 import apiRouter from './routes';
 import drizzleClient from '@infrastructure/database/client';
 
-export type Database = Awaited<ReturnType<typeof drizzleClient>>
-  ;
+export type Database = Awaited<ReturnType<typeof drizzleClient>>;
 
 export default class Api {
   public readonly name: string;
@@ -39,7 +38,9 @@ export default class Api {
       .use(express.json())
       .use(cors())
       .use(extractVersion('1'))
-      .use(logRequests);
+      .use(logRequests)
+      .use(express.static('./src/public'));
+
 
     // Router
     // Strategy setup
