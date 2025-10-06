@@ -1,7 +1,9 @@
 import Character from "@features/characters/core/entities/Character";
 import { CharacterDataSource } from "../interfaces/character.datasource";
 import { MySql2Database } from "drizzle-orm/mysql2";
+import { eq } from "drizzle-orm";
 import { users } from "@infrastructure/database/drizzle/migrations/schema";
+import { User } from "@features/users/core/user";
 
 export class CharacterDataSourceImpl implements CharacterDataSource {
     private database: MySql2Database;
@@ -14,9 +16,12 @@ export class CharacterDataSourceImpl implements CharacterDataSource {
         await this.database.insert(users).values({ id: 666, nickname: character.name });
         return;
     }
-    get(id: string): Promise<Character> | null {
-        throw new Error("Method not implemented.");
+
+    async get(id: number): Promise<Character | null> {
+        const fakeChar = new Character();
+        return fakeChar;
     }
+
     getAll(): Promise<Character[]> {
         throw new Error("Method not implemented.");
     }

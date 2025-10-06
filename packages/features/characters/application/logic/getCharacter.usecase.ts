@@ -18,8 +18,8 @@ export class getCharacter implements getCharacterUseCase {
      * @param id ID of the Character
      * @returns Character Object
      */
-    async execute(id: number): Promise<Character> {
-        const result = await this.characterRepository.get()
-        return result
+    async execute(id: number): Promise<Character | null> {
+        const result = await this.characterRepository.get(id);
+        return result;
     }
 }

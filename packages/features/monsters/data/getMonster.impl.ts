@@ -10,4 +10,5 @@ const getMonsterImpl = async (id: number) => {
     const db = drizzle(connection, { schema, mode: "default" });
     return db.select().from(monsters).where(eq(schema.monsters.id, id))
 }
+
 export default getMonsterImpl;

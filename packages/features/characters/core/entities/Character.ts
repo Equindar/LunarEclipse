@@ -9,22 +9,23 @@ interface CharacterProps {
 }
 
 export default class Character {
-    name: string;
-    status: CharacterStatus;
-    owner: User;
+    name: string = "Char 1";
+    // status: CharacterStatus;
+    // owner: User;
 
 
-    constructor(private props: CharacterProps, owner: User) {
-        this.name = props.name;
-        this.status = new InitializedCharacterStatus(this);
-        this.owner = owner;
-    }
 
-    public setStatus(status: CharacterStatus): void {
-        this.status = status;
-    }
+    // constructor(private props: CharacterProps, owner: User) {
+    //     this.name = props.name;
+    // this.status = new InitializedCharacterStatus(this);
+    // this.owner = owner;
+    // }
 
-    public getStatus(): string {
-        return this.status.constructor.name;
-    }
+    // public setStatus(status: CharacterStatus): void {
+    //     this.status = status;
+    // }
+
+    // public getStatus(): string {
+    //     return this.status.constructor.name;
+    // }
 }
