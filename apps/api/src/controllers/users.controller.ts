@@ -1,25 +1,36 @@
-import { Request, Response } from 'express';
-import getUserImpl from '@features/users/data/getUser.impl'
+import { NextFunction, Request, Response } from 'express';
+import { Database } from '../app';
+import UserDataSourceImpl from '@features/users/data/datasources/user.datasource';
+import UserRepositoryImpl from '@features/users/application/repositories/user.repository';
+import createUser from '@features/users/application/logic/createUser.usecase'
+import getUser from '@features/users/application/logic/getUser.usecase';
+import logger from '../utils/apiLogger';
+
+export default class UsersController {
+    public database;
+
+    constructor(db: Database) {
+        this.database = db;
+    }
 
 
+    // UseCase in Feature/application
+    public onCreateUser = async (req: Request, res: Response, next: NextFunction) => {
+        try {
+            await new createUser(new UserRepositoryImpl(new UserDataSourceImpl(this.database))).execute(req.body);
+            return res.sendStatus(201);
+        }
+        catch (error) {
+            next(error);
+        }
+    };
 
-export const listUsers = async (req: Request, res: Response) => {
-    const users = await getUserImpl();
-    res.status(200).send(users);
-}
+    public onGetUser = async (req: Request, res: Response, next: NextFunction) => {
 
-export const getUser = async (req: Request, res: Response) => {
-    res.status(200).send("getUser");
-}
+        const id = parseInt(`${req.params.id}`);
+        const data = await new getUser(new UserRepositoryImpl(new UserDataSourceImpl(this.database))).execute(id);
+        logger.debug(data);
+        return res.status(200).send(data);
 
-export const createUser = async (req: Request, res: Response) => {
-    res.status(200).json({ name: "Rat", health: 150, short_description: "short", description: "long desc" });
-}
-
-export const updateUser = async (req: Request, res: Response) => {
-    res.status(200).send("updateUser");
-}
-
-export const deleteUser = async (req: Request, res: Response) => {
-    res.status(200).send("deleteUser");
+    };
 }

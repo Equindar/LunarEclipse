@@ -1,9 +1,5 @@
 import { NextFunction, Request, Response, Router } from 'express';
-import { getCharacter } from '@features/characters/application/logic/getCharacter.usecase';
-import CharacterRepositoryImpl from '@features/characters/application/repositories/Character.repository';
-import { CharacterDataSourceImpl } from '@features/characters/data/datasources/Character.datasource';
 import logger from '../utils/apiLogger';
-import { Database } from '../app';
 
 export default class AccountsController {
     // UseCase in Feature/application
@@ -30,9 +26,11 @@ export default class AccountsController {
         try {
             logger.info("onGetToken");
             logger.debug(req.body);
-            logger.debug(req.query['code']);
             res.setHeader('Content-Type', 'application/x-www-form-urlencoded');
-            res.status(200).send();
+            res.status(200).send({
+                "grant-type": "authorization_code",
+
+            });
 
         }
         catch (error) {

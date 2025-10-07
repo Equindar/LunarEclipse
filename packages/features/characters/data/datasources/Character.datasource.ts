@@ -2,8 +2,8 @@ import Character from "@features/characters/core/entities/Character";
 import { CharacterDataSource } from "../interfaces/character.datasource";
 import { MySql2Database } from "drizzle-orm/mysql2";
 import { eq } from "drizzle-orm";
-import { users } from "@infrastructure/database/drizzle/migrations/schema";
-import { User } from "@features/users/core/user";
+import { characters } from "@infrastructure/database/drizzle/migrations/schema";
+import { User } from "@features/users/core/entities/user";
 
 export class CharacterDataSourceImpl implements CharacterDataSource {
     private database: MySql2Database;
@@ -13,13 +13,19 @@ export class CharacterDataSourceImpl implements CharacterDataSource {
     }
 
     async create(character: Character): Promise<void> {
-        await this.database.insert(users).values({ id: 666, nickname: character.name });
+        const char = new Character({ name: "Equindar", experience: 0 }, new User(character.owner.name, character.owner.uuid))
+        await this.database.insert(characters).values(
+            {
+                name: char.name,
+                experience: char.experience
+            }
+        );
         return;
     }
 
     async get(id: number): Promise<Character | null> {
-        const fakeChar = new Character();
-        return fakeChar;
+        const data = await this.database.select().from(characters).where(eq(characters.id, id))
+        return data;
     }
 
     getAll(): Promise<Character[]> {

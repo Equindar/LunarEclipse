@@ -1,5 +1,5 @@
 import ActiveUserStatus from "./ActiveUserStatus";
-import { User } from "./user";
+import { User } from "./entities/user";
 import { UserStatus } from "./userStatus";
 
 export default class ArchivedUserStatus implements UserStatus {

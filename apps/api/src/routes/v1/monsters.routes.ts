@@ -1,8 +1,8 @@
 import { Router, Request, Response } from "express";
-import { createMonster } from "../../controllers/monstersController";
+
 import validateRequests from "../../middlewares/validateRequests";
 import { createMonsterSchema } from "../../data/validation/monsters.requestSchemas";
-import { getMonster } from "../../controllers/monsters.controller";
+import { createMonster, getMonster } from "../../controllers/monsters.controller";
 import { Database } from "../../app";
 
 export default function createCharacterRouter(database: Database) {
