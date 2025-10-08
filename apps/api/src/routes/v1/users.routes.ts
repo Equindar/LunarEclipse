@@ -10,6 +10,7 @@ export default function createUserRouter(database: Database) {
     // Controller for UseCases
     const controller = new UsersController(database);
 
+    router.get("/", controller.onListUsers);
     router.get("/:id", controller.onGetUser);
     router.post("/", controller.onCreateUser);
 

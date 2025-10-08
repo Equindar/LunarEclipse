@@ -1,10 +1,11 @@
 import { NextFunction, Request, Response } from 'express';
-import { Database } from '../app';
 import UserDataSourceImpl from '@features/users/data/datasources/user.datasource';
 import UserRepositoryImpl from '@features/users/application/repositories/user.repository';
 import createUser from '@features/users/application/logic/createUser.usecase'
 import getUser from '@features/users/application/logic/getUser.usecase';
 import logger from '../utils/apiLogger';
+import listUsers from '@features/users/application/logic/listUsers.usecase';
+import { Database } from '../app';
 
 export default class UsersController {
     public database;
@@ -29,7 +30,12 @@ export default class UsersController {
 
         const id = parseInt(`${req.params.id}`);
         const data = await new getUser(new UserRepositoryImpl(new UserDataSourceImpl(this.database))).execute(id);
-        logger.debug(data);
+        return res.status(200).send(data);
+
+    };
+
+    public onListUsers = async (req: Request, res: Response, next: NextFunction) => {
+        const data = await new listUsers(new UserRepositoryImpl(new UserDataSourceImpl(this.database))).execute();
         return res.status(200).send(data);
 
     };

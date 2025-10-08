@@ -13,8 +13,9 @@ export default class UserRepositoryImpl implements UserRepository {
         await this.dataSource.create(subject);
         return true;
     }
-    list(): Promise<User[]> {
-        throw new Error("Method not implemented.")
+    async list(): Promise<User[]> {
+        const data = await this.dataSource.getAll();
+        return data;
     }
     async get(id: number): Promise<User | null> {
         const data = await this.dataSource.get(id);

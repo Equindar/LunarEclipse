@@ -3,6 +3,7 @@ import { sql } from "drizzle-orm"
 
 export const characters = mysqlTable("characters", {
 	id: int("ID").notNull(),
+	pId: varchar({ length: 26 }).notNull(),
 	name: varchar("Name", { length: 100 }).notNull(),
 	experience: int("Experience").default(0).notNull(),
 	userId: int("User_ID").notNull().references(() => users.id, { onDelete: "restrict", onUpdate: "restrict" } ),
@@ -10,6 +11,7 @@ export const characters = mysqlTable("characters", {
 },
 (table) => [
 	unique("characters_name_unique").on(table.name),
+	unique("characters_uuid").on(table.pId),
 ]);
 
 export const charactersInventory = mysqlTable("characters_inventory", {
@@ -43,6 +45,7 @@ export const inventories = mysqlTable("inventories", {
 
 export const items = mysqlTable("items", {
 	id: int("ID").notNull(),
+	pId: varchar({ length: 26 }).notNull(),
 	blueprintId: int("Blueprint_ID").notNull().references(() => itemsBlueprint.id, { onDelete: "restrict", onUpdate: "restrict" } ),
 	rarityId: int("Rarity_ID").notNull().references(() => itemsRarity.id, { onDelete: "restrict", onUpdate: "restrict" } ),
 	version: int("Version").notNull(),
@@ -52,6 +55,7 @@ export const items = mysqlTable("items", {
 (table) => [
 	index("Blueprint_ID").on(table.blueprintId),
 	index("Rarity_ID").on(table.rarityId),
+	unique("items_uuid").on(table.pId),
 	check("Attributes", sql`json_valid(\`Attributes\`)`),
 ]);
 
@@ -100,6 +104,7 @@ export const itemsVersion = mysqlTable("items_version", {
 
 export const monsters = mysqlTable("monsters", {
 	id: int("ID").notNull(),
+	pId: varchar({ length: 26 }).notNull(),
 	blueprintId: int("Blueprint_ID").notNull().references(() => monstersBlueprint.id, { onDelete: "restrict", onUpdate: "restrict" } ),
 	version: int("Version").notNull(),
 	attributes: longtext("Attributes").default('NULL'),
@@ -107,6 +112,7 @@ export const monsters = mysqlTable("monsters", {
 },
 (table) => [
 	index("Blueprint_ID").on(table.blueprintId),
+	unique("monsters_uuid").on(table.pId),
 	check("Attributes", sql`json_valid(\`Attributes\`)`),
 ]);
 
@@ -152,8 +158,9 @@ export const test = mysqlTable("test", {
 
 export const users = mysqlTable("users", {
 	id: int("ID").autoincrement().notNull(),
+	pId: varchar({ length: 26 }).notNull(),
 	nickname: varchar("Nickname", { length: 100 }).notNull(),
 },
 (table) => [
-	unique("users_unique").on(table.nickname),
+	unique("users_nickname_unique").on(table.nickname),
 ]);
