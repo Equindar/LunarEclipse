@@ -1,96 +1,116 @@
-import { NextFunction, Request, Response } from 'express';
-import { Database } from '../app';
-import logger from '../utils/apiLogger';
-
+import { Request, Response, NextFunction } from "express";
+import logger from "../utils/apiLogger";
+import { Database } from "../app";
+import { AttackAction } from "../demo/actions/Attack";
+import { DefendAction } from "../demo/actions/Defend";
+import { UtilityAction } from "../demo/actions/Utility";
+import { UtilityAttackAction } from "../demo/actions/UtilityAttack";
+import { UtilityDefendAction } from "../demo/actions/UtilityDefend";
+import { CombatEngine } from "../demo/CombatEngine";
+import { Player } from "../demo/Player";
+import { ActionType } from "../demo/types";
 
 export default class CombatsController {
+  private engine: CombatEngine;
   public database;
 
   constructor(db: Database) {
     this.database = db;
+    this.engine = new CombatEngine();
   }
 
-  // UseCase in Feature/application
   public onGetCombat = async (req: Request, res: Response, next: NextFunction) => {
-    logger.http(req.body);
-    const attacker = req.body.attacker;
-    const defender = req.body.defender;
-    const combat = req.body.combat;
+    try {
+      const { attackerData, defenderData } = req.body;
 
+      const attacker = new Player(attackerData.name, attackerData.hp, attackerData.energy);
+      const defender = new Player(defenderData.name, defenderData.hp, defenderData.energy);
 
-    this.compare_actions(attacker, defender, combat);
-    return res.status(200).send("Kämpfe...");
+      const attackerActions = this.parseActions(attackerData.actions);
+      const defenderActions = this.parseActions(defenderData.actions);
 
-  };
+      const engine = this.engine;
 
-  public compare_actions(attacker: any, defender: any, combat: any): void {
-    const attacker_actions = attacker.attacks;
-    const defenders_actions = defender.attacks;
-    const damage = parseInt(combat.attack);
-    const block = parseInt(combat.defense);
-    const utility = parseInt(combat.utility);
-    const cost = parseInt(combat.action_cost);
+      // Rundenweise Kampf
+      const rounds = Math.min(attackerActions.length, defenderActions.length);
+      let log: any[] = [];
 
+      for (let i = 0; i < rounds; i++) {
+        const { action: aAction, energy: aEnergy } = attackerActions[i];
+        const { action: dAction, energy: dEnergy } = defenderActions[i];
 
+        const attackerAction = this.getAction(aAction);
+        const defenderAction = this.getAction(dAction);
 
-    if (attacker_actions.length != defenders_actions.length) {
-      throw new Error("Angriffsmuster sind nicht gleich lang");
-    }
-    for (var i = 0; i < attacker_actions.length; i++) {
-      const action = attacker_actions[i].toLowerCase();
-      const reaction = defenders_actions[i].toLowerCase();
-      logger.debug(`Vergleiche: ${action} > ${reaction}`);
+        engine.resolveRound(
+          attacker,
+          defender,
+          attackerAction,
+          defenderAction,
+          aEnergy,
+          dEnergy
+        );
 
-      // Action A
-      if (action == "a") {
-        attacker.energy -= cost;
-        if (reaction == "a") {
-          defender.hp -= damage;
-          defender.energy -= cost;
-          attacker.hp -= damage;
-        }
-        if (reaction == "v") {
-          defender.hp -= (damage - block);
-          defender.energy -= cost;
-        }
-        if (reaction == "n") {
-          defender.hp -= damage;
-        }
-      } else {
-        // Action V
-        if (action == "v") {
-          attacker.energy -= cost;
-          if (reaction == "a") {
-            defender.energy -= cost;
-            attacker.hp -= (damage - block);
-          }
-          if (reaction == "v") {
-            defender.energy -= cost;
-          }
-          if (reaction == "n") {
-            defender.energy += utility;
-          }
-        } else {
-          // Action N
-          if (action == "n") {
+        log.push({
+          round: i + 1,
+          attacker: { hp: attacker.hp, energy: attacker.energy },
+          defender: { hp: defender.hp, energy: defender.energy },
+        });
 
-            if (reaction == "a") {
-              defender.energy -= cost;
-              attacker.hp -= damage;
-            }
-            if (reaction == "v") {
-              defender.energy -= cost;
-              attacker.energy += utility;
-            }
-            if (reaction == "n") {
-              defender.energy += utility;
-              attacker.energy += utility;
-            }
-          }
+        // Kampfende, sobald jemand 0 oder weniger HP hat
+        if (attacker.hp <= 0 || defender.hp <= 0) {
+          break;
         }
       }
-      logger.info(`${attacker.name} [HP: ${attacker.hp}, E: ${attacker.energy}] --- vs --- ${defender.name} [HP: ${defender.hp}, E: ${defender.energy}]`);
+
+      const winner =
+        attacker.hp <= 0 && defender.hp <= 0
+          ? "Draw"
+          : attacker.hp <= 0
+            ? defender.name
+            : defender.hp <= 0
+              ? attacker.name
+              : "None";
+
+      return res.status(200).json({
+        result: "Kampf beendet",
+        winner,
+        finalState: { attacker, defender },
+        rounds: log,
+      });
+    } catch (err) {
+      logger.error(err);
+      return res.status(500).send("Fehler im Kampf");
     }
-    return;
+  };
+
+
+
+  private parseActions(actionStrings: string[]): { action: string; energy: number }[] {
+    return actionStrings.map((raw) => {
+      const [actionPart, energyPart] = raw.split(":");
+      const action = actionPart.trim();
+      const energy = energyPart ? parseInt(energyPart) : 0;
+      return { action, energy };
+    });
+  }
+
+
+  private getAction(symbol: string) {
+    switch (symbol) {
+      case ActionType.ATTACK:
+        return new AttackAction();
+      case ActionType.DEFEND:
+        return new DefendAction();
+      case ActionType.UTILITY:
+        return new UtilityAction();
+      case ActionType.UTILITY_ATTACK:
+        return new UtilityAttackAction();
+      case ActionType.UTILITY_DEFEND:
+        return new UtilityDefendAction();
+      default:
+        throw new Error("Unbekannte Aktion");
+    }
   }
 }
+
