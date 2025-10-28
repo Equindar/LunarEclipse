@@ -1,9 +1,9 @@
 import { Request, Response, NextFunction } from "express";
 import logger from "../utils/apiLogger";
 import { Database } from "../app";
-import { AttackAction } from "../demo/actions/Attack";
-import { DefendAction } from "../demo/actions/Defend";
-import { UtilityAction } from "../demo/actions/Utility";
+import { AttackAction } from "../demo/actions/AttackAction";
+import { DefendAction } from "../demo/actions/DefendAction";
+import { UtilityAction } from "../demo/actions/UtilityAction";
 import { UtilityAttackAction } from "../demo/actions/UtilityAttack";
 import { UtilityDefendAction } from "../demo/actions/UtilityDefend";
 import { CombatEngine } from "../demo/CombatEngine";

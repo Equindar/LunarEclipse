@@ -76,12 +76,12 @@ export class CombatEngine {
 
     if (tempoD >= tempoA) {
       // Verteidigung rechtzeitig → vollständiger Block
-      logger.debug(`${defender.name} blockt rechtzeitig – kein Schaden.`);
+      logger.debug(`${defender.name} blockt rechtzeitig - kein Schaden.`);
     } else {
       // Verteidigung zu spät → nur 1 Schaden geblockt
       const netDamage = Math.max(0, baseDamage - 1);
       defender.takeDamage(netDamage);
-      logger.debug(`${defender.name} zu spät – blockt nur 1, erleidet ${netDamage} Schaden.`);
+      logger.debug(`${defender.name} zu spät - blockt nur 1, erleidet ${netDamage} Schaden.`);
     }
 
     // Buffs resetten
@@ -105,10 +105,10 @@ export class CombatEngine {
     if (tempoN >= tempoA) {
       // Nutzen kommt rechtzeitig → Energiegewinn
       utilityAction.execute(defender, attacker);
-      logger.debug(`${defender.name} war schneller – gewinnt Energie, bevor Schaden kommt.`);
+      logger.debug(`${defender.name} war schneller - gewinnt Energie, bevor Schaden kommt.`);
     } else {
       // Nutzen zu spät → keine Wirkung, voller Schaden
-      logger.debug(`${defender.name} zu spät – Nutzen wirkungslos.`);
+      logger.debug(`${defender.name} zu spät - Nutzen wirkungslos.`);
       defender.takeDamage(baseDamage);
     }
 
