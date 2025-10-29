@@ -1,9 +1,9 @@
 import { Request, Response, NextFunction } from "express";
 import logger from "../utils/apiLogger";
 import { Database } from "../app";
-import { AttackAction } from "../demo/actions/AttackAction";
-import { DefendAction } from "../demo/actions/DefendAction";
-import { UtilityAction } from "../demo/actions/UtilityAction";
+import { AttackAction } from "../demo/actions/Attack";
+import { DefendAction } from "../demo/actions/Defend";
+import { UtilityAction } from "../demo/actions/Utility";
 import { UtilityAttackAction } from "../demo/actions/UtilityAttack";
 import { UtilityDefendAction } from "../demo/actions/UtilityDefend";
 import { CombatEngine } from "../demo/CombatEngine";
@@ -36,8 +36,8 @@ export default class CombatsController {
       let log: any[] = [];
 
       for (let i = 0; i < rounds; i++) {
-        const { action: aAction, energy: aEnergy } = attackerActions[i];
-        const { action: dAction, energy: dEnergy } = defenderActions[i];
+        const { action: aAction, tempoEnergy: aTempoEnergy, impactEnergy: aImpactEnergy } = attackerActions[i];
+        const { action: dAction, tempoEnergy: dTempoEnergy, impactEnergy: dImpactEnergy } = defenderActions[i];
 
         const attackerAction = this.getAction(aAction);
         const defenderAction = this.getAction(dAction);
@@ -47,8 +47,10 @@ export default class CombatsController {
           defender,
           attackerAction,
           defenderAction,
-          aEnergy,
-          dEnergy
+          aTempoEnergy,
+          aImpactEnergy,
+          dTempoEnergy,
+          dImpactEnergy
         );
 
         log.push({
@@ -86,12 +88,18 @@ export default class CombatsController {
 
 
 
-  private parseActions(actionStrings: string[]): { action: string; energy: number }[] {
+  // Pattern: A:t5,i3
+  private parseActions(actionStrings: string[]): { action: string; tempoEnergy: number, impactEnergy: number }[] {
     return actionStrings.map((raw) => {
+      let tempoEnergy = 0, impactEnergy = 0;
       const [actionPart, energyPart] = raw.split(":");
       const action = actionPart.trim();
-      const energy = energyPart ? parseInt(energyPart) : 0;
-      return { action, energy };
+      if (energyPart) {
+        const [tempoPart, impactPart] = energyPart.split(",");
+        tempoEnergy = tempoPart ? parseInt(tempoPart.substring(1)) : 0;
+        impactEnergy = impactPart ? parseInt(impactPart.substring(1)) : 0;
+      }
+      return { action, tempoEnergy, impactEnergy };
     });
   }
 

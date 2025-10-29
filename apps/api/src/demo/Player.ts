@@ -32,8 +32,11 @@ export class Player {
     if (action === ActionType.UTILITY_DEFEND) this.nextDefenseBonus += 1;
   }
 
-  public resetBuffs(): void {
+  public resetAttackBuff(): void {
     this.nextAttackBonus = 0;
+  }
+
+  public resetDefenseBuff(): void {
     this.nextDefenseBonus = 0;
   }
 }

@@ -7,17 +7,19 @@ export abstract class BaseAction {
 
   /** Basiswerte */
   baseTempo = 2;
-  baseImpact = 2;
+  baseImpact = 0;
   baseDamage = 5;
   baseBlock = 5;
   energyCost = 1;
+  energyGain = 0;
+
 
   /** Tempo-Berechnung mit Energie-Investition */
   calculateTempo(energyInvested: number): number {
     return this.baseTempo + energyInvested;
   }
 
-  /** Tempo-Berechnung mit Energie-Investition */
+  /** Wirkung-Berechnung mit Energie-Investition */
   calculateImpact(energyInvested: number): number {
     return this.baseImpact + energyInvested;
   }
