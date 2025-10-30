@@ -1,6 +1,4 @@
-// domain/actions/AttackAction.ts
-import { BaseAction } from "./Base";
-import { Player } from "../Player";
+import { BaseAction, resolveProps, swapResolveProps } from "./Base";
 import { ActionType } from "../types";
 import logger from "../../utils/apiLogger";
 
@@ -9,44 +7,46 @@ export class AttackAction extends BaseAction {
     super(ActionType.ATTACK);
   }
 
-  resolveAgainst(self: Player, target: Player, other: BaseAction, tempoSelf: number, tempoOther: number, impactSelf: number, impactOther: number): void {
-    // Der Trick: Ich rufe auf dem anderen Objekt dessen passende "resolveX" auf
-    // -> zweiter Dispatch
+  resolveAgainst(params: resolveProps): void {
+    const { self, target, other, tempoSelf, tempoOther, impactSelf, impactOther } = params;
     switch (other.type) {
       case ActionType.ATTACK:
-        // Attacker greift an
-        this.resolveAttack(self, target, other, tempoSelf, tempoOther, impactSelf, impactOther);
-        // Verteidiger greift an
-        this.resolveAttack(target, self, other, tempoOther, tempoSelf, impactOther, impactSelf);
+        if (tempoSelf >= tempoOther) {
+          // Attacker ist schneller
+          this.resolveAttack(params);
+          this.resolveAttack(swapResolveProps(params));
+        }
+        else {
+          // Verteidiger ist schneller
+          this.resolveAttack(swapResolveProps(params));
+          this.resolveAttack(params);
+        }
         break;
       case ActionType.DEFEND:
-        other.resolveAttack!(target, self, this, tempoOther, tempoSelf, impactOther, impactSelf);
+        // Übergebe DEFEND die Kontrolle, wie sie auf Attack reagiert
+        other.resolveAttack!({ target, self, other: this, tempoOther, tempoSelf, impactOther, impactSelf });
         break;
       case ActionType.UTILITY:
-        other.resolveAttack!(target, self, this, tempoOther, tempoSelf, impactOther, impactSelf);
+        // Übergebe UTILITY die Kontrolle, wie sie auf Attack reagiert
+        other.resolveAttack!({ target, self, other: this, tempoOther, tempoSelf, impactOther, impactSelf });
         break;
       case ActionType.UTILITY_ATTACK:
-        other.resolveAttack!(target, self, this, tempoOther, tempoSelf, impactOther, impactSelf);
+        // Übergebe UTILITY_ATTACK die Kontrolle, wie sie auf Attack reagiert
+        other.resolveAttack!({ target, self, other: this, tempoOther, tempoSelf, impactOther, impactSelf });
         break;
       case ActionType.UTILITY_DEFEND:
-        other.resolveAttack!(target, self, this, tempoOther, tempoSelf, impactOther, impactSelf);
+        // Übergebe UTILITY_DEFEND die Kontrolle, wie sie auf Attack reagiert
+        other.resolveAttack!({ target, self, other: this, tempoOther, tempoSelf, impactOther, impactSelf });
         break;
     }
   }
 
-  resolveAttack(
-    self: Player,
-    target: Player,
-    other: BaseAction,
-    tempoSelf: number,
-    tempoOther: number,
-    impactSelf: number,
-    impactOther: number,
-
-  ): void {
-    // Attack vs Attack: Ziel erleidet Schaden (+ Impact)
+  // --- AttackAction reagiert auf Attack von other.ActionType.ATTACK
+  // Attack vs Attack: Ziel erleidet Schaden (+ Impact)
+  resolveAttack(params: resolveProps): void {
+    const { self: self, target: target, impactSelf: impactSelf } = params;
     target.takeDamage(this.baseDamage + impactSelf + self.nextAttackBonus);
-    logger.debug(`${self.name} greift an: ${target.name} erleidet ${this.baseDamage} + ${impactSelf} + ${self.nextAttackBonus} Schaden.`);
+    logger.debug(`${self.name} greift an: ${params.target.name} erleidet ${this.baseDamage} + ${impactSelf} + ${self.nextAttackBonus} Schaden.`);
     self.resetAttackBuff();
   }
 

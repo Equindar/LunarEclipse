@@ -1,10 +1,17 @@
-// domain/actions/BaseAction.ts
 import { Player } from "../Player";
 import { ActionType } from "../types";
 
-export abstract class BaseAction {
-  constructor(public type: ActionType) { }
+export type resolveProps = {
+  self: Player,
+  target: Player,
+  other: BaseAction,
+  tempoSelf: number,
+  tempoOther: number,
+  impactSelf: number,
+  impactOther: number,
+}
 
+export abstract class BaseAction {
   /** Basiswerte */
   baseTempo = 2;
   baseImpact = 0;
@@ -14,7 +21,16 @@ export abstract class BaseAction {
   energyGain = 0;
 
 
+  constructor(public type: ActionType) { }
+
   /** Tempo-Berechnung mit Energie-Investition */
+
+
+  /**
+   * Calculates tempo based on energy invest
+   * @param energyInvested spent energy to increase tempo
+   * @returns total tempo
+   */
   calculateTempo(energyInvested: number): number {
     return this.baseTempo + energyInvested;
   }
@@ -29,18 +45,33 @@ export abstract class BaseAction {
   }
 
   /** Hauptzug, entscheidet über Dispatch */
-  abstract resolveAgainst(
-    self: Player,
-    target: Player,
-    other: BaseAction,
-    tempoSelf: number,
-    tempoOther: number,
-    impactSelf: number,
-    impactOther: number
-  ): void;
+  abstract resolveAgainst(params: resolveProps): void;
 
   // Zweite Dispatch-Ebene — optional überschrieben von Kindklassen:
-  resolveAttack?(self: Player, target: Player, other: BaseAction, tempoSelf: number, tempoOther: number, impactSelf: number, impactOther: number): void;
-  resolveDefend?(self: Player, target: Player, other: BaseAction, tempoSelf: number, tempoOther: number, impactSelf: number, impactOther: number): void;
-  resolveUtility?(self: Player, target: Player, other: BaseAction, tempoSelf: number, tempoOther: number, impactSelf: number, impactOther: number): void;
+  resolveAttack?(params: resolveProps): void;
+  resolveDefend?(params: resolveProps): void;
+  resolveUtility?(params: resolveProps): void;
+  resolveUtilityAttack?(params: resolveProps): void;
+  resolveUtilityDefend?(params: resolveProps): void;
+
+}
+
+// --- Utils
+/** Hilffunktion zum Tauschen der Perspektive
+ * @param: ahah
+ * Tauscht folgende Übergabeparameter aus:
+ * * self <-> target
+ * * tempoSelf <-> tempoOther
+ * * impactSelf <-> impactOther
+ * */
+export function swapResolveProps(props: resolveProps): resolveProps {
+  return {
+    self: props.target,
+    target: props.self,
+    other: props.other,
+    tempoSelf: props.tempoOther,
+    tempoOther: props.tempoSelf,
+    impactSelf: props.impactOther,
+    impactOther: props.impactSelf,
+  };
 }

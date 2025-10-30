@@ -1,4 +1,4 @@
-import { BaseAction } from "./Base";
+import { BaseAction, resolveProps } from "./Base";
 import { Player } from "../Player";
 import { ActionResult, ActionType } from "../types";
 import logger from "../../utils/apiLogger";
@@ -10,25 +10,31 @@ export class UtilityDefendAction extends BaseAction {
     super(ActionType.UTILITY_DEFEND);
   }
 
-  resolveAgainst(self: Player, target: Player, other: BaseAction, tempoSelf: number, tempoOther: number, impactSelf: number, impactOther: number): void {
+  resolveAgainst(params: resolveProps): void {
+    const { self, target, other, tempoSelf, tempoOther, impactSelf, impactOther } = params;
     switch (other.type) {
       case ActionType.ATTACK:
-        this.resolveAttack!(self, target, other, tempoSelf, tempoOther, impactSelf, impactOther);
+        this.resolveAttack!(params);
         break;
       case ActionType.DEFEND:
-        other.resolveAttack!(target, self, this, tempoSelf, tempoOther, impactSelf, impactOther); // Dispatch an Defend
+        logger.error("not implemented: Nv -> V");
         break;
       case ActionType.UTILITY:
+        logger.error("not implemented: Nv -> N");
+        break;
       case ActionType.UTILITY_ATTACK:
+        logger.error("not implemented: Nv -> Na");
+        break;
       case ActionType.UTILITY_DEFEND:
-        other.resolveAttack!(target, self, this, tempoSelf, tempoOther, impactSelf, impactOther); // Dispatch an Utility
+        this.resolveUtilityDefend!(params); // Dispatch an Utility
         break;
     }
   }
 
   // --- Wie UtilityDefend auf Attack reagiert
   // Self erleidet Schaden (+ Impact)
-  resolveAttack(self: Player, target: Player, other: BaseAction, tempoSelf: number, tempoOther: number, impactSelf: number, impactOther: number): void {
+  resolveAttack(params: resolveProps): void {
+    const { self, target, other, tempoSelf, tempoOther, impactSelf, impactOther } = params;
     const damage = other.baseDamage + impactOther + target.nextAttackBonus;
     if (tempoSelf >= tempoOther) {
       self.gainEnergy(this.energyGain + impactSelf);
@@ -43,5 +49,16 @@ export class UtilityDefendAction extends BaseAction {
     self.takeDamage(damage);
     logger.debug(`${target.name} greift an: ${self.name} erleidet ${damage} Schaden.`);
     target.resetAttackBuff();
+  }
+
+  // --- Wie UtilityDefend auf UtilityDefend reagiert
+  resolveUtilityDefend(params: resolveProps): void {
+    const { self, target, other, tempoSelf, tempoOther, impactSelf, impactOther } = params;
+    logger.error("here");
+    self.gainEnergy(this.energyGain);
+    target.gainEnergy(other.energyGain);
+    target.applyBuff(ActionType.UTILITY_DEFEND);
+    logger.debug(`Beide nutzen Energie – +2 Energie für beide.`);
+    logger.debug(`${target.name} bekommt Buff "ActionType.UTILITY_ATTACK".`);
   }
 }

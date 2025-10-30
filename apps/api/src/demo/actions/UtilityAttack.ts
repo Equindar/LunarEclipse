@@ -1,6 +1,5 @@
-import { BaseAction } from "./Base";
-import { Player } from "../Player";
-import { ActionResult, ActionType } from "../types";
+import { BaseAction, resolveProps } from "./Base";
+import { ActionType } from "../types";
 import logger from "../../utils/apiLogger";
 
 export class UtilityAttackAction extends BaseAction {
@@ -10,25 +9,27 @@ export class UtilityAttackAction extends BaseAction {
     super(ActionType.UTILITY_ATTACK);
   }
 
-  resolveAgainst(self: Player, target: Player, other: BaseAction, tempoSelf: number, tempoOther: number, impactSelf: number, impactOther: number): void {
+  resolveAgainst(params: resolveProps): void {
+    const { self, target, other, tempoSelf, tempoOther, impactSelf, impactOther } = params;
     switch (other.type) {
       case ActionType.ATTACK:
-        this.resolveAttack!(self, target, other, tempoSelf, tempoOther, impactSelf, impactOther);
+        this.resolveAttack!(params);
         break;
       case ActionType.DEFEND:
-        other.resolveAttack!(target, self, this, tempoSelf, tempoOther, impactSelf, impactOther); // Dispatch an Defend
+        other.resolveAttack!({ target, self, other: this, tempoOther, tempoSelf, impactOther, impactSelf }); // Dispatch an Defend
         break;
       case ActionType.UTILITY:
       case ActionType.UTILITY_ATTACK:
       case ActionType.UTILITY_DEFEND:
-        other.resolveAttack!(target, self, this, tempoSelf, tempoOther, impactSelf, impactOther); // Dispatch an Utility
+        other.resolveAttack!({ target, self, other: this, tempoOther, tempoSelf, impactOther, impactSelf }); // Dispatch an Utility
         break;
     }
   }
 
   // --- Wie UtilityAttack auf Attack reagiert
   // Self erleidet Schaden (+ Impact)
-  resolveAttack(self: Player, target: Player, other: BaseAction, tempoSelf: number, tempoOther: number, impactSelf: number, impactOther: number): void {
+  resolveAttack(params: resolveProps): void {
+    const { self, target, other, tempoSelf, tempoOther, impactSelf, impactOther } = params;
     const damage = other.baseDamage + impactOther + target.nextAttackBonus;
     if (tempoSelf >= tempoOther) {
       self.gainEnergy(this.energyGain + impactSelf);
