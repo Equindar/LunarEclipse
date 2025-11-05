@@ -1,6 +1,6 @@
-import { ActionType } from "./types";
+import { ActionType } from "./types/types";
 
-export class Player {
+export class Fighter {
   name: string;
   hp: number;
   energy: number;

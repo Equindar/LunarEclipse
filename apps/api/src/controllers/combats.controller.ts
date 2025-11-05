@@ -7,51 +7,68 @@ import { UtilityAction } from "../demo/actions/Utility";
 import { UtilityAttackAction } from "../demo/actions/UtilityAttack";
 import { UtilityDefendAction } from "../demo/actions/UtilityDefend";
 import { CombatEngine } from "../demo/CombatEngine";
-import { Player } from "../demo/Player";
-import { ActionType } from "../demo/types";
+import { Fighter } from "../demo/Fighter";
+import { ActionType } from "../demo/types/types";
+import { RuleRegistry } from "../demo/RuleRegistry";
+import { CriticalStrikeRule } from "../demo/rules/CriticalStrike.rule";
+import { NoneAction } from "../demo/actions/None";
+import { RoundContext } from "../demo/interfaces/RoundContext";
+import { EarlyEnergyBoostRule } from "../demo/rules/EarlyEnergyBoost.rule";
 
 export default class CombatsController {
   private engine: CombatEngine;
+  private registry: RuleRegistry;
   public database;
 
   constructor(db: Database) {
     this.database = db;
-    this.engine = new CombatEngine();
+    this.registry = new RuleRegistry()
+    this.engine = new CombatEngine(this.registry);
   }
 
   public onGetCombat = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { attackerData, defenderData } = req.body;
 
-      const attacker = new Player(attackerData.name, attackerData.hp, attackerData.energy);
-      const defender = new Player(defenderData.name, defenderData.hp, defenderData.energy);
+      const attacker = new Fighter(attackerData.name, attackerData.hp, attackerData.energy);
+      const defender = new Fighter(defenderData.name, defenderData.hp, defenderData.energy);
 
-      const attackerActions = this.parseActions(attackerData.actions);
-      const defenderActions = this.parseActions(defenderData.actions);
+      const attackerActions = this.parseActions(attackerData.actions[0].pattern);
+      const defenderActions = this.parseActions(defenderData.actions[0].pattern);
 
-      const engine = this.engine;
+
+      this.registry.register(CriticalStrikeRule);
+      this.registry.register(EarlyEnergyBoostRule);
+
 
       // Rundenweise Kampf
       const rounds = Math.min(attackerActions.length, defenderActions.length);
       let log: any[] = [];
 
-      for (let i = 0; i < rounds; i++) {
-        const { action: aAction, tempoEnergy: aTempoEnergy, impactEnergy: aImpactEnergy } = attackerActions[i];
-        const { action: dAction, tempoEnergy: dTempoEnergy, impactEnergy: dImpactEnergy } = defenderActions[i];
+      for (let i = 1; i <= rounds; i++) {
+        const { action: aAction, tempoEnergy: aTempoEnergy, impactEnergy: aImpactEnergy } = attackerActions[i - 1];
+        const { action: dAction, tempoEnergy: dTempoEnergy, impactEnergy: dImpactEnergy } = defenderActions[i - 1];
 
         const attackerAction = this.getAction(aAction);
         const defenderAction = this.getAction(dAction);
 
-        engine.resolveRound(
-          attacker,
-          defender,
-          attackerAction,
-          defenderAction,
-          aTempoEnergy,
-          aImpactEnergy,
-          dTempoEnergy,
-          dImpactEnergy
-        );
+        var ctx: RoundContext = {
+          roundNumber: i,
+          self: {
+            character: attacker,
+            action: attackerAction,
+            tempo: aTempoEnergy,
+            impact: aImpactEnergy
+          },
+          target: {
+            character: defender,
+            action: defenderAction,
+            tempo: dTempoEnergy,
+            impact: dImpactEnergy
+          }
+        }
+
+        ctx = this.engine.resolveRound(ctx);
 
         log.push({
           round: i + 1,
@@ -106,6 +123,8 @@ export default class CombatsController {
 
   private getAction(symbol: string) {
     switch (symbol) {
+      case ActionType.NONE:
+        return new NoneAction();
       case ActionType.ATTACK:
         return new AttackAction();
       case ActionType.DEFEND:

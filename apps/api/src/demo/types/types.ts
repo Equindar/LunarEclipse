@@ -1,4 +1,5 @@
 export enum ActionType {
+  NONE = "X",
   ATTACK = "A",
   DEFEND = "V",
   UTILITY = "N",
@@ -6,8 +7,3 @@ export enum ActionType {
   UTILITY_DEFEND = "Nv",
 }
 
-export interface ActionResult {
-  damageToOpponent: number;
-  blockApplied: number;
-  energyChange: number;
-}

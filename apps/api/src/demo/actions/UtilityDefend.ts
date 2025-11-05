@@ -1,6 +1,5 @@
 import { BaseAction, resolveProps } from "./Base";
-import { Player } from "../Player";
-import { ActionResult, ActionType } from "../types";
+import { ActionType } from "../types/types";
 import logger from "../../utils/apiLogger";
 
 export class UtilityDefendAction extends BaseAction {

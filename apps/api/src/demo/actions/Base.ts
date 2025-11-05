@@ -1,30 +1,28 @@
-import { Player } from "../Player";
-import { ActionType } from "../types";
+import { Fighter } from "../Fighter";
+import { RoundContext } from "../interfaces/RoundContext";
+import { ActionType } from "../types/types";
 
 export type resolveProps = {
-  self: Player,
-  target: Player,
+  self: Fighter,
+  target: Fighter,
   other: BaseAction,
-  tempoSelf: number,
-  tempoOther: number,
   impactSelf: number,
-  impactOther: number,
+  impactTarget: number,
+  context?: RoundContext
 }
 
 export abstract class BaseAction {
   /** Basiswerte */
+  energyCost = 1;
   baseTempo = 2;
   baseImpact = 0;
+
   baseDamage = 5;
   baseBlock = 5;
-  energyCost = 1;
   energyGain = 0;
 
 
   constructor(public type: ActionType) { }
-
-  /** Tempo-Berechnung mit Energie-Investition */
-
 
   /**
    * Calculates tempo based on energy invest
@@ -35,30 +33,46 @@ export abstract class BaseAction {
     return this.baseTempo + energyInvested;
   }
 
-  /** Wirkung-Berechnung mit Energie-Investition */
+  /**
+   * calculates impact based on energy invest
+   * @param energyInvested spent energy to increase impact
+   * @returns total impact
+   */
   calculateImpact(energyInvested: number): number {
     return this.baseImpact + energyInvested;
   }
 
+  /**
+   * calculates the energy consumption of the action
+   * @param energyInvested spent energy to empower the action
+   * @returns total energy cost
+   */
   totalEnergyCost(energyInvested: number): number {
     return this.energyCost + energyInvested;
   }
 
-  /** Hauptzug, entscheidet über Dispatch */
-  abstract resolveAgainst(params: resolveProps): void;
+  /**
+   * Actor performs the action in the beginning, based on the higher tempo
+   * @param props
+   */
+  abstract resolveAsEngage(props: resolveProps): void;
 
-  // Zweite Dispatch-Ebene — optional überschrieben von Kindklassen:
-  resolveAttack?(params: resolveProps): void;
-  resolveDefend?(params: resolveProps): void;
-  resolveUtility?(params: resolveProps): void;
-  resolveUtilityAttack?(params: resolveProps): void;
-  resolveUtilityDefend?(params: resolveProps): void;
+  /**
+ * Actor reacts to an incoming action, based on the lower tempo
+ * @param props
+ */
+  abstract resolveAsReaction(props: resolveProps): void;
+
+  /**
+   * Actor performs the action in the same moment, based on the equal tempo
+   * @param props
+   */
+  abstract resolveAsMoment(props: resolveProps): void;
 
 }
-
 // --- Utils
 /** Hilffunktion zum Tauschen der Perspektive
- * @param: ahah
+ * @param:
  * Tauscht folgende Übergabeparameter aus:
  * * self <-> target
  * * tempoSelf <-> tempoOther
@@ -69,9 +83,8 @@ export function swapResolveProps(props: resolveProps): resolveProps {
     self: props.target,
     target: props.self,
     other: props.other,
-    tempoSelf: props.tempoOther,
-    tempoOther: props.tempoSelf,
-    impactSelf: props.impactOther,
-    impactOther: props.impactSelf,
+    impactSelf: props.impactTarget,
+    impactTarget: props.impactSelf,
+    context: props.context ?? undefined
   };
 }

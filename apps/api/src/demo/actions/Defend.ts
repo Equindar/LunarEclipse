@@ -1,6 +1,5 @@
 import { BaseAction, resolveProps, swapResolveProps } from "./Base";
-import { Player } from "../Player";
-import { ActionType } from "../types";
+import { ActionType } from "../types/types";
 import logger from "../../utils/apiLogger";
 
 export class DefendAction extends BaseAction {
@@ -8,36 +7,20 @@ export class DefendAction extends BaseAction {
     super(ActionType.DEFEND);
   }
 
-  resolveAgainst(params: resolveProps): void {
-    const { self, target, other, tempoSelf, tempoOther, impactSelf, impactOther } = params;
-    switch (other.type) {
-      case ActionType.ATTACK:
-        this.resolveAttack!(params);
-        break;
-      case ActionType.DEFEND:
-        if (tempoSelf >= tempoOther) {
-          // Attacker ist schneller
-          this.resolveDefend(params);
-          this.resolveDefend(swapResolveProps(params));
-        }
-        else {
-          // Verteidiger ist schneller
-          this.resolveDefend(swapResolveProps(params));
-          this.resolveDefend(params);
-        }
-        break;
-      case ActionType.UTILITY:
-        logger.debug(`Verteidigung vs Nutzen – Block schützt, kein Schaden.`);
-        break;
-      case ActionType.UTILITY_ATTACK:
-        // Übergebe UTILITY_ATTACK die Kontrolle, wie sie auf Attack reagiert
-        other.resolveAttack!({ target, self, other: this, tempoOther, tempoSelf, impactOther, impactSelf });
-        break;
-      case ActionType.UTILITY_DEFEND:
-        // Übergebe UTILITY_DEFEND die Kontrolle, wie sie auf Attack reagiert
-        other.resolveAttack!({ target, self, other: this, tempoOther, tempoSelf, impactOther, impactSelf });
-        break;
-    }
+  resolveAsEngage(params: resolveProps): void {
+    const damage = params.other.baseDamage + params.impactTarget;
+    const block = this.baseBlock + params.impactSelf + params.self.nextDefenseBonus;
+    target.takeDamage(this.baseDamage + impactSelf + self.nextAttackBonus);
+    logger.debug(`${self.name} greift an: ${params.target.name} erleidet ${this.baseDamage} + ${impactSelf} + ${self.nextAttackBonus} Schaden.`);
+    self.resetAttackBuff();
+  }
+
+  resolveAsReaction(props: resolveProps): void {
+    this.resolveAsEngage(props);
+  }
+
+  resolveAsMoment(props: resolveProps): void {
+    this.resolveAsEngage(props);
   }
 
   // --- DefendAction reagiert auf Attack von other.ActionType.ATTACK
