@@ -2,14 +2,17 @@ import { ActionType } from "./types/types";
 
 export class Fighter {
   name: string;
-  hp: number;
+  health: {
+    maximal: number;
+    remaining: number;
+  }
   energy: number;
   nextAttackBonus: number = 0;
   nextDefenseBonus: number = 0;
 
-  constructor(name: string, hp = 20, energy = 2) {
+  constructor(name: string, health = { maximal: 20, remaining: 20 }, energy = 2) {
     this.name = name;
-    this.hp = hp;
+    this.health = health;
     this.energy = energy;
   }
 
@@ -24,7 +27,7 @@ export class Fighter {
   }
 
   public takeDamage(amount: number): void {
-    this.hp -= Math.max(0, amount);
+    this.health.remaining -= Math.max(0, amount);
   }
 
   public applyBuff(action: ActionType): void {

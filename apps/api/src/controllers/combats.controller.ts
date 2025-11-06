@@ -14,6 +14,8 @@ import { CriticalStrikeRule } from "../demo/rules/CriticalStrike.rule";
 import { NoneAction } from "../demo/actions/None";
 import { RoundContext } from "../demo/interfaces/RoundContext";
 import { EarlyEnergyBoostRule } from "../demo/rules/EarlyEnergyBoost.rule";
+import { VengefulComebackRule } from "../demo/rules/VengefulComeback.rule";
+import { CombatContext } from "../demo/interfaces/CombatContext";
 
 export default class CombatsController {
   private engine: CombatEngine;
@@ -30,8 +32,8 @@ export default class CombatsController {
     try {
       const { attackerData, defenderData } = req.body;
 
-      const attacker = new Fighter(attackerData.name, attackerData.hp, attackerData.energy);
-      const defender = new Fighter(defenderData.name, defenderData.hp, defenderData.energy);
+      const attacker = new Fighter(attackerData.name, { maximal: attackerData.hp, remaining: attackerData.hp }, attackerData.energy);
+      const defender = new Fighter(defenderData.name, { maximal: defenderData.hp, remaining: defenderData.hp }, defenderData.energy);
 
       const attackerActions = this.parseActions(attackerData.actions[0].pattern);
       const defenderActions = this.parseActions(defenderData.actions[0].pattern);
@@ -39,6 +41,7 @@ export default class CombatsController {
 
       this.registry.register(CriticalStrikeRule);
       this.registry.register(EarlyEnergyBoostRule);
+      this.registry.register(VengefulComebackRule);
 
 
       // Rundenweise Kampf
@@ -52,7 +55,12 @@ export default class CombatsController {
         const attackerAction = this.getAction(aAction);
         const defenderAction = this.getAction(dAction);
 
-        var ctx: RoundContext = {
+        var combatContext: CombatContext = {
+          attacker: attacker,
+          defender: defender,
+        }
+
+        var roundContext: RoundContext = {
           roundNumber: i,
           self: {
             character: attacker,
@@ -68,26 +76,26 @@ export default class CombatsController {
           }
         }
 
-        ctx = this.engine.resolveRound(ctx);
+        roundContext = this.engine.resolveRound(combatContext, roundContext);
 
         log.push({
           round: i + 1,
-          attacker: { hp: attacker.hp, energy: attacker.energy },
-          defender: { hp: defender.hp, energy: defender.energy },
+          attacker: { hp: attacker.health.remaining, energy: attacker.energy },
+          defender: { hp: defender.health.remaining, energy: defender.energy },
         });
 
         // Kampfende, sobald jemand 0 oder weniger HP hat
-        if (attacker.hp <= 0 || defender.hp <= 0) {
-          break;
-        }
+        // if (attacker.hp <= 0 || defender.hp <= 0) {
+        //   break;
+        // }
       }
 
       const winner =
-        attacker.hp <= 0 && defender.hp <= 0
+        attacker.health.remaining <= 0 && defender.health.remaining <= 0
           ? "Draw"
-          : attacker.hp <= 0
+          : attacker.health.remaining <= 0
             ? defender.name
-            : defender.hp <= 0
+            : defender.health.remaining <= 0
               ? attacker.name
               : "None";
 

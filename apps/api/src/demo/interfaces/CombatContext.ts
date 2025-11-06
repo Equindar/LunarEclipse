@@ -1,5 +1,6 @@
 import { BaseAction } from "../actions/Base";
 import { Fighter } from "../Fighter";
+import { DamageByFighter } from "./Damage";
 
 type EnvironmentData = {
   temperature: number;
@@ -12,17 +13,12 @@ export interface CombatContext {
   environment?: EnvironmentData;
   attacker: Fighter;
   defender: Fighter;
-  attackerAction: BaseAction;
-  defenderAction: BaseAction;
-  tempoA: number;
-  tempoD: number;
-  aInvest: number;
-  dInvest: number;
 
   // Ergebnisfelder, die Regeln füllen:
-  damageToDefender?: number;
-  damageToAttacker?: number;
-  energyChangeA?: number;
-  energyChangeD?: number;
+  damageCaused?: DamageByFighter;
+  damageDealt?: DamageByFighter;
+  damageReceived?: DamageByFighter;
+  damageTaken?: DamageByFighter;
+
   log?: string[];
 }

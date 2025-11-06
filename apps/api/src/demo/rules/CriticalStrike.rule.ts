@@ -1,19 +1,19 @@
 import logger from "../../utils/apiLogger";
-import { CombatContext } from "../interfaces/CombatContext";
-import { RoundContext } from "../interfaces/RoundContext";
-import { Rule } from "../interfaces/Rule";
+import { Rule } from "../interfaces/RuleContext";
 import { ActionType } from "../types/types";
 
 export const CriticalStrikeRule: Rule = {
   name: "critical-strike",
+  phase: "preAction",
   priority: 10,
-  matches: (ctx: RoundContext) => {
-    return ctx.self.action.type === ActionType.ATTACK &&
-      ctx.self.tempo >= ctx.target.tempo + 5;
+  matches: (ctx) => {
+    if (!ctx.action) return false;
+    return ctx.action.self.action.type === ActionType.ATTACK &&
+      ctx.action.self.tempo >= ctx.action.target.tempo + 5;
   },
-  apply: (ctx: RoundContext) => {
+  apply: (ctx) => {
     //  ctx.damageDealt = ctx.attackerAction.baseDamage * 2;
-    ctx.target.character.takeDamage((ctx.self.action.baseDamage + ctx.self.character.nextAttackBonus + ctx.self.impact));
+    ctx.action!.target.character.takeDamage((ctx.action!.self.action.baseDamage + ctx.action!.self.character.nextAttackBonus + ctx.action!.self.impact));
     logger.debug(`"${CriticalStrikeRule.name}"-Rule angewendet. Angreifer erzielt Kritischen Treffer.`);
   }
 };

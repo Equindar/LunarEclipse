@@ -1,16 +1,16 @@
 import logger from "../../utils/apiLogger";
-import { RoundContext } from "../interfaces/RoundContext";
-import { Rule } from "../interfaces/Rule";
+import { Rule } from "../interfaces/RuleContext";
 
 export const EarlyEnergyBoostRule: Rule = {
   name: "early-energy-boost",
+  phase: "preRound",
   priority: 11,
-  matches: (ctx: RoundContext) => {
-    return ctx.roundNumber <= 2;
+  matches: (ctx) => {
+    return ctx.round.roundNumber <= 2;
   },
-  apply: (ctx: RoundContext) => {
-    ctx.self.character.gainEnergy(2);
-    ctx.target.character.gainEnergy(2);
+  apply: (ctx) => {
+    ctx.round.self.character.gainEnergy(2);
+    ctx.round.target.character.gainEnergy(2);
     logger.debug(`"${EarlyEnergyBoostRule.name}"-Rule angewendet. Energie-Regeneration erhöht: +2.`);
   }
 };
