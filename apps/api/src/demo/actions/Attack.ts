@@ -1,6 +1,7 @@
-import { BaseAction, resolveProps } from "./Base";
-import { ActionType } from "../types/types";
+import { BaseAction } from "./Base";
+import { ActionType } from "../types/ActionType";
 import logger from "../../utils/apiLogger";
+import { ActionContext } from "../interfaces/ActionContext";
 
 export class AttackAction extends BaseAction {
   /** Basiswerte */
@@ -10,18 +11,23 @@ export class AttackAction extends BaseAction {
     super(ActionType.ATTACK);
   }
 
-  resolveAsEngage(params: resolveProps): void {
-    const { self: self, target: target, impactSelf: impactSelf } = params;
-    target.takeDamage(this.baseDamage + impactSelf + self.nextAttackBonus);
-    logger.debug(`${self.name} greift an: ${params.target.name} erleidet ${this.baseDamage} + ${impactSelf} + ${self.nextAttackBonus} Schaden.`);
-    self.resetAttackBuff();
+  resolveAsEngage(ctx: ActionContext): void {
+    // Setze neuen geplannten Schaden für Target in roundCtx
+    ctx.ctxRound.plannedDamage.set(
+      ctx.target.character.name,
+      (ctx.ctxRound.plannedDamage.get(ctx.target.character.name) ?? 0) + this.baseDamage + ctx.self.impact + ctx.self.nextAttackBonus
+    );
+    logger.debug(`${self.name} greift an: ${ctx.target.character.name} erleidet ${this.baseDamage} + ${ctx.self.impact} + ${ctx.self.nextAttackBonus} Schaden.`);
+
+    // ToDo:
+    // self.resetAttackBuff();
   }
 
-  resolveAsReaction(props: resolveProps): void {
-    this.resolveAsEngage(props);
+  resolveAsReaction(ctx: ActionContext): void {
+    this.resolveAsEngage(ctx);
   }
 
-  resolveAsMoment(props: resolveProps): void {
-    this.resolveAsEngage(props);
+  resolveAsMoment(ctx: ActionContext): void {
+    this.resolveAsEngage(ctx);
   }
 }

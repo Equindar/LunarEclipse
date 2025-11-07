@@ -1,5 +1,5 @@
 import { BaseAction, resolveProps } from "./Base";
-import { ActionType } from "../types/types";
+import { ActionType } from "../types/ActionType";
 import logger from "../../utils/apiLogger";
 
 export class UtilityDefendAction extends BaseAction {

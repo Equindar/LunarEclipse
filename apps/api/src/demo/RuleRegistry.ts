@@ -1,5 +1,6 @@
 import logger from "../utils/apiLogger";
-import { Rule, RuleContext, RulePhase } from "./interfaces/RuleContext";
+import { RulePhase, Rule } from "./interfaces/Rule";
+import RuleContext from "./interfaces/RuleContext";
 
 export class RuleRegistry {
   private rulesByPhase: Map<RulePhase, Rule[]> = new Map();
@@ -25,6 +26,7 @@ export class RuleRegistry {
       try {
         if (r.matches(ctx)) {
           r.apply(ctx);
+          logger.debug(`Rule:${r.name} angewendet in ${phase}`)
           ctx.round.log.push(`rule:${r.name} applied in ${phase}`);
           if (r.stopPropagation) break;
         }

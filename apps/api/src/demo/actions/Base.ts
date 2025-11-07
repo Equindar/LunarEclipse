@@ -1,15 +1,5 @@
-import { Fighter } from "../Fighter";
-import { RoundContext } from "../interfaces/RoundContext";
-import { ActionType } from "../types/types";
-
-export type resolveProps = {
-  self: Fighter,
-  target: Fighter,
-  other: BaseAction,
-  impactSelf: number,
-  impactTarget: number,
-  context?: RoundContext
-}
+import { ActionContext } from "../interfaces/ActionContext";
+import { ActionType } from "../types/ActionType";
 
 export abstract class BaseAction {
   /** Basiswerte */
@@ -55,19 +45,19 @@ export abstract class BaseAction {
    * Actor performs the action in the beginning, based on the higher tempo
    * @param props
    */
-  abstract resolveAsEngage(props: resolveProps): void;
+  abstract resolveAsEngage(props: ActionContext): void;
 
   /**
  * Actor reacts to an incoming action, based on the lower tempo
  * @param props
  */
-  abstract resolveAsReaction(props: resolveProps): void;
+  abstract resolveAsReaction(props: ActionContext): void;
 
   /**
    * Actor performs the action in the same moment, based on the equal tempo
    * @param props
    */
-  abstract resolveAsMoment(props: resolveProps): void;
+  abstract resolveAsMoment(props: ActionContext): void;
 
 }
 // --- Utils
@@ -75,16 +65,11 @@ export abstract class BaseAction {
  * @param:
  * Tauscht folgende Übergabeparameter aus:
  * * self <-> target
- * * tempoSelf <-> tempoOther
- * * impactSelf <-> impactOther
  * */
-export function swapResolveProps(props: resolveProps): resolveProps {
+export function swapResolveProps(ctx: ActionContext): ActionContext {
   return {
-    self: props.target,
-    target: props.self,
-    other: props.other,
-    impactSelf: props.impactTarget,
-    impactTarget: props.impactSelf,
-    context: props.context ?? undefined
+    self: ctx.target,
+    target: ctx.self,
+    ctxRound: ctx.ctxRound
   };
 }

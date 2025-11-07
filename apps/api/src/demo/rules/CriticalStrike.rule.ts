@@ -1,6 +1,6 @@
 import logger from "../../utils/apiLogger";
 import { Rule } from "../interfaces/RuleContext";
-import { ActionType } from "../types/types";
+import { ActionType } from "../types/ActionType";
 
 export const CriticalStrikeRule: Rule = {
   name: "critical-strike",

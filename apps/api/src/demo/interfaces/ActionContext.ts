@@ -1,16 +1,7 @@
 import { BaseAction } from "../actions/Base";
 import { Fighter } from "../Fighter";
-import { DamageByFighter } from "./Damage";
+import { CombatContext } from "./CombatContext";
 import { RoundContext } from "./RoundContext";
-
-export enum ActionType {
-  NONE = "X",
-  ATTACK = "A",
-  DEFEND = "V",
-  UTILITY = "N",
-  UTILITY_ATTACK = "Na",
-  UTILITY_DEFEND = "Nv",
-}
 
 export interface ActionContext {
   self: {
@@ -18,20 +9,19 @@ export interface ActionContext {
     action: BaseAction;
     tempo: number;
     impact: number;
+    nextAttackBonus: number;
+    nextDefenseBonus: number;
   };
   target: {
     character: Fighter;
     action: BaseAction;
     tempo: number;
     impact: number;
+    nextAttackBonus: number;
+    nextDefenseBonus: number;
   };
-  ctxRound?: RoundContext
+  ctxRound: RoundContext;
+  readonly ctxCombat?: CombatContext;
 
-  // Ergebnisfelder, die Regeln füllen:
-  damageCaused?: DamageByFighter;
-  damageDealt?: DamageByFighter;
-  damageReceived?: DamageByFighter;
-  damageTaken?: DamageByFighter;
-
-  log?: string[];
+  actionLog?: string[];
 }

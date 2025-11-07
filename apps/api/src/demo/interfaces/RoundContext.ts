@@ -1,25 +1,21 @@
-import { BaseAction } from "../actions/Base";
-import { Fighter } from "../Fighter";
+import { CombatContext } from "./CombatContext";
+import { FighterId, RoundFighterState } from "./RoundFighterState";
+
 
 export interface RoundContext {
   roundNumber: number;
-  self: {
-    character: Fighter;
-    action: BaseAction;
-    tempo: number;
-    impact: number;
-  };
-  target: {
-    character: Fighter;
-    action: BaseAction;
-    tempo: number;
-    impact: number;
-  };
+  groupsByTempo?: Array<{ tempo: number; fighters: Map<FighterId, RoundFighterState> }>
 
-  // Ergebnisfelder, die Regeln füllen:
-  damageDealt?: number;
-  damageReceived?: number;
-  energyGained?: number;
+  // --- Kalkulationen
+  plannedDamage: Map<FighterId, number>;
+  plannedBlock: Map<FighterId, number>;
+  plannedEnergyGain: Map<FighterId, number>;
+  extraDamageById: Map<FighterId, number>;
+  energyGainAddById: Map<FighterId, number>;
+  damageMultipliersById: Map<FighterId, number>;
+
+  /** Referenz zum CombatContext */
+  readonly combatContext?: CombatContext;
 
   log?: string[];
 }
