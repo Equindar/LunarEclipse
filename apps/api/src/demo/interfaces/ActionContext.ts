@@ -1,25 +1,23 @@
 import { BaseAction } from "../actions/Base";
-import { Fighter } from "../Fighter";
+import { Fighter, FighterId } from "../Fighter";
 import { CombatContext } from "./CombatContext";
+import { FighterAction } from "./FighterAction";
 import { RoundContext } from "./RoundContext";
+import { RoundFighterState } from "./RoundFighterState";
 
 export interface ActionContext {
-  self: {
-    character: Fighter;
-    action: BaseAction;
-    tempo: number;
-    impact: number;
-    nextAttackBonus: number;
-    nextDefenseBonus: number;
-  };
-  target: {
-    character: Fighter;
-    action: BaseAction;
-    tempo: number;
-    impact: number;
-    nextAttackBonus: number;
-    nextDefenseBonus: number;
-  };
+  // Actor
+  actorId: FighterId;
+  actorState: RoundFighterState;
+  action: FighterAction;
+
+  // Target(s)
+  targets: FighterId[];
+  targetStates: RoundFighterState[]
+
+  fighter: Map<FighterId, FighterAction>
+
+
   ctxRound: RoundContext;
   readonly ctxCombat?: CombatContext;
 

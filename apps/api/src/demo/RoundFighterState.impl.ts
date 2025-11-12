@@ -1,4 +1,6 @@
-import { FighterId, RoundFighterState } from "./interfaces/RoundFighterState";
+import { FighterId } from "./Fighter";
+import { ActionPattern } from "./interfaces/ActionPattern";
+import { RoundFighterState } from "./interfaces/RoundFighterState";
 import { ActionType } from "./types/ActionType";
 
 export class RoundFighterStateImpl implements RoundFighterState {
@@ -7,7 +9,8 @@ export class RoundFighterStateImpl implements RoundFighterState {
     public hp: number,
     public energy: number,
     public nextAttackBonus: number = 0,
-    public nextDefenseBonus: number = 0
+    public nextDefenseBonus: number = 0,
+    public actions: ActionPattern
   ) { }
 
   public applyBuff(action: ActionType): void {
@@ -33,5 +36,9 @@ export class RoundFighterStateImpl implements RoundFighterState {
   gainEnergy(amount: number) {
     const n = Math.max(0, Math.floor(amount));
     this.energy += n;
+  }
+
+  gainHealth(amount: number): void {
+    this.hp += amount;
   }
 }

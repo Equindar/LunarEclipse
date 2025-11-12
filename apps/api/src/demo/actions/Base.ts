@@ -3,7 +3,8 @@ import { ActionType } from "../types/ActionType";
 
 export abstract class BaseAction {
   /** Basiswerte */
-  energyCost = 1;
+  baseEnergyCost = 1;
+  baseDurationInMs: number = 2000;
   baseTempo = 2;
   baseImpact = 0;
 
@@ -38,7 +39,7 @@ export abstract class BaseAction {
    * @returns total energy cost
    */
   totalEnergyCost(energyInvested: number): number {
-    return this.energyCost + energyInvested;
+    return this.baseEnergyCost + energyInvested;
   }
 
   /**

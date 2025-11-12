@@ -7,7 +7,7 @@ import { UtilityAction } from "../demo/actions/Utility";
 import { UtilityAttackAction } from "../demo/actions/UtilityAttack";
 import { UtilityDefendAction } from "../demo/actions/UtilityDefend";
 import { CombatEngine } from "../demo/CombatEngine";
-import { Fighter } from "../demo/Fighter";
+import { Fighter, FighterId } from "../demo/Fighter";
 import { RuleRegistry } from "../demo/RuleRegistry";
 import { CriticalStrikeRule } from "../demo/rules/CriticalStrike.rule";
 import { NoneAction } from "../demo/actions/None";
@@ -20,6 +20,29 @@ import { ActionPattern } from "../demo/interfaces/ActionPattern";
 import { FighterAction } from "../demo/interfaces/FighterAction";
 import { BaseAction } from "../demo/actions/Base";
 
+
+interface TypedRequestBody extends Express.Request {
+  body: {
+    fighters: {
+      name: string;
+      energy: {
+        maximal: number;
+        actual: number;
+      };
+      health: {
+        maximal: number;
+        actual: number;
+      };
+      actions: {
+        name: string;
+        probability: number;
+        pattern: string[];
+      }[]
+    }[];
+  }
+}
+
+
 export default class CombatsController {
   private engine: CombatEngine;
   private registry: RuleRegistry;
@@ -31,123 +54,72 @@ export default class CombatsController {
     this.engine = new CombatEngine(this.registry);
   }
 
-  public onGetCombat = async (req: Request, res: Response, next: NextFunction) => {
+  public onGetCombat = async (
+    req: TypedRequestBody,
+    res: Response,
+    next: NextFunction) => {
     try {
       const startTime = new Date(Date.now());
-      const { attackerData, defenderData } = req.body;
+      const { fighters } = req.body;
 
-      logger.warn(req.body);
-      // Alles vorbereiten:
-      // ActionPattern
-      const actions: ActionPattern[] = this.parseActionPatterns(
-        attackerData.actions[0].name,
-        attackerData.actions[0].probability,
-        attackerData.actions[0].pattern
-      );
+      var combatFighters = new Map<FighterId, Fighter>();
 
-      // Fighter
-      const attacker = new Fighter(
-        attackerData.name,
-        { maximal: attackerData.hp.maximal, actual: attackerData.hp.actual },
-        { maximal: attackerData.energy.maximal, actual: attackerData.energy.actual },
-        actions
-      );
-
-      logger.debug(attacker);
-      logger.debug(attacker.actionPatterns![0].pattern[0]);
-
-      return;
-
-
-
-      // const attacker = new Fighter(attackerData.name, { maximal: attackerData.hp.maximal, actual: attackerData.hp.actual }, { maximal: attackerData.energy.maximal, actual: attackerData.energy.actual });
-      // const defender = new Fighter(defenderData.name, { maximal: defenderData.hp.maximal, actual: defenderData.hp.actual }, { maximal: defenderData.energy.maximal, actual: defenderData.energy.actual });
-
-      const attackerActions = this.parseActions(attackerData.actions[0].pattern);
-      const defenderActions = this.parseActions(defenderData.actions[0].pattern);
-
-
-      this.registry.register(CriticalStrikeRule);
-      this.registry.register(EarlyEnergyBoostRule);
-      this.registry.register(VengefulComebackRule);
-
-
-      // Rundenweise Kampf
-      const rounds = Math.min(attackerActions.length, defenderActions.length);
-      let log: any[] = [];
-
-      for (let i = 1; i <= rounds; i++) {
-        const { action: aAction, tempoEnergy: aTempoEnergy, impactEnergy: aImpactEnergy } = attackerActions[i - 1];
-        const { action: dAction, tempoEnergy: dTempoEnergy, impactEnergy: dImpactEnergy } = defenderActions[i - 1];
-
-        const attackerAction = this.getAction(aAction);
-        const defenderAction = this.getAction(dAction);
-
-        var combatContext: CombatContext = {
-          identifier: "test-identifier",
-          time: {
-            start: startTime
-          },
-          attacker: attacker,
-          defender: defender,
-        }
-
-        var roundContext: RoundContext = {
-          roundNumber: i,
-          self: {
-            character: attacker,
-            action: attackerAction,
-            tempo: aTempoEnergy,
-            impact: aImpactEnergy,
-            nextAttackBonus: 0,
-            nextDefenseBonus: 0
-          },
-          target: {
-            character: defender,
-            action: defenderAction,
-            tempo: dTempoEnergy,
-            impact: dImpactEnergy,
-            nextAttackBonus: 0,
-            nextDefenseBonus: 0
-          },
-          plannedDamage: new Map(),
-          plannedBlock: new Map(),
-          plannedEnergyGain: new Map(),
-          extraDamageById: new Map(),
-          energyGainAddById: new Map(),
-          damageMultipliersById: new Map(),
-          combatContext: combatContext
-        }
-
-        roundContext = this.engine.resolveRound(combatContext, roundContext);
-
-        log.push({
-          round: i + 1,
-          attacker: { hp: attacker.health.actual, energy: attacker.energy },
-          defender: { hp: defender.health.actual, energy: defender.energy },
-        });
-
-        // Kampfende, sobald jemand 0 oder weniger HP hat
-        if (attacker.health.actual <= 0 || defender.health.actual <= 0) {
-          break;
+      // Fighter (Attacker)
+      if (fighters !== null) {
+        for (var item of fighters) {
+          combatFighters.set(item.name, new Fighter(
+            item.name,
+            { maximal: item.health.maximal, actual: item.health.actual },
+            { maximal: item.energy.maximal, actual: item.energy.actual },
+            this.parseActionPatterns(item.actions)
+          ));
         }
       }
 
-      const winner =
-        attacker.health.actual <= 0 && defender.health.actual <= 0
-          ? "Draw"
-          : attacker.health.actual <= 0
-            ? defender.name
-            : defender.health.actual <= 0
-              ? attacker.name
-              : "None";
+      // this.registry.register(CriticalStrikeRule);
+      this.registry.register(EarlyEnergyBoostRule);
+      this.registry.register(VengefulComebackRule);
 
-      return res.status(200).json({
-        result: "Kampf beendet",
-        winner,
-        finalState: { attacker, defender },
-        rounds: log,
+      this.engine.initCombat({
+        identifier: "test-identifier",
+        time: {
+          start: startTime
+        },
+        fighters: combatFighters,
+        currentRound: 1
       });
+
+
+      this.engine.resolveCombatRound();
+
+      //   log.push({
+      //     round: i + 1,
+      //     attacker: { hp: attacker.health.actual, energy: attacker.energy },
+      //     defender: { hp: defender.health.actual, energy: defender.energy },
+      //   });
+
+      //   // Kampfende, sobald jemand 0 oder weniger HP hat
+      //   if (attacker.health.actual <= 0 || defender.health.actual <= 0) {
+      //     break;
+      //   }
+      // }
+
+      // const winner =
+      //   attacker.health.actual <= 0 && defender.health.actual <= 0
+      //     ? "Draw"
+      //     : attacker.health.actual <= 0
+      //       ? defender.name
+      //       : defender.health.actual <= 0
+      //         ? attacker.name
+      //         : "None";
+
+      // return res.status(200).json({
+      //   result: "Kampf beendet",
+      //   winner,
+      //   finalState: { attacker, defender },
+      //   rounds: log,
+      // });
+      return res.sendStatus(200);
     } catch (err) {
       logger.error(err);
       return res.status(500).send("Fehler im Kampf");
@@ -157,33 +129,39 @@ export default class CombatsController {
 
 
   // Pattern: A:t5,i3
-  private parseActionPatterns(name: string, probability: number, actionStrings: string[]): ActionPattern[] {
+  private parseActionPatterns(actions: Array<{ name: string, probability: number, pattern: string[] }>): ActionPattern[] {
     var result = new Array<ActionPattern>();
-    var pattern = new Array<FighterAction>();
-    logger.debug(actionStrings);
-    actionStrings.map(
-      (raw) => {
+
+    if (!actions || actions.length === 0) {
+      logger.warn("parseActionPatterns: no actions provided");
+      return result;
+    }
+
+    actions.forEach(action => {
+      const temp: FighterAction[] = []
+
+      if (!action.pattern || action.pattern.length === 0) {
+        result.push({ name: action.name, probability: action.probability, pattern: temp });
+        return;
+      }
+
+      action.pattern.forEach(item => {
+        if (!item) return;
         let tempoEnergy = 0, impactEnergy = 0;
-        const [actionPart, energyPart] = raw.split(":");
-        const action = actionPart.trim();
+        const [actionPart, energyPart] = item.split(":");
         if (energyPart) {
           const [tempoPart, impactPart] = energyPart.split(",");
           tempoEnergy = tempoPart ? parseInt(tempoPart.substring(1)) : 0;
           impactEnergy = impactPart ? parseInt(impactPart.substring(1)) : 0;
         }
-        pattern.push({
-          action: this.getAction(action),
+        temp.push({
+          action: this.getAction(actionPart.trim()),
           investedTempo: tempoEnergy,
           investedImpact: impactEnergy
         });
-      }
-    );
-    result.push(
-      {
-        name: name,
-        probability: probability,
-        pattern: pattern
       });
+      result.push({ name: action.name, probability: action.probability, pattern: temp });
+    });
     return result;
   }
 

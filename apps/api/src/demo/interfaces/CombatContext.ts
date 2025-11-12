@@ -1,4 +1,4 @@
-import { Fighter } from "../Fighter";
+import { Fighter, FighterId } from "../Fighter";
 import { DamageByFighter } from "./Damage";
 
 type EnvironmentData = {
@@ -11,13 +11,14 @@ type EnvironmentData = {
 export interface CombatContext {
   identifier: string;
   randomSeed?: string;
+  currentRound: number;
   time: {
     start: Date,
     end?: Date
   }
   environment?: EnvironmentData;
-  attacker: Fighter;
-  defender: Fighter;
+
+  fighters: Map<FighterId, Fighter>;
 
   /* --- Beispiel:
   matchId: string;

@@ -10,18 +10,17 @@ import { ActionType } from "../types/ActionType";
  */
 export const VengefulComebackRule: Rule = {
   name: "vengeful-comeback",
-  phase: "postRound",
+  phase: "postActionRound",
   priority: 100,
   matches: (ctx) => {
-    return (
-      ctx.round.self.character.health.actual <= 0 && ctx.round.self.character.name == "Maro") ||
-      (ctx.round.target.character.health.actual <= 0 && ctx.round.target.character.name == "Maro");
+    if (ctx.round)
+      return (ctx.round.fighters.has("Maro") && (ctx.round.fighters.get("Maro")?.hp! <= 0))
+    return false;
   },
   apply: (ctx) => {
-    var subject: Fighter = ctx.round.self.character.health.actual <= 0 ? ctx.round.self.character : ctx.round.target.character;
-    subject.health.actual += 20;
-    // subject.applyBuff(ActionType.UTILITY_ATTACK);
-    // subject.applyBuff(ActionType.UTILITY_ATTACK);
-    logger.debug(`"${VengefulComebackRule.name}"-Rule angewendet. ${subject.name} erhält 20 HP, verstärkt seinen Angriff um +2.`);
+    logger.debug(`"${VengefulComebackRule.name}"-Rule angewendet. "Maro erhält 20 HP, verstärkt seinen Angriff um +2.`);
+    ctx.round!.fighters.get("Maro")?.gainHealth(20);
+    ctx.round!.fighters.get("Maro")?.applyBuff(ActionType.UTILITY_ATTACK);
+    ctx.round!.fighters.get("Maro")?.applyBuff(ActionType.UTILITY_ATTACK);
   }
 };

@@ -1,15 +1,16 @@
 import logger from "../../utils/apiLogger";
-import { Rule } from "../interfaces/RuleContext";
+import { FighterAction } from "../interfaces/FighterAction";
+import { Rule } from "../interfaces/Rule";
 import { ActionType } from "../types/ActionType";
 
 export const CriticalStrikeRule: Rule = {
   name: "critical-strike",
-  phase: "preAction",
+  phase: "postAction",
   priority: 10,
   matches: (ctx) => {
     if (!ctx.action) return false;
-    return ctx.action.self.action.type === ActionType.ATTACK &&
-      ctx.action.self.tempo >= ctx.action.target.tempo + 5;
+    return ctx.action.fighter.forEach(
+      item => item.action.type === ActionType.ATTACK
   },
   apply: (ctx) => {
     //  ctx.damageDealt = ctx.attackerAction.baseDamage * 2;

@@ -1,10 +1,13 @@
+import { FighterId } from "../Fighter";
 import { CombatContext } from "./CombatContext";
-import { FighterId, RoundFighterState } from "./RoundFighterState";
+import { RoundFighterState } from "./RoundFighterState";
+import { TempoGroup } from "./TempoGroup";
 
 
 export interface RoundContext {
   roundNumber: number;
-  groupsByTempo?: Array<{ tempo: number; fighters: Map<FighterId, RoundFighterState> }>
+  groupsByTempo?: TempoGroup[];
+  fighters: Map<FighterId, RoundFighterState>;
 
   // --- Kalkulationen
   plannedDamage: Map<FighterId, number>;
@@ -17,5 +20,5 @@ export interface RoundContext {
   /** Referenz zum CombatContext */
   readonly combatContext?: CombatContext;
 
-  log?: string[];
+  roundLog: string[];
 }

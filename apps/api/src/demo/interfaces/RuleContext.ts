@@ -10,11 +10,11 @@ export default interface RuleContext {
    *
    * wird benötigt für Regeln auf Umwelt
   */
-  readonly combat: CombatContext;
+  combat: CombatContext;
   /** RoundContext
    * wird benötigt, um Werte im Context anzupassen
    */
-  round: RoundContext;
+  round?: RoundContext;
   /** ActionContext (optional)
    * wird für Regeln mit Phase preAction/postAction benötigt
    * * Beispiel: CriticalStrike

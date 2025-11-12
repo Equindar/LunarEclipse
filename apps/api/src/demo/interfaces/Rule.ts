@@ -7,7 +7,9 @@ import RuleContext from "./RuleContext";
  * * postAction — direkt nach einer Aktion (z. B. apply DoT).
  * * postGroup — nach einer Tempo-Gruppenauflösung (commit group planned effects).
  * * postRound — nach kompletter Round, vor Commit to GameState. */
-export type RulePhase = "preCombat" | "preRound" | "preGroup" | "preAction" | "postAction" | "postGroup" | "postRound" | "postCombat";
+export type RulePhase =
+  "preCombat" | "preCombatRound" | "preActionRound" | "preGroup" | "preAction" |
+  "postAction" | "postGroup" | "postActionRound" | "postCombatRound" | "postCombat";
 
 export interface Rule {
   /** Name der Regel */
