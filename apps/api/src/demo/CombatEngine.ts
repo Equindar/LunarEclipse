@@ -1,268 +1,239 @@
-import { Fighter, FighterId } from "./Fighter";
-import { BaseAction, swapResolveProps } from "./actions/Base";
 import logger from "../utils/apiLogger";
-import { RuleRegistry } from "./RuleRegistry";
-import { RoundContext } from "./interfaces/RoundContext";
-import { CombatContext } from "./interfaces/CombatContext";
-import { RoundFighterStateImpl } from "./RoundFighterState.impl";
+import { IRoundContext } from "./interfaces/RoundContext";
+import { ICombatContext } from "./interfaces/CombatContext";
 import { ActionPattern } from "./interfaces/ActionPattern";
-import { RoundFighterState } from "./interfaces/RoundFighterState";
-import { ActionType } from "./types/ActionType";
-import { TempoGroup, TempoGroupEntry } from "./interfaces/TempoGroup";
-import { FighterAction } from "./interfaces/FighterAction";
+import { EarlyEnergyBoostRule } from "./rules/EarlyEnergyBoost.rule";
+import { VengefulComebackRule } from "./rules/VengefulComeback.rule";
+import { RoundContext } from "./contexts/RoundContext";
 
 export class CombatEngine {
   /** Rundenlänge in Millisekunden */
   combatRoundLengthInMs: number = 10000;
-  combatContext: CombatContext = {
-    identifier: "",
-    time: {
-      start: new Date(Date.now()),
-      end: undefined
-    },
-    fighters: new Map(),
-    currentRound: 1
-  };
+  combatContext: ICombatContext;
 
-  constructor(private registry: RuleRegistry) { }
+  constructor(ctx: ICombatContext) {
+    this.combatContext = ctx;
+  }
 
-  public initCombat(ctx: CombatContext) {
+  public initCombat() {
     logger.warn("CombatEngine.initCombat()");
-    this.registry.applyPhase("preCombat", { combat: this.combatContext });
+    // Set inital RoundNumber
+    this.combatContext.currentRound = 0;
+
+    // Register Rules in RuleRegistry
+    this.combatContext.ruleRegistry.register(EarlyEnergyBoostRule)
+    this.combatContext.ruleRegistry.register(VengefulComebackRule)
+
+    this.combatContext.ruleRegistry.applyPhase("preCombat", { combat: this.combatContext });
   }
 
 
-  public buildRoundContext(roundNumber: number, ctx: CombatContext): RoundContext {
-    // RoundContext erstellen
-    let roundContext: RoundContext = {
-      roundNumber: roundNumber,
-      fighters: new Map(),
-      plannedDamage: new Map(),
-      plannedBlock: new Map(),
-      plannedEnergyGain: new Map(),
-      extraDamageById: new Map(),
-      energyGainAddById: new Map(),
-      damageMultipliersById: new Map(),
-      roundLog: []
-    }
+  // public buildActionContext(fighterId: FighterId, roundContext: IRoundContext): IActionContext {
+  //   logger.warn("buildActionContext()");
 
-    ctx.fighters.forEach((item) => {
-      const id: FighterId = item.name
-      const fighterState: RoundFighterState = new RoundFighterStateImpl(
-        id, item.health.actual, item.energy.actual, 0, 0, this.getNewActionPattern(ctx, item.name)
-      );
-      roundContext.fighters.set(id, fighterState);
-    })
+  //   const actorState = roundContext.fighters.get(fighterId);
+  //   if (!actorState) {
+  //     throw new Error(`buildActionContext: actor '${fighterId}' not found in roundContext`);
+  //   }
+  //   const patternIndex = actorState.actionIndex ?? 0;
 
-    return roundContext;
-  }
+  //   let actionCtx: IActionContext = {
+  //     actorId: fighterId,
+  //     actorState: actorState,
+  //     action: actorState.actions.pattern[patternIndex],
+  //     targets: [],
+  //     targetStates: [],
+  //     ctxRound: roundContext
+  //   }
+  //   // pick the FighterAction from the pattern
+  //   const pattern = actorState.actions?.pattern ?? [];
+  //   if (pattern.length === 0) {
+  //     throw new Error(`buildActionContext: actor '${fighterId}' has empty action pattern`);
+  //   }
+  //   const actionEntry = pattern[Math.min(patternIndex, pattern.length - 1)];
+  //   logger.error("Math.min(patternIndex, pattern.length - 1): " + Math.min(patternIndex, pattern.length - 1));
+  //   // logger.error(actionEntry);
+
+  //   // ProtoTyp: Targetting
+  //   if (fighterId == "Equindar") {
+  //     actionCtx.targets.push("Maro");
+  //     actionCtx.targetStates.push(roundContext.fighters.get("Maro")!);
+  //   }
+  //   if (fighterId == "Maro") {
+  //     actionCtx.targets.push("Equindar");
+  //     actionCtx.targetStates.push(roundContext.fighters.get("Equindar")!);
+  //   }
+  //   return actionCtx;
+
+  //   // // initial target selection (engine can let preAction-rules modify this ctx)
+  //   // let targets = targetSelector(roundContext, fighterId, actionEntry, { actorState });
+  //   // if (!Array.isArray(targets) || targets.length === 0) {
+  //   //   // fallback to self-target to avoid empty target list
+  //   //   targets = [fighterId];
+  //   // }
+
+  //   // // resolve target states (filter out missing but keep mapping order)
+  //   // const targetStates: RoundFighterState[] = targets.map((tid) => {
+  //   //   const ts = roundContext.fighters.get(tid);
+  //   //   if (!ts) {
+  //   //     // If a target ID isn't present (e.g. was removed), we keep a placeholder object to avoid crashes.
+  //   //     return {
+  //   //       id: tid,
+  //   //       name: tid,
+  //   //       hp: 0,
+  //   //       energy: 0,
+  //   //       actions: { name: "empty", probability: 0, pattern: [] },
+  //   //     } as RoundFighterState;
+  //   //   }
+  //   //   return ts;
+  //   // });
+  // }
 
   public calculateLooting() {
     throw new Error("not implemented yet.")
   }
 
-
-
   public resolveCombatRound() {
+    logger.warn("CombatEngine.resolveCombatRound()");
     this.combatContext.currentRound += 1;
-    const roundNumber = this.combatContext.currentRound;
 
-    const roundContext = this.buildRoundContext(roundNumber, this.combatContext);
+    const roundContext = this.combatContext.createRound();
+    roundContext.build();
 
-    for (const element of roundContext.fighters.values()) {
-      if (!element.actions || element.actions.pattern.length === 0) {
-        element.actions = this.getNewActionPattern(this.combatContext, element.id);
-      }
-    }
-
-    this.registry.applyPhase("preCombatRound", { combat: this.combatContext, round: roundContext });
-
+    // this.registry.applyPhase("preCombatRound", { combat: this.combatContext, round: roundContext });
     // TempoGroups ermitteln
-    roundContext.groupsByTempo = this.calculateTempoGroups(roundContext.fighters);
-    logger.debug(roundContext);
+    logger.info(`Runde #${roundContext.roundNumber}:`)
+    roundContext.fighters.forEach(element => {
+      logger.info(`${element.id}: [HP:${element.health}, E:${element.energy}]`);
+      logger.debug(`${element.actions.name} (${element.actions.probability})`);
+    });
+    const groups = roundContext.calculateTempoGroups();
 
-    for (const tempoGroup of roundContext.groupsByTempo) {
-      this.registry.applyPhase("preGroup", { combat: this.combatContext, round: roundContext });
+    // logger.debug(roundContext);
+
+    for (const tempoGroup of groups) {
+      this.combatContext.ruleRegistry.applyPhase("preGroup", { combat: this.combatContext, round: roundContext });
 
       if (tempoGroup.actions.length === 1) {
+        // Es ist genau eine Aktion in dieser TempoGruppe vorhanden
+        logger.error("tempoGroup.actions.length: 1");
         const entry = tempoGroup.actions[0];
-        const actionContext = buildActionContext(entry.fighter, roundContext, /*patternIndex*/ 0);
-        this.registry.applyPhase("preAction", { combat: this.combatContext, round: roundContext, action: actionContext });
+        // ActionContext erstellen
+        const actionContext = roundContext.createActionContext(entry.fighter, entry.patternIndex);
 
-        // Engine decides perspective (first/second) here already because it's highest group.
-        this.resolveActionRound(actionContext);
+        this.combatContext.ruleRegistry.applyPhase("preAction", { combat: this.combatContext, round: roundContext, action: actionContext });
+        actionContext.execute("Engage", this.combatContext.ruleRegistry);
+        this.combatContext.ruleRegistry.applyPhase("postAction", { combat: this.combatContext, round: roundContext, action: actionContext });
 
-        this.registry.applyPhase("postAction", { combat: this.combatContext, round: roundContext, action: actionContext });
-
-        this.commitActionRound(actionContext, roundContext); // optional minimal commit (or no-op)
+        actionContext.commit();
       } else {
+        // Es sind mehr als eine Aktion in dieser TempoGruppe vorhanden
+        logger.error(`tempoGroup.actions.length: ${tempoGroup.actions.length}`);
         // simultaneous group: preAction for all, then resolve all, then postAction for all
-        const actionCtxs = tempoGroup.actions.map(a => buildActionContext(a.fighter, roundContext));
-        for (const ctx of actionCtxs) this.registry.applyPhase("preAction", { combat: this.combatContext, round: roundContext, action: ctx });
+        const actionCtxs = tempoGroup.actions.map(action => roundContext.createActionContext(action.fighter, action.patternIndex));
+        for (const ctx of actionCtxs) this.combatContext.ruleRegistry.applyPhase("preAction", { combat: this.combatContext, round: roundContext, action: ctx });
 
-        for (const ctx of actionCtxs) this.resolveActionRound(ctx /* as simultaneous */);
+        for (const ctx of actionCtxs) ctx.execute("Moment", this.combatContext.ruleRegistry);
 
-        for (const ctx of actionCtxs) this.registry.applyPhase("postAction", { combat: this.combatContext, round: roundContext, action: ctx });
+        for (const ctx of actionCtxs) this.combatContext.ruleRegistry.applyPhase("postAction", { combat: this.combatContext, round: roundContext, action: ctx });
 
+        for (const ctx of actionCtxs) ctx.commit();
         // commit group-level effects (recommended) - e.g. resolve area-of-effect application, mark KOs
-        this.commitGroupEffects(tempoGroup, roundContext);
+        // this.commitGroupEffects(tempoGroup, roundContext);
       }
 
-      this.registry.applyPhase("postGroup", { combat: this.combatContext, round: roundContext });
+      this.combatContext.ruleRegistry.applyPhase("postGroup", { combat: this.combatContext, round: roundContext });
 
       // Optional: prune fighters with hp <= 0 from remaining groups (if you want immediate KO removal)
       // this.removeDeadFromFutureGroups(roundContext, groups);
     }
+    this.combatContext.ruleRegistry.applyPhase("postActionRound", { combat: this.combatContext, round: roundContext });
+    roundContext.commit();
 
+    this.commitCombatRound(roundContext);
+
+    this.advanceActionIndices(roundContext);
   }
 
-
-  public commitCombatRound() {
-    throw new Error("not implemented yet.")
-  }
-
-  public resolveActionRound(roundCtx: RoundContext) {
-    // ActionContext erstellen
-    throw new Error("not implemented yet.")
-  }
-
-  public commitActionRound(roundCtx: RoundContext, fighters: Map<FighterId, RoundFighterState>) {
-    // ToDo:
-    // Nimm alle Änderungen aus dem RoundContext (RoundFighterState) und aktualisiere CombatContext (Fighter)
-    for (const [playerId, rstate] of roundCtx.fighters.entries()) {
-      const baseDmg = roundCtx.plannedDamage.get(playerId) ?? 0;
-      const extra = roundCtx.extraDamageById.get(playerId) ?? 0;
-      const multiplier = roundCtx.damageMultipliersById.get(playerId) ?? 1;
-      const block = roundCtx.plannedBlock.get(playerId) ?? 0;
-
-      const raw = (baseDmg + extra) * multiplier;
-      const finalDamage = Math.max(0, Math.floor(raw - block));
-
-      // Apply to round state
-      rstate.takeDamage(finalDamage);
-
-      roundCtx.roundLog.push(`[commit] ${rstate.id} takes ${finalDamage} (base:${baseDmg}, extra:${extra}, mult:${multiplier}, block:${block})`);
+  public commitCombatRound(ctx: IRoundContext) {
+    // compute finalDamage / energy / apply status durations
+    // update combatCtx.fighters (persistent), update logs
+    // run resolve end-of-round side effects
+    for (const [id, stage] of ctx.fighters.entries()) {
+      const persistent = this.combatContext.fighters.get(id);
+      if (!persistent) continue;
+      persistent.health.actual = stage.health;
+      persistent.energy.actual = stage.energy;
+      // commit other persistent fields as needed
     }
-
-    // 2) Energy gains
-    for (const [playerId, rstate] of roundCtx.fighters.entries()) {
-      const baseGain = roundCtx.plannedEnergyGain.get(playerId) ?? 0;
-      const add = roundCtx.energyGainAddById.get(playerId) ?? 0;
-      const mult = roundCtx.damageMultipliersById.get(playerId) ?? 1; // maybe separate multiplier for energy
-      const finalGain = Math.max(0, Math.floor((baseGain + add) * mult));
-
-      if (finalGain > 0) {
-        rstate.gainEnergy(finalGain);
-        roundCtx.roundLog.push(`[commit] ${rstate.id} gains ${finalGain} energy`);
-      }
-    }
-
-    // 3) Apply RoundState back to domain Players (persist)
-    for (const [id, rstate] of roundCtx.fighters.entries()) {
-      const player = fighters.get(id);
-      if (!player) continue;
-      // Option A: set values atomically
-      player.hp = rstate.hp;
-      player.energy = rstate.energy;
-      // Option B: call domain methods for side-effects/logging
-      // player.takeDamage(originalHP - rstate.hp) etc.
-    }
-
-    // 4) Return roundCtx.roundLog or structured result
-    return {
-      log: roundCtx.roundLog,
-      finalStates: Array.from(roundCtx.fighters.values()).map(s => ({ id: s.id, hp: s.hp, energy: s.energy }))
-    };
   }
 
-  public isCombatOver(roundCtx: RoundContext): boolean {
+  // public commitActionRound(roundCtx: IRoundContext, combatCtx: ICombatContext) {
+  //   logger.warn("CombatEngine.commitActionRound()");
+  //   // ToDo:
+  //   // Nimm alle Änderungen aus dem RoundContext (RoundFighterState) und aktualisiere CombatContext (Fighter)
+  //   for (const [playerId, rstate] of roundCtx.fighters.entries()) {
+  //     const baseDmg = roundCtx.plannedDamage.get(playerId) ?? 0;
+  //     const extra = roundCtx.extraDamageById.get(playerId) ?? 0;
+  //     const multiplier = roundCtx.damageMultipliersById.get(playerId) ?? 1;
+  //     const block = roundCtx.plannedBlock.get(playerId) ?? 0;
+
+  //     const raw = (baseDmg + extra) * multiplier;
+  //     const finalDamage = Math.max(0, Math.floor(raw - block));
+
+  //     // Apply to round state
+  //     rstate.takeDamage(finalDamage);
+
+  //     roundCtx.roundLog.push(`[commit] ${rstate.id} takes ${finalDamage} (base:${baseDmg}, extra:${extra}, mult:${multiplier}, block:${block})`);
+  //     logger.debug(`[commit] ${rstate.id} takes ${finalDamage} (base:${baseDmg}, extra:${extra}, mult:${multiplier}, block:${block})`);
+  //   }
+
+  //   // 2) Energy gains
+  //   for (const [playerId, rstate] of roundCtx.fighters.entries()) {
+  //     const baseGain = roundCtx.plannedEnergyGain.get(playerId) ?? 0;
+  //     const add = roundCtx.energyGainAddById.get(playerId) ?? 0;
+  //     const mult = roundCtx.damageMultipliersById.get(playerId) ?? 1; // maybe separate multiplier for energy
+  //     const finalGain = Math.max(0, Math.floor((baseGain + add) * mult));
+
+  //     if (finalGain > 0) {
+  //       rstate.gainEnergy(finalGain);
+  //       roundCtx.roundLog.push(`[commit] ${rstate.id} gains ${finalGain} energy`);
+  //       logger.debug(`[commit] ${rstate.id} gains ${finalGain} energy`);
+  //     }
+  //   }
+
+  //   // 3) Apply RoundState back to domain Players (persist)
+  //   for (const [id, rstate] of roundCtx.fighters.entries()) {
+  //     const player = combatCtx.fighters.get(id);
+  //     if (!player) continue;
+  //     // Option A: set values atomically
+  //     player.health.actual = rstate.hp;
+  //     player.energy.actual = rstate.energy;
+  //     // Option B: call domain methods for side-effects/logging
+  //     // player.takeDamage(originalHP - rstate.hp) etc.
+  //   }
+  // }
+
+  public isCombatOver(roundCtx: IRoundContext): boolean {
     // Gibt es nur noch einen Überlebenden? (Free for All)
-    throw new Error("not implemented yet.")
-    return false;
+    return roundCtx.roundNumber >= 10;
   }
 
-  private calculateTempoGroups(fighters: Map<FighterId, RoundFighterState>): TempoGroup[] {
-    var result: TempoGroup[] = [];
-    // Collect individual actor-action entries with computed totalTempo
-    type InternalEntry = {
-      fighter: FighterId;
-      action: FighterAction; // from your types, re-used here
-      totalTempo: number;
-    };
-
-    const entries: InternalEntry[] = [];
-
-    for (const [fighterId, fState] of fighters.entries()) {
-      const pattern = fState.actions?.pattern ?? [];
-      if (!pattern || pattern.length === 0) {
-        // No action for this fighter this round -> skip
-        continue;
-      }
-
-      // Use the first action in the pattern as the "current" action for grouping.
-      const fa = pattern[0];
-
-      // baseTempo assumed to be on BaseAction (fallback to 0 if missing)
-      const baseTempo = (fa.action && (fa.action as BaseAction).baseTempo) ?? 0;
-
-      const investedTempo = Number(fa.investedTempo ?? 0);
-      const totalTempo = baseTempo + investedTempo;
-
-      entries.push({
-        fighter: fighterId,
-        action: fa,
-        totalTempo,
-      });
-    }
-
-    // Stable sort: by totalTempo desc, then by fighter id asc as deterministic tie-breaker
-    entries.sort((a, b) => {
-      if (b.totalTempo !== a.totalTempo) return b.totalTempo - a.totalTempo;
-      // tie-breaker
-      return a.fighter.localeCompare(b.fighter);
-    });
-
-    // Group into TempoGroup[]
-    let currentTempo: number | null = null;
-    let currentActions: TempoGroupEntry[] = [];
-
-    for (const e of entries) {
-      if (currentTempo === null || e.totalTempo !== currentTempo) {
-        // push previous group
-        if (currentActions.length > 0) {
-          result.push({
-            tempo: currentTempo!,
-            actions: currentActions,
-          });
-        }
-        // start new group
-        currentTempo = e.totalTempo;
-        currentActions = [
-          {
-            fighter: e.fighter,
-            action: e.action,
-          } as TempoGroupEntry,
-        ];
+  advanceActionIndices(round: IRoundContext) {
+    for (const [id, st] of round.fighters.entries()) {
+      const old = st.actionIndex ?? 0;
+      const next = old + 1;
+      if (st.actions && next < st.actions.pattern.length) {
+        st.actionIndex = next;
       } else {
-        // same tempo -> append
-        currentActions.push({
-          fighter: e.fighter,
-          action: e.action,
-        } as TempoGroupEntry);
+        // naive: reset to 0 (or call getNewActionPattern)
+        st.actions = this.getNewActionPattern(this.combatContext, id); // assumed sync here, adapt if async
+        st.actionIndex = 0;
       }
     }
-    // push last group
-    if (currentActions.length > 0) {
-      result.push({
-        tempo: currentTempo!,
-        actions: currentActions,
-      });
-    }
-
-    return result;
   }
 
-  private getNewActionPattern(ctx: CombatContext, fighterId: string, random?: () => number): ActionPattern {
+  private getNewActionPattern(ctx: ICombatContext, fighterId: string, random?: () => number): ActionPattern {
     // Parameter: Kämpfer
     const fighter = ctx.fighters.get(fighterId);
 
@@ -373,61 +344,5 @@ export class CombatEngine {
       pattern: action.pattern
     };
   }
-
-
-
-  // public resolveRound(combatContext: CombatContext, roundContext: RoundContext): RoundContext {
-  //   var attacker = roundContext.self;
-  //   var defender = roundContext.target;
-
-  //   logger.warn(combatContext.time.start.toLocaleTimeString("de-DE", { hour: "2-digit", minute: "2-digit", second: "2-digit", hour12: false }));
-
-  //   this.registry.applyPhase("preRound", { combat: combatContext, round: ctx });
-
-  //   const attacker_detail_start = `${attacker.character.name}[HP:${attacker.character.health.actual}/${attacker.character.health.maximal},E:${attacker.character.energy.actual}/${attacker.character.energy.maximal}]`;
-  //   const defender_detail_start = `${defender.character.name}[HP:${defender.character.health.actual}/${defender.character.health.maximal},E:${defender.character.energy.actual}/${defender.character.energy.maximal}]`;
-
-
-  //   logger.info(`Runde #${ctx.roundNumber} (Start): ${attacker_detail_start} vs ${defender_detail_start}`);
-  //   logger.debug(`${attacker.character.name}[${attacker.action.type}:t${attacker.tempo},i${attacker.impact}] vs ${defender.character.name}[${defender.action.type}:t${defender.tempo},i${defender.impact}]`);
-
-  //   // Energie abziehen
-  //   ctx.self.character.spendEnergy(ctx.self.action.totalEnergyCost(ctx.self.tempo + ctx.self.impact));
-  //   ctx.target.character.spendEnergy(ctx.target.action.totalEnergyCost(ctx.target.tempo + ctx.target.impact));
-
-  //   const tempoA = attacker.action.calculateTempo(attacker.tempo);
-  //   const tempoD = defender.action.calculateTempo(defender.tempo);
-
-  //   var actionProps: resolveProps = { self: attacker.character, target: defender.character, other: defender.action, impactSelf: attacker.impact, impactTarget: defender.impact }
-
-  //   this.registry.applyPhase("preAction", { combat: combatContext, round: ctx });
-
-  //   if (tempoA > tempoD) {
-  //     attacker.action.resolveAsEngage(actionProps);
-  //     defender.action.resolveAsReaction(swapResolveProps(actionProps));
-  //   } else if (tempoA < tempoD) {
-  //     defender.action.resolveAsEngage(swapResolveProps(actionProps));
-  //     attacker.action.resolveAsReaction(actionProps);
-  //   } else {
-  //     attacker.action.resolveAsMoment(actionProps);
-  //     defender.action.resolveAsMoment(swapResolveProps(actionProps));
-  //   }
-
-  //   this.registry.applyPhase("postAction", { combat: combatContext, round: ctx });
-
-  //   const attacker_detail_end = `${attacker.character.name}[HP:${attacker.character.health.actual}/${attacker.character.health.maximal},E:${attacker.character.energy.actual}/${attacker.character.energy.maximal}]`;
-  //   const defender_detail_end = `${defender.character.name}[HP:${defender.character.health.actual}/${defender.character.health.maximal},E:${defender.character.energy.actual}/${defender.character.energy.maximal}]`;
-  //   logger.info(`Runde #${ctx.roundNumber} (End): ${attacker_detail_end} vs ${defender_detail_end}`);
-
-  //   // Regel-Registry anwenden -> verändert ctx
-  //   this.registry.applyPhase("postRound", { combat: combatContext, round: ctx });
-
-  //   //  logger.debug(ctx.log);
-
-  //   return ctx;
-  // }
-}
-function buildActionContext(fighter: string, roundContext: RoundContext, arg2: number) {
-  throw new Error("Function not implemented.");
 }
 

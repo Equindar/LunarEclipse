@@ -1,0 +1,175 @@
+import logger from "../../utils/apiLogger";
+import { BaseAction } from "../actions/Base";
+import { FighterId } from "../Fighter";
+import { IActionContext } from "../interfaces/ActionContext";
+import { ICombatContext } from "../interfaces/CombatContext";
+import { FighterAction } from "../interfaces/FighterAction";
+import { IRoundContext } from "../interfaces/RoundContext";
+import { RoundFighterState } from "../interfaces/RoundFighterState";
+import { TempoGroup, TempoGroupEntry } from "../interfaces/TempoGroup";
+import { RuleRegistry } from "../RuleRegistry";
+import { ActionType } from "../types/ActionType";
+import { ActionContext } from "./ActionContext";
+import { CombatContext } from "./CombatContext";
+
+export class RoundContext implements IRoundContext {
+  roundNumber: number;
+  fighters: Map<FighterId, RoundFighterState> = new Map();
+
+  private ruleRegistry: RuleRegistry;
+  private combatContext: CombatContext;
+
+  // --- Kalkulationen
+  plannedDamage: Map<FighterId, number> = new Map();
+  plannedBlock: Map<FighterId, number> = new Map();
+  plannedEnergyGain: Map<FighterId, number> = new Map();
+  extraDamageById: Map<FighterId, number> = new Map();
+  energyGainAddById: Map<FighterId, number> = new Map();
+  damageMultipliersById: Map<FighterId, number> = new Map();
+
+  tempoGroups?: TempoGroup[];
+  log: string[] = [];
+
+
+  constructor(
+    roundNumber: number,
+    ctx: ICombatContext,
+    registry: RuleRegistry
+  ) {
+    this.roundNumber = roundNumber;
+    this.combatContext = ctx;
+    this.ruleRegistry = registry;
+  }
+
+
+  commit(): void {
+    for (const [id, stage] of this.fighters.entries()) {
+      const base = this.plannedDamage.get(id) ?? 0;
+      const extra = this.extraDamageById.get(id) ?? 0;
+      const mult = this.damageMultipliersById.get(id) ?? 1;
+      const block = this.plannedBlock.get(id) ?? 0;
+      const raw = (base + extra) * mult;
+      const finalDamage = Math.max(0, Math.floor(raw - block));
+      // apply to round snapshot
+      stage.health = stage.health - finalDamage;
+      this.log.push(`[commit] ${stage.id} takes ${finalDamage} dmg (base=${base}, extra=${extra}, mult=${mult}, block=${block})`);
+    }
+
+    // energy gains
+    for (const [id, stage] of this.fighters.entries()) {
+      const baseGain = this.plannedEnergyGain.get(id) ?? 0;
+      const add = this.energyGainAddById.get(id) ?? 0;
+      const finalGain = Math.max(0, Math.floor(baseGain + add));
+      stage.energy += finalGain;
+      if (finalGain > 0) this.log.push(`[commit] ${stage.id} gains ${finalGain} energy`);
+    }
+  }
+
+  build(): void {
+    logger.warn("RoundContext.build()");
+    this.fighters.clear();
+    for (const [id, fighter] of this.combatContext.fighters.entries()) {
+      const fighterState: RoundFighterState = {
+        id: fighter.name,
+        health: fighter.health.actual,
+        energy: fighter.energy.actual,
+        actions: fighter.actions[0],
+        // ???
+        actionIndex: fighter.actionIndex
+      }
+      this.fighters.set(id, fighterState);
+    }
+
+    this.plannedDamage = new Map();
+    this.plannedBlock = new Map();
+    this.plannedEnergyGain = new Map();
+    this.extraDamageById = new Map();
+    this.energyGainAddById = new Map();
+    this.damageMultipliersById = new Map();
+
+    this.ruleRegistry.applyPhase("preActionRound", { combat: this.combatContext, round: this });
+  }
+
+  createActionContext(actorId: FighterId, patternIndex?: number): IActionContext {
+    logger.warn("RoundContext.createActionContext()");
+    const actionCtx = new ActionContext();
+    actionCtx.build({
+      roundCtx: this,
+      actorId,
+      patternIndex: patternIndex ?? 0,
+      combatCtx: this.combatContext
+    })
+    return actionCtx;
+  }
+
+  calculateTempoGroups(): TempoGroup[] {
+    var result: TempoGroup[] = [];
+    type Internal = { fighter: FighterId; patternIndex: number; action: FighterAction; totalTempo: number };
+    const temp: Internal[] = [];
+
+    for (const [id, state] of this.fighters.entries()) {
+      const index = state.actionIndex ?? 0;
+      const entry = state.actions?.pattern?.[index];
+      if (!entry) {
+        // No action for this fighter this round -> skip
+        continue;
+      }
+      // baseTempo assumed to be on BaseAction (fallback to 0 if missing)
+      const baseTempo = (entry.action && (entry.action as BaseAction).baseTempo) ?? 0;
+      const investedTempo = Number(entry.investedTempo ?? 0);
+      temp.push({
+        fighter: id,
+        patternIndex: index,
+        action: entry,
+        totalTempo: baseTempo + investedTempo,
+      });
+    }
+
+    // Stable sort: by totalTempo desc, then by fighter id asc as deterministic tie-breaker
+    temp.sort((a, b) => {
+      if (b.totalTempo !== a.totalTempo) return b.totalTempo - a.totalTempo;
+      return a.fighter.localeCompare(b.fighter);
+    });
+
+    // Group into TempoGroup[]
+    let currentTempo: number | null = null;
+    let currentActions: TempoGroupEntry[] = [];
+
+    for (const item of temp) {
+      if (currentTempo === null || item.totalTempo !== currentTempo) {
+        // push previous group
+        if (currentActions.length > 0) {
+          result.push({
+            tempo: currentTempo!,
+            actions: currentActions,
+          });
+        }
+        // start new group
+        currentTempo = item.totalTempo;
+        currentActions = [
+          {
+            fighter: item.fighter,
+            action: item.action,
+          } as TempoGroupEntry,
+        ];
+      } else {
+        // same tempo -> append
+        currentActions.push({
+          fighter: item.fighter,
+          patternIndex: item.patternIndex,
+          action: item.action,
+        } as TempoGroupEntry);
+      }
+    }
+    // push last group
+    if (currentActions.length > 0) {
+      result.push({
+        tempo: currentTempo!,
+        actions: currentActions,
+      });
+    }
+
+    this.tempoGroups = result;
+    return result;
+  }
+}

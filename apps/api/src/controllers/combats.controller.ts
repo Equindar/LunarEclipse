@@ -11,14 +11,13 @@ import { Fighter, FighterId } from "../demo/Fighter";
 import { RuleRegistry } from "../demo/RuleRegistry";
 import { CriticalStrikeRule } from "../demo/rules/CriticalStrike.rule";
 import { NoneAction } from "../demo/actions/None";
-import { RoundContext } from "../demo/interfaces/RoundContext";
 import { EarlyEnergyBoostRule } from "../demo/rules/EarlyEnergyBoost.rule";
 import { VengefulComebackRule } from "../demo/rules/VengefulComeback.rule";
-import { CombatContext } from "../demo/interfaces/CombatContext";
 import { ActionType } from "../demo/types/ActionType";
 import { ActionPattern } from "../demo/interfaces/ActionPattern";
 import { FighterAction } from "../demo/interfaces/FighterAction";
 import { BaseAction } from "../demo/actions/Base";
+import { CombatContext } from "../demo/contexts/CombatContext";
 
 
 interface TypedRequestBody extends Express.Request {
@@ -44,14 +43,10 @@ interface TypedRequestBody extends Express.Request {
 
 
 export default class CombatsController {
-  private engine: CombatEngine;
-  private registry: RuleRegistry;
   public database;
 
   constructor(db: Database) {
     this.database = db;
-    this.registry = new RuleRegistry()
-    this.engine = new CombatEngine(this.registry);
   }
 
   public onGetCombat = async (
@@ -76,21 +71,17 @@ export default class CombatsController {
         }
       }
 
-      // this.registry.register(CriticalStrikeRule);
-      this.registry.register(EarlyEnergyBoostRule);
-      this.registry.register(VengefulComebackRule);
+      const ctx = new CombatContext("Test12345", startTime, new RuleRegistry());
+      ctx.fighters = combatFighters;
 
-      this.engine.initCombat({
-        identifier: "test-identifier",
-        time: {
-          start: startTime
-        },
-        fighters: combatFighters,
-        currentRound: 1
-      });
+      const engine = new CombatEngine(ctx)
 
+      engine.initCombat();
 
-      this.engine.resolveCombatRound();
+      for (let i = 0; i < 3; i++) {
+        engine.resolveCombatRound();
+
+      }
 
       //   log.push({
       //     round: i + 1,

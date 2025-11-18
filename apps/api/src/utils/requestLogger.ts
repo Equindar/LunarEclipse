@@ -23,7 +23,7 @@ const requestLogger = createLogger({
   format: format.combine(
     format.label({ label: 'Request' }),
     format.timestamp({
-      format: 'YYYY-MM-DD hh:mm:ss.SSS Z',
+      format: 'YYYY-MM-DD HH:mm:ss.SSS Z',
     }),
     format.json(),
   ),

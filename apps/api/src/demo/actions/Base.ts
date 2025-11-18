@@ -1,4 +1,4 @@
-import { ActionContext } from "../interfaces/ActionContext";
+import { IActionContext } from "../interfaces/ActionContext";
 import { ActionType } from "../types/ActionType";
 
 export abstract class BaseAction {
@@ -23,6 +23,9 @@ export abstract class BaseAction {
   calculateTempo(energyInvested: number): number {
     return this.baseTempo + energyInvested;
   }
+  // calculateTempo(action: FighterAction, int: number): number {
+  //   return this.baseTempo + action.investedTempo;
+  // }
 
   /**
    * calculates impact based on energy invest
@@ -46,31 +49,18 @@ export abstract class BaseAction {
    * Actor performs the action in the beginning, based on the higher tempo
    * @param props
    */
-  abstract resolveAsEngage(props: ActionContext): void;
+  abstract resolveAsEngage(ctx: IActionContext): void;
 
   /**
  * Actor reacts to an incoming action, based on the lower tempo
  * @param props
  */
-  abstract resolveAsReaction(props: ActionContext): void;
+  abstract resolveAsReaction(ctx: IActionContext): void;
 
   /**
    * Actor performs the action in the same moment, based on the equal tempo
    * @param props
    */
-  abstract resolveAsMoment(props: ActionContext): void;
+  abstract resolveAsMoment(ctx: IActionContext): void;
 
-}
-// --- Utils
-/** Hilffunktion zum Tauschen der Perspektive
- * @param:
- * Tauscht folgende Übergabeparameter aus:
- * * self <-> target
- * */
-export function swapResolveProps(ctx: ActionContext): ActionContext {
-  return {
-    self: ctx.target,
-    target: ctx.self,
-    ctxRound: ctx.ctxRound
-  };
 }

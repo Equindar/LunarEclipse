@@ -6,6 +6,8 @@ export type TempoGroupEntry = {
   fighter: FighterId;
   /** Einzel-Aktion eines Aktionsmusters*/
   action: FighterAction;
+  /** Index im Aktionsmuster */
+  patternIndex: number;
 }
 
 export interface TempoGroup {

@@ -21,17 +21,17 @@ export class RuleRegistry {
 
   applyPhase(phase: RulePhase, ctx: RuleContext) {
     const rules = this.rulesByPhase.get(phase) ?? [];
-    ctx.round.log = ctx.round.log ?? [];
+    // ctx.round?.roundLog = ctx.round?.roundLog ?? [];
     for (const r of rules) {
       try {
         if (r.matches(ctx)) {
           r.apply(ctx);
           logger.debug(`Rule:${r.name} angewendet in ${phase}`)
-          ctx.round.log.push(`rule:${r.name} applied in ${phase}`);
+          // ctx.round.log.push(`rule:${r.name} applied in ${phase}`);
           if (r.stopPropagation) break;
         }
       } catch (error) {
-        ctx.round.log.push(`rule:${r.name} error: ${String(error)}`);
+        // ctx.round.log.push(`rule:${r.name} error: ${String(error)}`);
       }
     }
   }

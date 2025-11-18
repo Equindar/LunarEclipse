@@ -14,13 +14,15 @@ export const VengefulComebackRule: Rule = {
   priority: 100,
   matches: (ctx) => {
     if (ctx.round)
-      return (ctx.round.fighters.has("Maro") && (ctx.round.fighters.get("Maro")?.hp! <= 0))
+      return (ctx.round.fighters.has("Maro") && (ctx.round.fighters.get("Maro")?.health! <= 0))
     return false;
   },
   apply: (ctx) => {
-    logger.debug(`"${VengefulComebackRule.name}"-Rule angewendet. "Maro erhält 20 HP, verstärkt seinen Angriff um +2.`);
-    ctx.round!.fighters.get("Maro")?.gainHealth(20);
-    ctx.round!.fighters.get("Maro")?.applyBuff(ActionType.UTILITY_ATTACK);
-    ctx.round!.fighters.get("Maro")?.applyBuff(ActionType.UTILITY_ATTACK);
+    const subject = ctx.round!.fighters.get("Maro");
+    if (subject) {
+      logger.debug(`"${VengefulComebackRule.name}"-Rule angewendet. "Maro erhält 20 HP, verstärkt seinen Angriff um +2.`);
+      subject.health += 20;
+      subject.nextAttackBonus ? subject.nextAttackBonus += 2 : 2;
+    }
   }
 };

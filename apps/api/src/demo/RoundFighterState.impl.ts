@@ -6,11 +6,12 @@ import { ActionType } from "./types/ActionType";
 export class RoundFighterStateImpl implements RoundFighterState {
   constructor(
     public id: FighterId,
-    public hp: number,
+    public health: number,
     public energy: number,
     public nextAttackBonus: number = 0,
     public nextDefenseBonus: number = 0,
-    public actions: ActionPattern
+    public actions: ActionPattern,
+    public actionIndex: number = 0
   ) { }
 
   public applyBuff(action: ActionType): void {
@@ -29,8 +30,8 @@ export class RoundFighterStateImpl implements RoundFighterState {
 
   takeDamage(amount: number) {
     const n = Math.max(0, Math.floor(amount));
-    this.hp -= n;
-    if (this.hp < 0) this.hp = 0;
+    this.health -= n;
+    if (this.health < 0) this.health = 0;
   }
 
   gainEnergy(amount: number) {
@@ -39,6 +40,6 @@ export class RoundFighterStateImpl implements RoundFighterState {
   }
 
   gainHealth(amount: number): void {
-    this.hp += amount;
+    this.health += amount;
   }
 }

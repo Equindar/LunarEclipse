@@ -12,8 +12,8 @@ export const EarlyEnergyBoostRule: Rule = {
   apply: (ctx) => {
     logger.debug(`"${EarlyEnergyBoostRule.name}"-Rule angewendet. Energie-Regeneration erhöht: +2.`);
     ctx.round!.fighters.forEach((character) => {
-      character.gainEnergy(2)
       logger.debug(`${character.id} hat 2 Energie erhalten.`)
+      character.energy += 2;
     });
   }
 };

@@ -1,7 +1,7 @@
 import { BaseAction } from "./Base";
 import { ActionType } from "../types/ActionType";
 import logger from "../../utils/apiLogger";
-import { ActionContext } from "../interfaces/ActionContext";
+import { IActionContext } from "../interfaces/ActionContext";
 
 export class AttackAction extends BaseAction {
   /** Basiswerte */
@@ -11,23 +11,28 @@ export class AttackAction extends BaseAction {
     super(ActionType.ATTACK);
   }
 
-  resolveAsEngage(ctx: ActionContext): void {
+  resolveAsEngage(ctx: IActionContext): void {
+    logger.error("AttackAction.resolveAsEngage()");
     // Setze neuen geplannten Schaden für Target in roundCtx
-    ctx.ctxRound.plannedDamage.set(
-      ctx.target.character.name,
-      (ctx.ctxRound.plannedDamage.get(ctx.target.character.name) ?? 0) + this.baseDamage + ctx.self.impact + ctx.self.nextAttackBonus
-    );
-    logger.debug(`${self.name} greift an: ${ctx.target.character.name} erleidet ${this.baseDamage} + ${ctx.self.impact} + ${ctx.self.nextAttackBonus} Schaden.`);
 
-    // ToDo:
-    // self.resetAttackBuff();
+    ctx.ctxRound.plannedDamage.set(
+      ctx.targets![0].id,
+      this.baseDamage + ctx.actor.action.investedImpact + (ctx.actor.state.nextAttackBonus ?? 0)
+    );
+    ctx.ctxRound.plannedEnergyGain.set(
+      ctx.actor.id,
+      ctx.actor.state.energy - this.totalEnergyCost(ctx.actor.action.investedTempo + ctx.actor.action.investedImpact));
+    logger.debug(`${ctx.actor.id} greift an: ${ctx.targets![0].id} erleidet ${this.baseDamage} + ${ctx.actor.action.investedImpact} + ${ctx.actor.state.nextAttackBonus ?? 0} Schaden.`);
+    ctx.actor.state.nextAttackBonus = 0;
   }
 
-  resolveAsReaction(ctx: ActionContext): void {
+  resolveAsReaction(ctx: IActionContext): void {
+    logger.error("AttackAction.resolveAsReaction()");
     this.resolveAsEngage(ctx);
   }
 
-  resolveAsMoment(ctx: ActionContext): void {
+  resolveAsMoment(ctx: IActionContext): void {
+    logger.error("AttackAction.resolveAsMoment()");
     this.resolveAsEngage(ctx);
   }
 }

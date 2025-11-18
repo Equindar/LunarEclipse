@@ -1,6 +1,6 @@
-import { ActionContext } from "./ActionContext";
-import { CombatContext } from "./CombatContext";
-import { RoundContext } from "./RoundContext";
+import { IActionContext } from "./ActionContext";
+import { ICombatContext } from "./CombatContext";
+import { IRoundContext } from "./RoundContext";
 
 /** RuleContext
  *
@@ -10,14 +10,14 @@ export default interface RuleContext {
    *
    * wird benötigt für Regeln auf Umwelt
   */
-  combat: CombatContext;
+  combat: ICombatContext;
   /** RoundContext
    * wird benötigt, um Werte im Context anzupassen
    */
-  round?: RoundContext;
+  round?: IRoundContext;
   /** ActionContext (optional)
    * wird für Regeln mit Phase preAction/postAction benötigt
    * * Beispiel: CriticalStrike
    */
-  action?: ActionContext;
+  action?: IActionContext;
 }

@@ -13,13 +13,15 @@ export class Fighter {
     actual: number;
   };
   skills?: string[];
-  actions?: ActionPattern[];
+  actions: ActionPattern[];
+  actionIndex: number;
 
   constructor(name: string, health = { maximal: 100, actual: 100 }, energy = { maximal: 50, actual: 50 }, actions: ActionPattern[]) {
     this.name = name;
     this.health = health;
     this.energy = energy;
     this.actions = actions;
+    this.actionIndex = 0;
   }
 
   // public spendEnergy(amount: number): boolean {

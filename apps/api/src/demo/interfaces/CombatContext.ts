@@ -1,5 +1,8 @@
 import { Fighter, FighterId } from "../Fighter";
+import { RuleRegistry } from "../RuleRegistry";
 import { DamageByFighter } from "./Damage";
+import { IRoundContext } from "./RoundContext";
+import { Rule } from "./Rule";
 
 type EnvironmentData = {
   temperature: number;
@@ -8,25 +11,22 @@ type EnvironmentData = {
   humidity: number;
 }
 
-export interface CombatContext {
-  identifier: string;
+export interface ICombatContext {
+  readonly identifier: string;
+  readonly fighters: Map<FighterId, Fighter>;
+  readonly environment?: EnvironmentData;
+  ruleRegistry: RuleRegistry;
   randomSeed?: string;
   currentRound: number;
   time: {
     start: Date,
     end?: Date
   }
-  environment?: EnvironmentData;
 
-  fighters: Map<FighterId, Fighter>;
-
-  /* --- Beispiel:
-  matchId: string;
-  seed?: number;
-  settings: MatchSettings;
-  players: PlayerState[]; // persistent player info
-  globalModifiers?: Map<string, any>;
-   */
+  createRound(): IRoundContext;
+  registerRule(rule: Rule): void;
+  // snapshot(): CombatSnapshot
+  // restoreSnapshot():
 
   // Ergebnisfelder, die Regeln füllen:
   damageCaused?: DamageByFighter;

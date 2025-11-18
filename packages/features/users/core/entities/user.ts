@@ -7,21 +7,21 @@ interface UserProps {
 }
 
 export class User implements UserProps {
-  // private status: UserStatus;
+  private status: UserStatus;
   name: string;
   uuid: string;
 
   constructor(name: string, uuid: string) {
-    // this.status = new InitializedUserStatus(this);
+    this.status = new InitializedUserStatus(this);
     this.name = name;
     this.uuid = uuid;
   }
 
-  // public setStatus(status: UserStatus): void {
-  //   this.status = status;
-  // }
+  public setStatus(status: UserStatus): void {
+    this.status = status;
+  }
 
-  // public getStatus(): string {
-  //   return this.status.constructor.name;
-  // }
+  public getStatus(): string {
+    return this.status.constructor.name;
+  }
 }

@@ -1,6 +1,7 @@
-import { BaseAction, resolveProps } from "./Base";
+import { BaseAction } from "./Base";
 import { ActionType } from "../types/ActionType";
-import logger from "../../utils/apiLogger";
+import { IActionContext } from "../interfaces/ActionContext";
+
 
 export class NoneAction extends BaseAction {
   /** Basiswerte */
@@ -10,7 +11,13 @@ export class NoneAction extends BaseAction {
     super(ActionType.NONE);
   }
 
-  resolveAgainst(params: resolveProps): void {
-    logger.debug(`${params.self.name} macht nichts.`);
+  resolveAsEngage(ctx: IActionContext): void {
+    throw new Error("Method not implemented.");
+  }
+  resolveAsReaction(ctx: IActionContext): void {
+    throw new Error("Method not implemented.");
+  }
+  resolveAsMoment(ctx: IActionContext): void {
+    throw new Error("Method not implemented.");
   }
 }
