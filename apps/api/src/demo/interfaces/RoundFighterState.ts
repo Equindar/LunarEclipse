@@ -1,5 +1,4 @@
 import { FighterId } from "../Fighter";
-import { ActionType } from "../types/ActionType";
 import { ActionPattern } from "./ActionPattern";
 
 export interface RoundFighterState {

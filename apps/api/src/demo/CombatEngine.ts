@@ -5,6 +5,7 @@ import { ActionPattern } from "./interfaces/ActionPattern";
 import { EarlyEnergyBoostRule } from "./rules/EarlyEnergyBoost.rule";
 import { VengefulComebackRule } from "./rules/VengefulComeback.rule";
 import { RoundContext } from "./contexts/RoundContext";
+import { FighterId } from "./Fighter";
 
 export class CombatEngine {
   /** Rundenlänge in Millisekunden */
@@ -16,7 +17,7 @@ export class CombatEngine {
   }
 
   public initCombat() {
-    logger.warn("CombatEngine.initCombat()");
+    // --- logger.warn("CombatEngine.initCombat()");
     // Set inital RoundNumber
     this.combatContext.currentRound = 0;
 
@@ -24,7 +25,7 @@ export class CombatEngine {
     this.combatContext.ruleRegistry.register(EarlyEnergyBoostRule)
     this.combatContext.ruleRegistry.register(VengefulComebackRule)
 
-    this.combatContext.ruleRegistry.applyPhase("preCombat", { combat: this.combatContext });
+    this.combatContext.ruleRegistry.applyPhase("preCombat", { combatContext: this.combatContext });
   }
 
 
@@ -94,7 +95,7 @@ export class CombatEngine {
   }
 
   public resolveCombatRound() {
-    logger.warn("CombatEngine.resolveCombatRound()");
+    // --- logger.warn("CombatEngine.resolveCombatRound()");
     this.combatContext.currentRound += 1;
 
     const roundContext = this.combatContext.createRound();
@@ -104,55 +105,61 @@ export class CombatEngine {
     // TempoGroups ermitteln
     logger.info(`Runde #${roundContext.roundNumber}:`)
     roundContext.fighters.forEach(element => {
+      var debug: string = "";
       logger.info(`${element.id}: [HP:${element.health}, E:${element.energy}]`);
-      logger.debug(`${element.actions.name} (${element.actions.probability})`);
+      element.actions.pattern.forEach(element => {
+        debug += `${element.action.type}:t${element.investedTempo},i${element.investedImpact} `;
+      });
+      logger.debug(`${element.actions.name} (${element.actions.probability}) - ${debug}`);
     });
+
+    this.ensureActionsForActionRound(roundContext);
     const groups = roundContext.calculateTempoGroups();
 
     // logger.debug(roundContext);
 
     for (const tempoGroup of groups) {
-      this.combatContext.ruleRegistry.applyPhase("preGroup", { combat: this.combatContext, round: roundContext });
+      this.combatContext.ruleRegistry.applyPhase("preGroup", { combatContext: this.combatContext, roundContext: roundContext });
 
       if (tempoGroup.actions.length === 1) {
         // Es ist genau eine Aktion in dieser TempoGruppe vorhanden
-        logger.error("tempoGroup.actions.length: 1");
+        // logger.error("tempoGroup.actions.length: 1");
         const entry = tempoGroup.actions[0];
         // ActionContext erstellen
-        const actionContext = roundContext.createActionContext(entry.fighter, entry.patternIndex);
+        const actionContext = roundContext.createActionContext(entry.fighter, entry.actionIndex);
 
-        this.combatContext.ruleRegistry.applyPhase("preAction", { combat: this.combatContext, round: roundContext, action: actionContext });
+        this.combatContext.ruleRegistry.applyPhase("preAction", { combatContext: this.combatContext, roundContext: roundContext, actionContext: actionContext });
         actionContext.execute("Engage", this.combatContext.ruleRegistry);
-        this.combatContext.ruleRegistry.applyPhase("postAction", { combat: this.combatContext, round: roundContext, action: actionContext });
+        this.combatContext.ruleRegistry.applyPhase("postAction", { combatContext: this.combatContext, roundContext: roundContext, actionContext: actionContext });
 
         actionContext.commit();
       } else {
         // Es sind mehr als eine Aktion in dieser TempoGruppe vorhanden
-        logger.error(`tempoGroup.actions.length: ${tempoGroup.actions.length}`);
+        // logger.error(`tempoGroup.actions.length: ${tempoGroup.actions.length}`);
         // simultaneous group: preAction for all, then resolve all, then postAction for all
-        const actionCtxs = tempoGroup.actions.map(action => roundContext.createActionContext(action.fighter, action.patternIndex));
-        for (const ctx of actionCtxs) this.combatContext.ruleRegistry.applyPhase("preAction", { combat: this.combatContext, round: roundContext, action: ctx });
+        const actionCtxs = tempoGroup.actions.map(action => roundContext.createActionContext(action.fighter, action.actionIndex));
+        for (const ctx of actionCtxs) this.combatContext.ruleRegistry.applyPhase("preAction", { combatContext: this.combatContext, roundContext: roundContext, actionContext: ctx });
 
         for (const ctx of actionCtxs) ctx.execute("Moment", this.combatContext.ruleRegistry);
 
-        for (const ctx of actionCtxs) this.combatContext.ruleRegistry.applyPhase("postAction", { combat: this.combatContext, round: roundContext, action: ctx });
+        for (const ctx of actionCtxs) this.combatContext.ruleRegistry.applyPhase("postAction", { combatContext: this.combatContext, roundContext: roundContext, actionContext: ctx });
 
         for (const ctx of actionCtxs) ctx.commit();
         // commit group-level effects (recommended) - e.g. resolve area-of-effect application, mark KOs
         // this.commitGroupEffects(tempoGroup, roundContext);
       }
 
-      this.combatContext.ruleRegistry.applyPhase("postGroup", { combat: this.combatContext, round: roundContext });
+      this.combatContext.ruleRegistry.applyPhase("postGroup", { combatContext: this.combatContext, roundContext: roundContext });
 
       // Optional: prune fighters with hp <= 0 from remaining groups (if you want immediate KO removal)
       // this.removeDeadFromFutureGroups(roundContext, groups);
     }
-    this.combatContext.ruleRegistry.applyPhase("postActionRound", { combat: this.combatContext, round: roundContext });
+    this.combatContext.ruleRegistry.applyPhase("postActionRound", { combatContext: this.combatContext, roundContext: roundContext });
     roundContext.commit();
 
-    this.commitCombatRound(roundContext);
-
     this.advanceActionIndices(roundContext);
+
+    this.commitCombatRound(roundContext);
   }
 
   public commitCombatRound(ctx: IRoundContext) {
@@ -164,6 +171,7 @@ export class CombatEngine {
       if (!persistent) continue;
       persistent.health.actual = stage.health;
       persistent.energy.actual = stage.energy;
+      persistent.actionIndex = stage.actionIndex;
       // commit other persistent fields as needed
     }
   }
@@ -220,15 +228,37 @@ export class CombatEngine {
   }
 
   advanceActionIndices(round: IRoundContext) {
-    for (const [id, st] of round.fighters.entries()) {
-      const old = st.actionIndex ?? 0;
+    for (const [id, stage] of round.fighters.entries()) {
+      const old = stage.actionIndex ?? 0;
       const next = old + 1;
-      if (st.actions && next < st.actions.pattern.length) {
-        st.actionIndex = next;
+      if (stage.actions && next < stage.actions.pattern.length) {
+        stage.actionIndex = next;
       } else {
         // naive: reset to 0 (or call getNewActionPattern)
-        st.actions = this.getNewActionPattern(this.combatContext, id); // assumed sync here, adapt if async
-        st.actionIndex = 0;
+        stage.actions = this.getNewActionPattern(this.combatContext, id); // assumed sync here, adapt if async
+        stage.actionIndex = 0;
+      }
+    }
+  }
+
+  public ensureActionsForActionRound(roundCtx: IRoundContext) {
+    for (const [id, f] of roundCtx.fighters.entries()) {
+      // defensive: if no actions at all -> request new
+      if (!f.actions || !Array.isArray(f.actions.pattern) || f.actions.pattern.length === 0) {
+        const newPattern = this.getNewActionPattern(this.combatContext, id);
+        f.actions = newPattern;
+        f.actionIndex = 0;
+        roundCtx.log.push(`ensureActions: ${id} got new pattern (was missing)`);
+        continue;
+      }
+
+      // if actionIndex invalid -> request new pattern
+      const idx = Number.isFinite(f.actionIndex) ? f.actionIndex : 0;
+      if (idx < 0 || idx >= f.actions.pattern.length) {
+        const newPattern = this.getNewActionPattern(this.combatContext, id);
+        f.actions = newPattern;
+        f.actionIndex = 0;
+        roundCtx.log.push(`ensureActions: ${id} pattern exhausted -> new pattern loaded`);
       }
     }
   }

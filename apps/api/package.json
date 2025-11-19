@@ -1,9 +1,11 @@
 {
   "name": "lunareclipse-api",
   "version": "1.0.0",
+  "description": "LunarEclipse-API, written in typescript",
+  "main": "server.ts",
   "scripts": {
     "dev": "ts-node-dev -r tsconfig-paths/register --respawn --transpile-only src/server.ts",
-    "start": "node build/server.js",
+    "start": "node build/src/server.js",
     "build": "tsc -p tsconfig.json",
     "test": "jest --passWithNoTests",
     "test:e2e": "jest --testPathPattern=test/e2e",

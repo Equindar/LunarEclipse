@@ -1,4 +1,5 @@
 import { IActionContext } from "../interfaces/ActionContext";
+import { FighterAction } from "../interfaces/FighterAction";
 import { ActionType } from "../types/ActionType";
 
 export abstract class BaseAction {
@@ -41,8 +42,8 @@ export abstract class BaseAction {
    * @param energyInvested spent energy to empower the action
    * @returns total energy cost
    */
-  totalEnergyCost(energyInvested: number): number {
-    return this.baseEnergyCost + energyInvested;
+  totalEnergyCost(action: FighterAction): number {
+    return this.baseEnergyCost + action.investedTempo + action.investedImpact;
   }
 
   /**

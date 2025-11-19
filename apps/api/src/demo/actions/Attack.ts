@@ -12,27 +12,24 @@ export class AttackAction extends BaseAction {
   }
 
   resolveAsEngage(ctx: IActionContext): void {
-    logger.error("AttackAction.resolveAsEngage()");
+    // logger.error("AttackAction.resolveAsEngage()");
     // Setze neuen geplannten Schaden für Target in roundCtx
 
     ctx.ctxRound.plannedDamage.set(
       ctx.targets![0].id,
       this.baseDamage + ctx.actor.action.investedImpact + (ctx.actor.state.nextAttackBonus ?? 0)
     );
-    ctx.ctxRound.plannedEnergyGain.set(
-      ctx.actor.id,
-      ctx.actor.state.energy - this.totalEnergyCost(ctx.actor.action.investedTempo + ctx.actor.action.investedImpact));
     logger.debug(`${ctx.actor.id} greift an: ${ctx.targets![0].id} erleidet ${this.baseDamage} + ${ctx.actor.action.investedImpact} + ${ctx.actor.state.nextAttackBonus ?? 0} Schaden.`);
     ctx.actor.state.nextAttackBonus = 0;
   }
 
   resolveAsReaction(ctx: IActionContext): void {
-    logger.error("AttackAction.resolveAsReaction()");
+    // logger.error("AttackAction.resolveAsReaction()");
     this.resolveAsEngage(ctx);
   }
 
   resolveAsMoment(ctx: IActionContext): void {
-    logger.error("AttackAction.resolveAsMoment()");
+    // logger.error("AttackAction.resolveAsMoment()");
     this.resolveAsEngage(ctx);
   }
 }

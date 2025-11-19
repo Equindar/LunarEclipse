@@ -27,7 +27,7 @@ export interface IActionContext {
   ctxRound: IRoundContext;
   readonly ctxCombat?: ICombatContext;
 
-  actionLog?: string[];
+  log?: string[];
   cancelled: boolean;
 
   execute(perspective: ActionPhase, registry?: RuleRegistry): void;

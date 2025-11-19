@@ -1,4 +1,5 @@
 import logger from "../../utils/apiLogger";
+import { NoneAction } from "../actions/None";
 import { FighterId } from "../Fighter";
 import { IActionContext } from "../interfaces/ActionContext";
 import { ActionPhase } from "../interfaces/ActionPhase";
@@ -32,19 +33,20 @@ export class ActionContext implements IActionContext {
   build(params: {
     roundCtx: IRoundContext;
     actorId: FighterId;
-    patternIndex?: number;
+    actionIndex?: number;
     targetSelector?: (roundCtx: IRoundContext, actorId: FighterId, action: FighterAction) => FighterId[];
     combatCtx?: ICombatContext;
     allowAutoOtherAction?: boolean;
   }) {
-    logger.warn("ActionContext.build()")
-    const { roundCtx, actorId, patternIndex = undefined, targetSelector = undefined, combatCtx, allowAutoOtherAction = true } = params;
 
+    // --- logger.warn("ActionContext.build()")
+
+    const { roundCtx, actorId, actionIndex = undefined, targetSelector = undefined, combatCtx, allowAutoOtherAction = true } = params;
     const actorState = roundCtx.fighters.get(actorId);
     if (!actorState) throw new Error("build ActionContext: actor not found: " + actorId);
 
     // pick actionEntry from actor.actions.pattern[actionIndex] or provided patternIndex
-    const idx = patternIndex ?? actorState.actionIndex ?? 0;
+    const idx = actorState.actionIndex ?? actionIndex ?? 0;
     const pattern = actorState.actions?.pattern ?? [];
     const action = pattern[Math.min(idx, Math.max(0, pattern.length - 1))];
     if (!action) throw new Error(`build ActionContext: no action entry for actor ${actorId} at index ${idx}`);
@@ -85,7 +87,8 @@ export class ActionContext implements IActionContext {
   /** execute führt die passende resolveAsX Methode der BaseAction aus */
   execute(perspective: ActionPhase, registry?: RuleRegistry) {
 
-    logger.warn("ActionContext.execute()");
+    // --- logger.warn("ActionContext.execute()");
+
     // Bekommt perspective Engage/Reaction/Moment
     // führt registry.applyPhase.preAction aus
     // Check auf Action-cancelled
@@ -101,8 +104,23 @@ export class ActionContext implements IActionContext {
 
     // allow preAction rules to run earlier (Engine usually calls this)
     // call the action implementation
-    const base = this.actor.action.action;
-    logger.debug(base.type);
+    var base = this.actor.action.action;
+    logger.debug(`${this.actor.id} benutzt: ${base.type} [t${this.actor.action.investedTempo},i${this.actor.action.investedImpact}]`);
+
+    const energyCost = base.totalEnergyCost(this.actor.action);
+    if (this.actor.state.energy < energyCost) {
+      logger.debug(`${this.actor.id} hat nicht genug Energie für die Aktion`);
+      this.actor.action = {
+        action: new NoneAction(),
+        investedImpact: 0,
+        investedTempo: 0
+      };
+      base = new NoneAction();
+    }
+    else {
+      this.actor.state.energy -= energyCost;
+    }
+
     try {
       if (perspective === "Engage") {
         if (base.resolveAsEngage) base.resolveAsEngage(this);
@@ -120,6 +138,5 @@ export class ActionContext implements IActionContext {
   }
 
   commit(): void {
-
   }
 }

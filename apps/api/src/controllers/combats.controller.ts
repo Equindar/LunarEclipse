@@ -78,7 +78,7 @@ export default class CombatsController {
 
       engine.initCombat();
 
-      for (let i = 0; i < 3; i++) {
+      for (let i = 0; i < 2; i++) {
         engine.resolveCombatRound();
 
       }
