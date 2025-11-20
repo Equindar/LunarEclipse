@@ -2,6 +2,7 @@ import { BaseAction } from "./Base";
 import { ActionType } from "../types/ActionType";
 import { IActionContext } from "../interfaces/ActionContext";
 import logger from "../../utils/apiLogger";
+import { formatDuration } from "../utils/time";
 
 export class DefendAction extends BaseAction {
   constructor() {
@@ -9,17 +10,32 @@ export class DefendAction extends BaseAction {
   }
 
   resolveAsEngage(ctx: IActionContext): void {
-    logger.error("DefendAction.resolveAsEngage()");
-    throw new Error("Method not implemented.");
+    const actor = ctx.actor.id;
+    const state = ctx.ctxRound.fighters.get(actor)!;
+    const execution = ctx.ctxCombat.time.elapsed + (1000 - (ctx.actor.action.investedTempo * 100));
+
+    const block = this.baseBlock + ctx.actor.action.investedImpact + ctx.actor.state.nextDefenseBonus
+    ctx.ctxRound.addPlannedBlock(actor, block);
+    logger.debug(`[${formatDuration(execution)}] ${actor} blockt: erhält ${this.baseBlock} + ${ctx.actor.action.investedImpact} + ${ctx.actor.state.nextDefenseBonus} Schild.`);
+    state.resetDefenseBuff();
+
   }
+
   resolveAsReaction(ctx: IActionContext): void {
-    logger.error("DefendAction.resolveAsReaction()");
-    throw new Error("Method not implemented.");
+    const actor = ctx.actor.id;
+    const state = ctx.ctxRound.fighters.get(actor)!;
+    const execution = ctx.ctxCombat.time.elapsed + (1000 - (ctx.actor.action.investedTempo * 100));
+
+    const block = 1 + ctx.actor.action.investedImpact + ctx.actor.state.nextDefenseBonus
+    ctx.ctxRound.addPlannedBlock(actor, block);
+    logger.debug(`[${formatDuration(execution)}] ${actor} blockt (verspätet): erhält ${1} + ${ctx.actor.action.investedImpact} + ${ctx.actor.state.nextDefenseBonus} Schild.`);
+    state.resetDefenseBuff();
   }
+
   resolveAsMoment(ctx: IActionContext): void {
-    logger.error("DefendAction.resolveAsMoment()");
-    throw new Error("Method not implemented.");
+    this.resolveAsEngage(ctx);
   }
+
   // // --- DefendAction reagiert auf Attack von other.ActionType.ATTACK
   // // Attack vs Attack: Ziel erleidet Schaden (+ Impact)
   // // --- Attack trifft auf Defend

@@ -1,7 +1,7 @@
 import { FighterId } from "../Fighter";
 import { ActionPattern } from "./ActionPattern";
 
-export interface RoundFighterState {
+export interface IRoundFighterState {
   id: FighterId;
   health: number;
   energy: number;

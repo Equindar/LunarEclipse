@@ -22,6 +22,7 @@ import { CombatContext } from "../demo/contexts/CombatContext";
 
 interface TypedRequestBody extends Express.Request {
   body: {
+    limit?: number,
     fighters: {
       name: string;
       energy: {
@@ -66,6 +67,7 @@ export default class CombatsController {
             item.name,
             { maximal: item.health.maximal, actual: item.health.actual },
             { maximal: item.energy.maximal, actual: item.energy.actual },
+            { nextAttack: 0, nextDefense: 0 },
             this.parseActionPatterns(item.actions)
           ));
         }
@@ -77,39 +79,15 @@ export default class CombatsController {
       const engine = new CombatEngine(ctx)
 
       engine.initCombat();
-
-      for (let i = 0; i < 2; i++) {
+      const limit = req.body.limit ?? 3;
+      for (let i = 0; i < limit; i++) {
         engine.resolveCombatRound();
-
+        if (engine.isCombatOver()) {
+          logger.error("Kampf vorbei, YAY!");
+          return;
+        }
       }
 
-      //   log.push({
-      //     round: i + 1,
-      //     attacker: { hp: attacker.health.actual, energy: attacker.energy },
-      //     defender: { hp: defender.health.actual, energy: defender.energy },
-      //   });
-
-      //   // Kampfende, sobald jemand 0 oder weniger HP hat
-      //   if (attacker.health.actual <= 0 || defender.health.actual <= 0) {
-      //     break;
-      //   }
-      // }
-
-      // const winner =
-      //   attacker.health.actual <= 0 && defender.health.actual <= 0
-      //     ? "Draw"
-      //     : attacker.health.actual <= 0
-      //       ? defender.name
-      //       : defender.health.actual <= 0
-      //         ? attacker.name
-      //         : "None";
-
-      // return res.status(200).json({
-      //   result: "Kampf beendet",
-      //   winner,
-      //   finalState: { attacker, defender },
-      //   rounds: log,
-      // });
       return res.sendStatus(200);
     } catch (err) {
       logger.error(err);

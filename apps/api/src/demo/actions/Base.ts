@@ -14,28 +14,29 @@ export abstract class BaseAction {
   energyGain = 0;
 
 
-  constructor(public type: ActionType) { }
-
-  /**
-   * Calculates tempo based on energy invest
-   * @param energyInvested spent energy to increase tempo
-   * @returns total tempo
-   */
-  calculateTempo(energyInvested: number): number {
-    return this.baseTempo + energyInvested;
+  constructor(public type: ActionType) {
   }
-  // calculateTempo(action: FighterAction, int: number): number {
-  //   return this.baseTempo + action.investedTempo;
+
+  // /**
+  //  * Calculates tempo based on energy invest
+  //  * @param energyInvested spent energy to increase tempo
+  //  * @returns total tempo
+  //  */
+  // calculateTempo(energyInvested: number): number {
+  //   return this.baseTempo + energyInvested;
   // }
+  // // calculateTempo(action: FighterAction, int: number): number {
+  // //   return this.baseTempo + action.investedTempo;
+  // // }
 
-  /**
-   * calculates impact based on energy invest
-   * @param energyInvested spent energy to increase impact
-   * @returns total impact
-   */
-  calculateImpact(energyInvested: number): number {
-    return this.baseImpact + energyInvested;
-  }
+  // /**
+  //  * calculates impact based on energy invest
+  //  * @param energyInvested spent energy to increase impact
+  //  * @returns total impact
+  //  */
+  // calculateImpact(energyInvested: number): number {
+  //   return this.baseImpact + energyInvested;
+  // }
 
   /**
    * calculates the energy consumption of the action
@@ -56,7 +57,16 @@ export abstract class BaseAction {
  * Actor reacts to an incoming action, based on the lower tempo
  * @param props
  */
-  abstract resolveAsReaction(ctx: IActionContext): void;
+  abstract resolveAsReaction(
+    ctx: IActionContext
+    // ,
+    // targettedBy: {
+    //   id: FighterId;
+    //   state: RoundFighterState;
+    //   action: FighterAction;
+    //   primary?: boolean;
+    // }[]
+  ): void;
 
   /**
    * Actor performs the action in the same moment, based on the equal tempo

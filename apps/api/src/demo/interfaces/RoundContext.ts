@@ -1,6 +1,7 @@
 import { FighterId } from "../Fighter";
+import { RoundFighterState } from "../RoundFighterState";
 import { IActionContext } from "./ActionContext";
-import { RoundFighterState } from "./RoundFighterState";
+
 import { TempoGroup } from "./TempoGroup";
 
 

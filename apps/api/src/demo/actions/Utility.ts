@@ -1,6 +1,7 @@
 import { BaseAction } from "./Base";
 import { ActionType } from "../types/ActionType";
 import { IActionContext } from "../interfaces/ActionContext";
+import logger from "../../utils/apiLogger";
 
 export class UtilityAction extends BaseAction {
   energyGain: number = 3;
@@ -10,13 +11,18 @@ export class UtilityAction extends BaseAction {
   }
 
   resolveAsEngage(ctx: IActionContext): void {
-    throw new Error("Method not implemented.");
+    const actor = ctx.actor.id;
+
+    const energy = this.energyGain + ctx.actor.action.investedImpact
+    ctx.ctxRound.addPlannedEnergyGain(actor, energy);
+    logger.debug(`${actor} regeneriert: erhält ${this.energyGain} + ${ctx.actor.action.investedImpact} Energie.`);
   }
+
   resolveAsReaction(ctx: IActionContext): void {
-    throw new Error("Method not implemented.");
+    this.resolveAsEngage(ctx);
   }
   resolveAsMoment(ctx: IActionContext): void {
-    throw new Error("Method not implemented.");
+    this.resolveAsEngage(ctx);
   }
 
   // // --- Attack trifft auf Utility

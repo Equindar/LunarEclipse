@@ -10,7 +10,7 @@ export class CombatContext implements ICombatContext {
   readonly randomSeed?: string | undefined;
   public currentRound: number;
   readonly environment?: { temperature: number; brightness: number; visibility: number; humidity: number; } | undefined;
-  time: { start: Date; end?: Date; };
+  time: { start: Date; elapsed: number; end?: Date; };
   ruleRegistry: RuleRegistry;
   fighters: Map<string, Fighter> = new Map();
 
@@ -28,7 +28,8 @@ export class CombatContext implements ICombatContext {
     this.ruleRegistry = registry;
     this.currentRound = 0;
     this.time = {
-      start: startTime
+      start: startTime,
+      elapsed: 0
     }
 
 

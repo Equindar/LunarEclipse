@@ -12,46 +12,22 @@ export class Fighter {
     maximal: number;
     actual: number;
   };
+  buffs: {
+    nextAttack: number;
+    nextDefense: number;
+  }
   skills?: string[];
   actions: ActionPattern[];
-  actionIndex: number;
 
-  constructor(name: string, health = { maximal: 100, actual: 100 }, energy = { maximal: 50, actual: 50 }, actions: ActionPattern[]) {
+  currentActionIndex: number;
+  currentPattern?: ActionPattern;
+
+  constructor(name: string, health = { maximal: 100, actual: 100 }, energy = { maximal: 50, actual: 50 }, buffs = { nextAttack: 0, nextDefense: 0 }, actions: ActionPattern[]) {
     this.name = name;
     this.health = health;
     this.energy = energy;
+    this.buffs = buffs;
     this.actions = actions;
-    this.actionIndex = 0;
+    this.currentActionIndex = 0;
   }
-
-  // public spendEnergy(amount: number): boolean {
-  //   if (this.energy.actual < amount) return false;
-  //   this.energy.actual -= amount;
-  //   return true;
-  // }
-
-  // public gainEnergy(amount: number): void {
-  //   this.energy.actual += amount;
-  //   // avoid energy overflow
-  //   if (this.energy.actual > this.energy.maximal) {
-  //     this.energy.actual = this.energy.maximal;
-  //   }
-  // }
-
-  // public takeDamage(amount: number): void {
-  //   this.health.actual -= Math.max(0, amount);
-  // }
-
-  // public applyBuff(action: ActionType): void {
-  //   if (action === ActionType.UTILITY_ATTACK) this.nextAttackBonus += 1;
-  //   if (action === ActionType.UTILITY_DEFEND) this.nextDefenseBonus += 1;
-  // }
-
-  // public resetAttackBuff(): void {
-  //   this.nextAttackBonus = 0;
-  // }
-
-  // public resetDefenseBuff(): void {
-  //   this.nextDefenseBonus = 0;
-  // }
 }

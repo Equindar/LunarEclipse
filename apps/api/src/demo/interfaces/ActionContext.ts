@@ -1,12 +1,15 @@
+
+import { RoundContext } from "../contexts/RoundContext";
 import { FighterId } from "../Fighter";
+import { RoundFighterState } from "../RoundFighterState";
 import { RuleRegistry } from "../RuleRegistry";
 import { ActionPhase } from "./ActionPhase";
 import { ICombatContext } from "./CombatContext";
 import { FighterAction } from "./FighterAction";
-import { IRoundContext } from "./RoundContext";
-import { RoundFighterState } from "./RoundFighterState";
+
 
 export interface IActionContext {
+  readonly ctxCombat: ICombatContext;
   // Actor
   actor: {
     id: FighterId,
@@ -15,17 +18,25 @@ export interface IActionContext {
   }
 
   // Target(s)
-  targets?: [{
+  // ausgehend
+  selectedTargets?: [{
     id: FighterId;
     state: RoundFighterState;
     action: FighterAction;
     primary?: boolean;
   }]
+  // eingehend
+  targettedBy?: [{
+    id: FighterId;
+    state: RoundFighterState;
+    action: FighterAction;
+    primary?: boolean;
+  }];
+
 
   // fighter: Map<FighterId, FighterAction>
   phase?: ActionPhase;
-  ctxRound: IRoundContext;
-  readonly ctxCombat?: ICombatContext;
+  ctxRound: RoundContext;
 
   log?: string[];
   cancelled: boolean;

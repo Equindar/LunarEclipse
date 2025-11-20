@@ -2,6 +2,7 @@ import { BaseAction } from "./Base";
 import { ActionType } from "../types/ActionType";
 import logger from "../../utils/apiLogger";
 import { IActionContext } from "../interfaces/ActionContext";
+import { formatDuration } from "../utils/time";
 
 export class AttackAction extends BaseAction {
   /** Basiswerte */
@@ -13,14 +14,19 @@ export class AttackAction extends BaseAction {
 
   resolveAsEngage(ctx: IActionContext): void {
     // logger.error("AttackAction.resolveAsEngage()");
-    // Setze neuen geplannten Schaden für Target in roundCtx
+    // Inits
+    const actor = ctx.actor.id;
+    const targets = ctx.selectedTargets;
+    const state = ctx.ctxRound.fighters.get(actor)!;
+    const execution = ctx.ctxCombat.time.elapsed + (1000 - (ctx.actor.action.investedTempo * 100));
+    // logger.verbose(targets);
 
-    ctx.ctxRound.plannedDamage.set(
-      ctx.targets![0].id,
-      this.baseDamage + ctx.actor.action.investedImpact + (ctx.actor.state.nextAttackBonus ?? 0)
-    );
-    logger.debug(`${ctx.actor.id} greift an: ${ctx.targets![0].id} erleidet ${this.baseDamage} + ${ctx.actor.action.investedImpact} + ${ctx.actor.state.nextAttackBonus ?? 0} Schaden.`);
-    ctx.actor.state.nextAttackBonus = 0;
+    const damage = this.baseDamage + ctx.actor.action.investedImpact + ctx.actor.state.nextAttackBonus;
+    targets?.forEach(element => {
+      ctx.ctxRound.addPlannedDamage(element.id, damage);
+    });
+    logger.debug(`[${formatDuration(execution)}] ${actor} greift an: ${ctx.selectedTargets![0].id} erleidet ${this.baseDamage} + ${ctx.actor.action.investedImpact} + ${ctx.actor.state.nextAttackBonus} Schaden.`);
+    state.resetAttackBuff();
   }
 
   resolveAsReaction(ctx: IActionContext): void {

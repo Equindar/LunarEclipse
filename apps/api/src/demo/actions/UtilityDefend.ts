@@ -1,6 +1,7 @@
 import { BaseAction } from "./Base";
 import { ActionType } from "../types/ActionType";
 import { IActionContext } from "../interfaces/ActionContext";
+import logger from "../../utils/apiLogger";
 
 export class UtilityDefendAction extends BaseAction {
   energyGain: number = 2;
@@ -10,13 +11,20 @@ export class UtilityDefendAction extends BaseAction {
   }
 
   resolveAsEngage(ctx: IActionContext): void {
-    throw new Error("Method not implemented.");
+    const actor = ctx.actor.id;
+    const state = ctx.ctxRound.fighters.get(actor)!;
+
+    const energy = this.energyGain + ctx.actor.action.investedImpact
+    ctx.ctxRound.addPlannedEnergyGain(actor, energy);
+    state.applyBuff(this.type)
+    logger.debug(`${actor} regeneriert: erhält ${this.energyGain} + ${ctx.actor.action.investedImpact} Energie.`);
   }
+
   resolveAsReaction(ctx: IActionContext): void {
-    throw new Error("Method not implemented.");
+    this.resolveAsEngage(ctx);
   }
   resolveAsMoment(ctx: IActionContext): void {
-    throw new Error("Method not implemented.");
+    this.resolveAsEngage(ctx);
   }
 
   // // --- Wie UtilityDefend auf Attack reagiert

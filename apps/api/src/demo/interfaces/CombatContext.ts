@@ -20,6 +20,7 @@ export interface ICombatContext {
   currentRound: number;
   time: {
     start: Date,
+    elapsed: number,
     end?: Date
   }
 

@@ -4,8 +4,7 @@ import { ICombatContext } from "./interfaces/CombatContext";
 import { ActionPattern } from "./interfaces/ActionPattern";
 import { EarlyEnergyBoostRule } from "./rules/EarlyEnergyBoost.rule";
 import { VengefulComebackRule } from "./rules/VengefulComeback.rule";
-import { RoundContext } from "./contexts/RoundContext";
-import { FighterId } from "./Fighter";
+import { formatDuration } from "./utils/time";
 
 export class CombatEngine {
   /** Rundenlänge in Millisekunden */
@@ -28,68 +27,6 @@ export class CombatEngine {
     this.combatContext.ruleRegistry.applyPhase("preCombat", { combatContext: this.combatContext });
   }
 
-
-  // public buildActionContext(fighterId: FighterId, roundContext: IRoundContext): IActionContext {
-  //   logger.warn("buildActionContext()");
-
-  //   const actorState = roundContext.fighters.get(fighterId);
-  //   if (!actorState) {
-  //     throw new Error(`buildActionContext: actor '${fighterId}' not found in roundContext`);
-  //   }
-  //   const patternIndex = actorState.actionIndex ?? 0;
-
-  //   let actionCtx: IActionContext = {
-  //     actorId: fighterId,
-  //     actorState: actorState,
-  //     action: actorState.actions.pattern[patternIndex],
-  //     targets: [],
-  //     targetStates: [],
-  //     ctxRound: roundContext
-  //   }
-  //   // pick the FighterAction from the pattern
-  //   const pattern = actorState.actions?.pattern ?? [];
-  //   if (pattern.length === 0) {
-  //     throw new Error(`buildActionContext: actor '${fighterId}' has empty action pattern`);
-  //   }
-  //   const actionEntry = pattern[Math.min(patternIndex, pattern.length - 1)];
-  //   logger.error("Math.min(patternIndex, pattern.length - 1): " + Math.min(patternIndex, pattern.length - 1));
-  //   // logger.error(actionEntry);
-
-  //   // ProtoTyp: Targetting
-  //   if (fighterId == "Equindar") {
-  //     actionCtx.targets.push("Maro");
-  //     actionCtx.targetStates.push(roundContext.fighters.get("Maro")!);
-  //   }
-  //   if (fighterId == "Maro") {
-  //     actionCtx.targets.push("Equindar");
-  //     actionCtx.targetStates.push(roundContext.fighters.get("Equindar")!);
-  //   }
-  //   return actionCtx;
-
-  //   // // initial target selection (engine can let preAction-rules modify this ctx)
-  //   // let targets = targetSelector(roundContext, fighterId, actionEntry, { actorState });
-  //   // if (!Array.isArray(targets) || targets.length === 0) {
-  //   //   // fallback to self-target to avoid empty target list
-  //   //   targets = [fighterId];
-  //   // }
-
-  //   // // resolve target states (filter out missing but keep mapping order)
-  //   // const targetStates: RoundFighterState[] = targets.map((tid) => {
-  //   //   const ts = roundContext.fighters.get(tid);
-  //   //   if (!ts) {
-  //   //     // If a target ID isn't present (e.g. was removed), we keep a placeholder object to avoid crashes.
-  //   //     return {
-  //   //       id: tid,
-  //   //       name: tid,
-  //   //       hp: 0,
-  //   //       energy: 0,
-  //   //       actions: { name: "empty", probability: 0, pattern: [] },
-  //   //     } as RoundFighterState;
-  //   //   }
-  //   //   return ts;
-  //   // });
-  // }
-
   public calculateLooting() {
     throw new Error("not implemented yet.")
   }
@@ -102,8 +39,8 @@ export class CombatEngine {
     roundContext.build();
 
     // this.registry.applyPhase("preCombatRound", { combat: this.combatContext, round: roundContext });
-    // TempoGroups ermitteln
-    logger.info(`Runde #${roundContext.roundNumber}:`)
+    // DEBUG Ausgabe
+    logger.info(`[${formatDuration(this.combatContext.time.elapsed)}] Runde #${roundContext.roundNumber}:`);
     roundContext.fighters.forEach(element => {
       var debug: string = "";
       logger.info(`${element.id}: [HP:${element.health}, E:${element.energy}]`);
@@ -113,13 +50,18 @@ export class CombatEngine {
       logger.debug(`${element.actions.name} (${element.actions.probability}) - ${debug}`);
     });
 
+    // ActionPatterns ermitteln, wenn nötig
     this.ensureActionsForActionRound(roundContext);
+    // TempoGroups ermitteln
     const groups = roundContext.calculateTempoGroups();
+
+    const actedFighters = new Set<string>();
 
     // logger.debug(roundContext);
 
     for (const tempoGroup of groups) {
       this.combatContext.ruleRegistry.applyPhase("preGroup", { combatContext: this.combatContext, roundContext: roundContext });
+      let perspective: "Engage" | "Reaction" = "Engage";
 
       if (tempoGroup.actions.length === 1) {
         // Es ist genau eine Aktion in dieser TempoGruppe vorhanden
@@ -128,11 +70,19 @@ export class CombatEngine {
         // ActionContext erstellen
         const actionContext = roundContext.createActionContext(entry.fighter, entry.actionIndex);
 
+        // Ermittle Perspektive (basierend auf actedFighters)
+        if (actionContext.selectedTargets) {
+          const anyTargetActed = actionContext.selectedTargets.some(item => actedFighters.has(item.id));
+          perspective = anyTargetActed ? "Reaction" : "Engage";
+        }
+
         this.combatContext.ruleRegistry.applyPhase("preAction", { combatContext: this.combatContext, roundContext: roundContext, actionContext: actionContext });
-        actionContext.execute("Engage", this.combatContext.ruleRegistry);
+        actionContext.execute(perspective, this.combatContext.ruleRegistry);
         this.combatContext.ruleRegistry.applyPhase("postAction", { combatContext: this.combatContext, roundContext: roundContext, actionContext: actionContext });
 
         actionContext.commit();
+        // Füge Kämpfer zur Liste 'actedFighters' hinzu
+        actedFighters.add(entry.fighter)
       } else {
         // Es sind mehr als eine Aktion in dieser TempoGruppe vorhanden
         // logger.error(`tempoGroup.actions.length: ${tempoGroup.actions.length}`);
@@ -147,6 +97,9 @@ export class CombatEngine {
         for (const ctx of actionCtxs) ctx.commit();
         // commit group-level effects (recommended) - e.g. resolve area-of-effect application, mark KOs
         // this.commitGroupEffects(tempoGroup, roundContext);
+
+        // Füge alle Kämpfer zur Liste 'actedFighters' hinzu
+        for (const element of tempoGroup.actions) actedFighters.add(element.fighter);
       }
 
       this.combatContext.ruleRegistry.applyPhase("postGroup", { combatContext: this.combatContext, roundContext: roundContext });
@@ -154,12 +107,18 @@ export class CombatEngine {
       // Optional: prune fighters with hp <= 0 from remaining groups (if you want immediate KO removal)
       // this.removeDeadFromFutureGroups(roundContext, groups);
     }
-    this.combatContext.ruleRegistry.applyPhase("postActionRound", { combatContext: this.combatContext, roundContext: roundContext });
     roundContext.commit();
+    this.combatContext.ruleRegistry.applyPhase("postActionRound", { combatContext: this.combatContext, roundContext: roundContext });
 
     this.advanceActionIndices(roundContext);
-
     this.commitCombatRound(roundContext);
+
+    this.combatContext.fighters.forEach(element => {
+      if (element.health.actual <= 0) {
+        this.combatContext.fighters.delete(element.name);
+        logger.error(`${element.name} wurde entfernt. (HP unter 0)`);
+      }
+    });
   }
 
   public commitCombatRound(ctx: IRoundContext) {
@@ -171,9 +130,13 @@ export class CombatEngine {
       if (!persistent) continue;
       persistent.health.actual = stage.health;
       persistent.energy.actual = stage.energy;
-      persistent.actionIndex = stage.actionIndex;
+      persistent.buffs.nextAttack = stage.nextAttackBonus;
+      persistent.buffs.nextDefense = stage.nextDefenseBonus;
+      persistent.currentActionIndex = stage.actionIndex;
+      persistent.currentPattern = stage.actions;
       // commit other persistent fields as needed
     }
+    this.combatContext.time.elapsed += 2000;
   }
 
   // public commitActionRound(roundCtx: IRoundContext, combatCtx: ICombatContext) {
@@ -222,12 +185,12 @@ export class CombatEngine {
   //   }
   // }
 
-  public isCombatOver(roundCtx: IRoundContext): boolean {
+  public isCombatOver(): boolean {
     // Gibt es nur noch einen Überlebenden? (Free for All)
-    return roundCtx.roundNumber >= 10;
+    return this.combatContext.fighters.size === 1;
   }
 
-  advanceActionIndices(round: IRoundContext) {
+  public advanceActionIndices(round: IRoundContext) {
     for (const [id, stage] of round.fighters.entries()) {
       const old = stage.actionIndex ?? 0;
       const next = old + 1;

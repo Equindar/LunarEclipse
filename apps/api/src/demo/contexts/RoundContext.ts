@@ -1,12 +1,11 @@
-import logger from "../../utils/apiLogger";
 import { BaseAction } from "../actions/Base";
 import { FighterId } from "../Fighter";
 import { IActionContext } from "../interfaces/ActionContext";
 import { ICombatContext } from "../interfaces/CombatContext";
 import { FighterAction } from "../interfaces/FighterAction";
 import { IRoundContext } from "../interfaces/RoundContext";
-import { RoundFighterState } from "../interfaces/RoundFighterState";
 import { TempoGroup, TempoGroupEntry } from "../interfaces/TempoGroup";
+import { RoundFighterState } from "../RoundFighterState";
 import { RuleRegistry } from "../RuleRegistry";
 import { ActionContext } from "./ActionContext";
 import { CombatContext } from "./CombatContext";
@@ -55,11 +54,13 @@ export class RoundContext implements IRoundContext {
     }
 
     // energy gains
-    for (const [id, stage] of this.fighters.entries()) {
+    for (const [id, state] of this.fighters.entries()) {
       const baseGain = this.plannedEnergyGain.get(id) ?? 0;
       const add = this.energyGainAddById.get(id) ?? 0;
-      const finalGain = Math.floor(baseGain + add);
-      if (finalGain > 0) this.log.push(`[commit] ${stage.id} gains ${finalGain} energy`);
+      const finalGain = Math.max(0, Math.floor(baseGain + add));
+      if (finalGain > 0) {
+        state.gainEnergy(finalGain);
+      }
     }
   }
 
@@ -68,17 +69,9 @@ export class RoundContext implements IRoundContext {
 
     this.fighters.clear();
     for (const [id, fighter] of this.combatContext.fighters.entries()) {
-      const fighterState: RoundFighterState = {
-        id: fighter.name,
-        health: fighter.health.actual,
-        energy: fighter.energy.actual,
-        actions: fighter.actions[0],
-        // ???
-        actionIndex: fighter.actionIndex ?? 0
-      }
+      const fighterState = RoundFighterState.create(fighter);
       this.fighters.set(id, fighterState);
     }
-
 
     this.plannedDamage = new Map();
     this.plannedBlock = new Map();
@@ -171,5 +164,20 @@ export class RoundContext implements IRoundContext {
 
     this.tempoGroups = result;
     return result;
+  }
+
+  addPlannedDamage(targetId: FighterId, amount: number) {
+    const prev = this.plannedDamage.get(targetId) ?? 0;
+    this.plannedDamage.set(targetId, prev + amount);
+  }
+
+  addPlannedBlock(fighterId: FighterId, amount: number) {
+    const prev = this.plannedBlock.get(fighterId) ?? 0;
+    this.plannedBlock.set(fighterId, prev + amount);
+  }
+
+  addPlannedEnergyGain(fighterId: FighterId, amount: number) {
+    const prev = this.plannedEnergyGain.get(fighterId) ?? 0;
+    this.plannedEnergyGain.set(fighterId, prev + amount);
   }
 }

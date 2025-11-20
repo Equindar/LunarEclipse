@@ -5,17 +5,26 @@ import { IActionContext } from "../interfaces/ActionContext";
 import { ActionPhase } from "../interfaces/ActionPhase";
 import { ICombatContext } from "../interfaces/CombatContext";
 import { FighterAction } from "../interfaces/FighterAction";
-import { IRoundContext } from "../interfaces/RoundContext";
-import { RoundFighterState } from "../interfaces/RoundFighterState";
+import { RoundFighterState } from "../RoundFighterState";
 import { RuleRegistry } from "../RuleRegistry";
+import { RoundContext } from "./RoundContext";
 
 export class ActionContext implements IActionContext {
+  //** Akteur der Aktion */
   actor!: {
     id: FighterId;
     state: RoundFighterState;
     action: FighterAction;
   };
-  targets?: [{
+  //** Vom Akteur ausgewählte Ziele (ausgehend) */
+  selectedTargets?: [{
+    id: FighterId;
+    state: RoundFighterState;
+    action: FighterAction;
+    primary: boolean;
+  }];
+  //** Als Ziel ausgewählt (eingehend) */
+  targettedBy?: [{
     id: FighterId;
     state: RoundFighterState;
     action: FighterAction;
@@ -23,19 +32,19 @@ export class ActionContext implements IActionContext {
   }];
 
   phase?: ActionPhase;
-  ctxRound!: IRoundContext;
-  ctxCombat?: ICombatContext;
+  ctxRound!: RoundContext;
+  ctxCombat!: ICombatContext;
   log?: string[] = [];
   cancelled: boolean = false;
 
   constructor() { }
 
   build(params: {
-    roundCtx: IRoundContext;
+    combatCtx: ICombatContext;
+    roundCtx: RoundContext;
     actorId: FighterId;
     actionIndex?: number;
-    targetSelector?: (roundCtx: IRoundContext, actorId: FighterId, action: FighterAction) => FighterId[];
-    combatCtx?: ICombatContext;
+    targetSelector?: (roundCtx: RoundContext, actorId: FighterId, action: FighterAction) => FighterId[];
     allowAutoOtherAction?: boolean;
   }) {
 
@@ -60,7 +69,7 @@ export class ActionContext implements IActionContext {
     }
 
     // default naive target selection
-    const selector = targetSelector ?? ((rc: IRoundContext, aid: FighterId) => {
+    const selector = targetSelector ?? ((rc: RoundContext, aid: FighterId) => {
       // fallback: first other fighter or self
       for (const id of rc.fighters.keys()) {
         if (id !== aid) return [id];
@@ -76,7 +85,7 @@ export class ActionContext implements IActionContext {
         action: enemy?.actions.pattern[enemy.actionIndex ?? 0]!,
         primary: selector(roundCtx, actorId, action)[0] === item
       }
-      this.targets ? this.targets.push(newTarget) : this.targets = [newTarget];
+      this.selectedTargets ? this.selectedTargets.push(newTarget) : this.selectedTargets = [newTarget];
     });
 
     this.phase = "preAction";
@@ -86,7 +95,6 @@ export class ActionContext implements IActionContext {
 
   /** execute führt die passende resolveAsX Methode der BaseAction aus */
   execute(perspective: ActionPhase, registry?: RuleRegistry) {
-
     // --- logger.warn("ActionContext.execute()");
 
     // Bekommt perspective Engage/Reaction/Moment
@@ -100,12 +108,12 @@ export class ActionContext implements IActionContext {
 
 
     if (this.cancelled) return;
-    this.phase = perspective === "Engage" ? "Engage" : perspective === "Reaction" ? "Reaction" : "Moment";
+    this.phase = perspective;
 
     // allow preAction rules to run earlier (Engine usually calls this)
     // call the action implementation
     var base = this.actor.action.action;
-    logger.debug(`${this.actor.id} benutzt: ${base.type} [t${this.actor.action.investedTempo},i${this.actor.action.investedImpact}]`);
+    logger.debug(`${this.actor.id} benutzt: ${base.type} [t${this.actor.action.investedTempo},i${this.actor.action.investedImpact}] als [${perspective}]`);
 
     const energyCost = base.totalEnergyCost(this.actor.action);
     if (this.actor.state.energy < energyCost) {
