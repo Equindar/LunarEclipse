@@ -1,4 +1,3 @@
-
 import { eq, asc } from "drizzle-orm";
 import { users } from "@infrastructure/database/drizzle/migrations/schema";
 import { User } from "@features/users/core/entities/User";

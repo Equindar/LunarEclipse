@@ -14,14 +14,16 @@ export default class CharacterRepositoryImpl implements CharacterRepository {
     return true;
   }
 
-  list(): Promise<Character[]> {
-    throw new Error("Method not implemented.");
+  async list(): Promise<Character[]> {
+    const data = await this.dataSource.getAll();
+    return data;
   }
   async get(id: number): Promise<Character | null> {
     const data = await this.dataSource.get(id);
     return data;
   }
-  update(subject: Character): Promise<Character> {
-    throw new Error("Method not implemented.");
+  async update(id: number, subject: Character): Promise<boolean> {
+    await this.dataSource.update(id, subject);
+    return true;
   }
 }

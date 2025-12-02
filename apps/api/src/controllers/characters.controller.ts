@@ -2,10 +2,11 @@ import { NextFunction, Request, Response, Router } from 'express';
 import { getCharacter } from '@features/characters/application/logic/getCharacter.usecase';
 import CharacterRepositoryImpl from '@features/characters/application/repositories/Character.repository';
 import { CharacterDataSourceImpl } from '@features/characters/data/datasources/Character.datasource';
-import logger from '../utils/apiLogger';
 import { Database } from '../app';
 import { CharacterDTO } from '../data/dtos/character';
 import createCharacter from '@features/characters/application/logic/createCharacter.usecase';
+import { listCharacters } from '@features/characters/application/logic/listCharacters.usecase';
+import updateCharacter from '@features/characters/application/logic/updateCharacter.usecase';
 
 export default class CharactersController {
   public database;
@@ -29,7 +30,10 @@ export default class CharactersController {
   };
 
   public onListCharacters = async (req: Request, res: Response, next: NextFunction) => {
-    return res.status(201).json({ message: "kein error" });
+    const data = await new listCharacters(new CharacterRepositoryImpl(new CharacterDataSourceImpl(this.database))).execute();
+    const result: CharacterDTO[] = []
+    data.forEach(item => { result.push(CharacterDTO.fromEntity(item)) });
+    return res.status(200).send(result);
   };
 
   public onCreateCharacter = async (req: Request, res: Response, next: NextFunction) => {
@@ -43,6 +47,14 @@ export default class CharactersController {
   };
 
   public onUpdateCharacter = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const id = parseInt(`${req.params.id}`);
+      await new updateCharacter(new CharacterRepositoryImpl(new CharacterDataSourceImpl(this.database))).execute(id, req.body.character);
+      return res.sendStatus(200);
+    }
+    catch (error) {
+      next(error);
+    }
 
   };
 }

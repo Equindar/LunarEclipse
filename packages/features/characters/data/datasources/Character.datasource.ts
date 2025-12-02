@@ -1,6 +1,6 @@
 import Character from "@features/characters/core/entities/Character";
 import { CharacterDataSource } from "../interfaces/character.datasource";
-import { eq } from "drizzle-orm";
+import { eq, asc, sql } from "drizzle-orm";
 import { characters, users } from "@infrastructure/database/drizzle/migrations/schema";
 import { User } from "@features/users/core/entities/User";
 import { ulid } from "ulid";
@@ -47,14 +47,39 @@ export class CharacterDataSourceImpl implements CharacterDataSource {
     return character;
   }
 
-  getAll(): Promise<Character[]> {
+  async getAll(): Promise<Character[]> {
+    let result = new Array<Character>();
+    const data = await this.database.select()
+      .from(characters)
+      .leftJoin(users, eq(characters.userId, users.id))
+      .orderBy(asc(users.id));
+    data.forEach((item) => {
+      result.push(
+        new Character(
+          item.characters.name,
+          new InitializedCharacterStatus,
+          new User(data[0].users!.id, data[0].users!.nickname, new InitializedUserStatus, data[0].users!.pId),
+          item.characters.experience,
+          item.characters.id,
+          item.characters.pId)
+      );
+    });
+    return result;
+  }
+
+  async delete(id: number): Promise<void> {
     throw new Error("Method not implemented.");
   }
-  delete(id: string): Promise<void> {
-    throw new Error("Method not implemented.");
-  }
-  update(id: string, data: Character): Promise<void> {
-    throw new Error("Method not implemented.");
+
+  async update(id: number, characterData: Character): Promise<boolean> {
+    const data = {
+      name: characterData.name,
+      // userId: characterData.owner.id,
+      updatedAt: sql`NOW()`,
+      // experience: characterData.experience
+    };
+    await this.database.update(characters).set(data).where(eq(characters.id, id));
+    return true;
   }
 
 }
