@@ -1,4 +1,4 @@
-import { User } from "@features/users/core/entities/user"
+import { User } from "@features/users/core/entities/User"
 import { UserRepository } from "@features/users/core/interfaces/repositories/User.repository"
 import listUsersUseCase from "@features/users/core/interfaces/usecases/listUsers.usecase";
 

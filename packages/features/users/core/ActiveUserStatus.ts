@@ -1,21 +1,11 @@
-import ArchivedUserStatus from "./ArchivedUserStatus";
-import BlockedUserStatus from "./BlockedUserStatus";
-import { User } from "./entities/user";
-import { UserStatus } from "./userStatus";
+import UserStatus from "./interfaces/userStatus";
 
-export default class ActiveUserStatus implements UserStatus {
-    constructor(private user: User) { }
+export default class ActiveUserStatus extends UserStatus {
+  public setDisplayName(name: string): void {
+    throw new Error("Method not implemented.");
+  }
+  public doAction(): void {
+    throw new Error("Method not implemented.");
+  }
 
-    init(): void {
-        throw new Error("Blocked User cant get initialized.");
-    }
-    activate(): void {
-        throw new Error("User is already active.");
-    }
-    block(): void {
-        this.user.setStatus(new BlockedUserStatus(this.user));
-    }
-    archive(): void {
-        this.user.setStatus(new ArchivedUserStatus(this.user));
-    }
 }

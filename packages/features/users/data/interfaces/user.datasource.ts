@@ -1,7 +1,7 @@
-import { User } from "@features/users/core/entities/user";
+import { User } from "@features/users/core/entities/User";
 
 export interface UserDataSource {
-    create(character: User): void;
+    create(user: User): void;
     get(id: number): Promise<User | null>;
     getAll(): Promise<User[]>;
     delete(id: string): void;

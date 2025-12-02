@@ -1,4 +1,5 @@
 import logger from "../utils/apiLogger";
+import { CombatLogger } from "../utils/combatLogger";
 import { IRoundContext } from "./interfaces/RoundContext";
 import { ICombatContext } from "./interfaces/CombatContext";
 import { ActionPattern } from "./interfaces/ActionPattern";
@@ -33,6 +34,7 @@ export class CombatEngine {
 
   public resolveCombatRound() {
     // --- logger.warn("CombatEngine.resolveCombatRound()");
+    const combatlogger = new CombatLogger(this.combatContext);
     this.combatContext.currentRound += 1;
 
     const roundContext = this.combatContext.createRound();
@@ -41,6 +43,7 @@ export class CombatEngine {
     // this.registry.applyPhase("preCombatRound", { combat: this.combatContext, round: roundContext });
     // DEBUG Ausgabe
     logger.info(`[${formatDuration(this.combatContext.time.elapsed)}] Runde #${roundContext.roundNumber}:`);
+    combatlogger.logRound(roundContext, "testing new CombatLogger");
     roundContext.fighters.forEach(element => {
       var debug: string = "";
       logger.info(`${element.id}: [HP:${element.health}, E:${element.energy}]`);
@@ -78,6 +81,7 @@ export class CombatEngine {
 
         this.combatContext.ruleRegistry.applyPhase("preAction", { combatContext: this.combatContext, roundContext: roundContext, actionContext: actionContext });
         actionContext.execute(perspective, this.combatContext.ruleRegistry);
+        combatlogger.logAction(actionContext, `Aktion wurde ausgeführt!`);
         this.combatContext.ruleRegistry.applyPhase("postAction", { combatContext: this.combatContext, roundContext: roundContext, actionContext: actionContext });
 
         actionContext.commit();
@@ -113,12 +117,14 @@ export class CombatEngine {
     this.advanceActionIndices(roundContext);
     this.commitCombatRound(roundContext);
 
-    this.combatContext.fighters.forEach(element => {
-      if (element.health.actual <= 0) {
-        this.combatContext.fighters.delete(element.name);
-        logger.error(`${element.name} wurde entfernt. (HP unter 0)`);
+    roundContext.fighters.forEach(fighter => {
+      if (fighter.health <= 0) {
+        // this.combatContext.fighters.delete(element.name);
+        logger.error(`${fighter.id} wurde entfernt. (HP unter 0)`);
+        combatlogger.log(`${fighter.id} wurde entfernt. (HP unter 0)`);
       }
     });
+    this.combatContext.log?.forEach(item => logger.debug(item));
   }
 
   public commitCombatRound(ctx: IRoundContext) {
@@ -187,7 +193,10 @@ export class CombatEngine {
 
   public isCombatOver(): boolean {
     // Gibt es nur noch einen Überlebenden? (Free for All)
-    return this.combatContext.fighters.size === 1;
+    const remainingFighters = new Map(
+      [...this.combatContext.fighters.entries()].filter(([id, fighter]) => fighter.health.actual > 0)
+    );
+    return remainingFighters.size === 1;
   }
 
   public advanceActionIndices(round: IRoundContext) {

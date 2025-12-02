@@ -1,4 +1,5 @@
-import DevControls from '@/components/dev/DevControls';
+
+import DevControls from '@/components/dev/DevControls.js';
 import { Outlet } from 'react-router-dom';
 
 const Layout = () => {

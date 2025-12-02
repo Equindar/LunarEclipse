@@ -1,32 +1,38 @@
-import { User } from "@features/users/core/entities/user";
 import { CharacterStatus } from "../interfaces/characterStatus";
 import InitializedCharacterStatus from "../InitializedCharacterStatus";
+import { User } from "@features/users/core/entities/User";
+import { ULID, ulid } from "ulid";
 
 interface CharacterProps {
-    name: string;
-    experience: number;
+  name: string;
+  status: CharacterStatus;
+  owner: User;
+  experience: number;
 }
 
 export default class Character implements CharacterProps {
-    experience: number;
-    name: string;
-    status: CharacterStatus;
-    owner: User;
+  id: number = 0;
+  uuid: ULID = ulid();
+  experience: number = 0;
+  name: string;
+  status: CharacterStatus = new InitializedCharacterStatus();
+  owner: User;
 
+  constructor(name: string, status: CharacterStatus, owner: User, exp?: number, id?: number, uuid?: string) {
+    this.name = name;
+    this.experience = exp ?? this.experience;
+    this.owner = owner;
+    this.status = status;
+    this.id = id ?? this.id;
+    this.uuid = uuid ?? this.uuid;
 
+  }
 
-    constructor(private props: CharacterProps, owner: User) {
-        this.name = props.name;
-        this.experience = props.experience;
-        this.status = new InitializedCharacterStatus(this);
-        this.owner = owner;
-    }
+  public setStatus(status: CharacterStatus): void {
+    this.status = status;
+  }
 
-    public setStatus(status: CharacterStatus): void {
-        this.status = status;
-    }
-
-    public getStatus(): string {
-        return this.status.constructor.name;
-    }
+  public getStatus(): string {
+    return this.status.constructor.name;
+  }
 }

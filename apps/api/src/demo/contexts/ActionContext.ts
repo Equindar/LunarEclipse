@@ -31,6 +31,7 @@ export class ActionContext implements IActionContext {
     primary: boolean;
   }];
 
+  scheduledTime?: number;
   phase?: ActionPhase;
   ctxRound!: RoundContext;
   ctxCombat!: ICombatContext;
@@ -49,7 +50,6 @@ export class ActionContext implements IActionContext {
   }) {
 
     // --- logger.warn("ActionContext.build()")
-
     const { roundCtx, actorId, actionIndex = undefined, targetSelector = undefined, combatCtx, allowAutoOtherAction = true } = params;
     const actorState = roundCtx.fighters.get(actorId);
     if (!actorState) throw new Error("build ActionContext: actor not found: " + actorId);
@@ -91,6 +91,12 @@ export class ActionContext implements IActionContext {
     this.phase = "preAction";
     this.log = [];
     this.cancelled = false;
+
+    const baseOffset = 1000;
+    const tempoStep = 100;
+    const investedTempo = this.actor.action.investedTempo ?? 0;
+    const combatElapsed = this.scheduledTime ?? this.ctxCombat.time.elapsed ?? 0;
+    this.scheduledTime = combatElapsed + Math.max(0, baseOffset - (investedTempo * tempoStep));
   }
 
   /** execute führt die passende resolveAsX Methode der BaseAction aus */

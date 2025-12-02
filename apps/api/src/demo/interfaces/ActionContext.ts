@@ -33,6 +33,7 @@ export interface IActionContext {
     primary?: boolean;
   }];
 
+  scheduledTime?: number;
 
   // fighter: Map<FighterId, FighterAction>
   phase?: ActionPhase;

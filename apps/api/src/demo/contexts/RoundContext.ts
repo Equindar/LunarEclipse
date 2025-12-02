@@ -69,8 +69,10 @@ export class RoundContext implements IRoundContext {
 
     this.fighters.clear();
     for (const [id, fighter] of this.combatContext.fighters.entries()) {
-      const fighterState = RoundFighterState.create(fighter);
-      this.fighters.set(id, fighterState);
+      if (fighter.health.actual > 0) {
+        const fighterState = RoundFighterState.create(fighter);
+        this.fighters.set(id, fighterState);
+      }
     }
 
     this.plannedDamage = new Map();

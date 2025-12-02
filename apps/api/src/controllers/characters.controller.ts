@@ -4,44 +4,45 @@ import CharacterRepositoryImpl from '@features/characters/application/repositori
 import { CharacterDataSourceImpl } from '@features/characters/data/datasources/Character.datasource';
 import logger from '../utils/apiLogger';
 import { Database } from '../app';
+import { CharacterDTO } from '../data/dtos/character';
+import createCharacter from '@features/characters/application/logic/createCharacter.usecase';
 
 export default class CharactersController {
-    public database;
+  public database;
 
-    constructor(db: Database) {
-        this.database = db;
+  constructor(db: Database) {
+    this.database = db;
+  }
+
+
+  // UseCase in Feature/application
+  public onGetCharacter = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const id = parseInt(`${req.params.id}`);
+      const data = await new getCharacter(new CharacterRepositoryImpl(new CharacterDataSourceImpl(this.database))).execute(id);
+      return res.status(200).send(CharacterDTO.fromEntity(data!));
+    }
+    catch (error) {
+      next(error);
     }
 
+  };
 
-    // UseCase in Feature/application
-    public onGetCharacter_new = async (req: Request, res: Response, next: NextFunction) => {
-        try {
-            const id = parseInt(`${req.params.id}`);
-            const data = await new getCharacter(new CharacterRepositoryImpl(new CharacterDataSourceImpl(this.database))).execute(id);
-            return res.status(201).json(data);
-        }
-        catch (error) {
-            next(error);
-        }
+  public onListCharacters = async (req: Request, res: Response, next: NextFunction) => {
+    return res.status(201).json({ message: "kein error" });
+  };
 
-    };
+  public onCreateCharacter = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      await new createCharacter(new CharacterRepositoryImpl(new CharacterDataSourceImpl(this.database))).execute(req.body.character, req.body.userId);
+      return res.sendStatus(201);
+    }
+    catch (error) {
+      next(error);
+    }
+  };
 
-    async onListCharacters(req: Request, res: Response, next: NextFunction) {
-        logger.info(this.database);
-        return res.status(201).json({ message: "kein error" });
+  public onUpdateCharacter = async (req: Request, res: Response, next: NextFunction) => {
 
-    };
-
-    // async onCreateCharacter(req: Request, res: Response, next: NextFunction) {
-    //     try {
-    //         const body = req.body;
-    //         const data = await this.interactor.createCharacter(body);
-    //         return res.status(201).json(data);
-    //     }
-    //     catch (error) {
-    //         next(error);
-    //     }
-    // };
-
-    async onUpdateCharacter(req: Request, res: Response, next: NextFunction) { };
+  };
 }

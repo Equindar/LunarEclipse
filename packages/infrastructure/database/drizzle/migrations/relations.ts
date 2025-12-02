@@ -1,5 +1,5 @@
 import { relations } from "drizzle-orm/relations";
-import { users, characters, charactersInventory, inventories, items, charactersWallet, itemsBlueprint, itemsRarity, itemsBlueprintVersion, itemsVersion, monstersBlueprint, monsters, monstersBlueprintVersion, monstersVersion } from "./schema";
+import { users, characters, charactersInventory, inventories, items, charactersWallet, itemsBlueprint, itemsRarity, itemsBlueprintVersion, itemsVersion, monstersBlueprint, monsters, monstersBlueprintVersion, monstersVersion, news } from "./schema";
 
 export const charactersRelations = relations(characters, ({one, many}) => ({
 	user: one(users, {
@@ -12,6 +12,7 @@ export const charactersRelations = relations(characters, ({one, many}) => ({
 
 export const usersRelations = relations(users, ({many}) => ({
 	characters: many(characters),
+	news: many(news),
 }));
 
 export const charactersInventoryRelations = relations(charactersInventory, ({one}) => ({
@@ -110,5 +111,12 @@ export const monstersVersionRelations = relations(monstersVersion, ({one}) => ({
 	monstersBlueprintVersion: one(monstersBlueprintVersion, {
 		fields: [monstersVersion.blueprintVersionId],
 		references: [monstersBlueprintVersion.id]
+	}),
+}));
+
+export const newsRelations = relations(news, ({one}) => ({
+	user: one(users, {
+		fields: [news.userId],
+		references: [users.id]
 	}),
 }));

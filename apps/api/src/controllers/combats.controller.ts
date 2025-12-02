@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from "express";
+import { Response } from "express";
 import logger from "../utils/apiLogger";
 import { Database } from "../app";
 import { AttackAction } from "../demo/actions/Attack";
@@ -9,15 +9,12 @@ import { UtilityDefendAction } from "../demo/actions/UtilityDefend";
 import { CombatEngine } from "../demo/CombatEngine";
 import { Fighter, FighterId } from "../demo/Fighter";
 import { RuleRegistry } from "../demo/RuleRegistry";
-import { CriticalStrikeRule } from "../demo/rules/CriticalStrike.rule";
 import { NoneAction } from "../demo/actions/None";
-import { EarlyEnergyBoostRule } from "../demo/rules/EarlyEnergyBoost.rule";
-import { VengefulComebackRule } from "../demo/rules/VengefulComeback.rule";
 import { ActionType } from "../demo/types/ActionType";
 import { ActionPattern } from "../demo/interfaces/ActionPattern";
 import { FighterAction } from "../demo/interfaces/FighterAction";
-import { BaseAction } from "../demo/actions/Base";
 import { CombatContext } from "../demo/contexts/CombatContext";
+import { ulid } from "ulid";
 
 
 interface TypedRequestBody extends Express.Request {
@@ -52,8 +49,7 @@ export default class CombatsController {
 
   public onGetCombat = async (
     req: TypedRequestBody,
-    res: Response,
-    next: NextFunction) => {
+    res: Response) => {
     try {
       const startTime = new Date(Date.now());
       const { fighters } = req.body;
@@ -73,10 +69,11 @@ export default class CombatsController {
         }
       }
 
-      const ctx = new CombatContext("Test12345", startTime, new RuleRegistry());
+      const ctx = new CombatContext(ulid(), startTime, new RuleRegistry());
       ctx.fighters = combatFighters;
 
       const engine = new CombatEngine(ctx)
+      logger.error(ctx.identifier);
 
       engine.initCombat();
       const limit = req.body.limit ?? 3;
@@ -84,9 +81,24 @@ export default class CombatsController {
         engine.resolveCombatRound();
         if (engine.isCombatOver()) {
           logger.error("Kampf vorbei, YAY!");
-          return;
+          let temp: { name: string, hp: number, energy: number }[] = [];
+          engine.combatContext.fighters.forEach(item => {
+            temp.push({
+              name: item.name,
+              hp: item.health.actual,
+              energy: item.energy.actual
+            });
+          });
+          logger.info(engine.combatContext.log);
+          return res.status(200).json(
+            {
+              "status": "ended",
+              "data": temp
+            }
+          );
         }
       }
+
 
       return res.sendStatus(200);
     } catch (err) {

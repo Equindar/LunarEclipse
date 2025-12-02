@@ -7,9 +7,9 @@ import logger from './utils/apiLogger';
 import { v1Strategy } from './strategies/v1Strategy';
 import { v2Strategy } from './strategies/v2Strategy';
 import apiRouter from './routes';
-import drizzleClient from '@infrastructure/database/client';
+import createDrizzleClient from '@infrastructure/database/client';
 
-export type Database = Awaited<ReturnType<typeof drizzleClient>>;
+export type Database = Awaited<ReturnType<typeof createDrizzleClient>>;
 
 export default class Api {
   public readonly name: string;
@@ -24,7 +24,7 @@ export default class Api {
   }
 
   public async connectDataBase() {
-    this.database = await drizzleClient();
+    this.database = await createDrizzleClient();
   }
 
   public init() {

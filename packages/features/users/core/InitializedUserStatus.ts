@@ -1,22 +1,19 @@
-import ActiveUserStatus from "./ActiveUserStatus";
-import ArchivedUserStatus from "./ArchivedUserStatus";
-import BlockedUserStatus from "./BlockedUserStatus";
-import { User } from "./entities/user";
-import { UserStatus } from "./userStatus";
+import UserStatus from "./interfaces/userStatus";
 
-export default class InitializedUserStatus implements UserStatus {
-    constructor(private user: User) { }
+export default class InitializedUserStatus extends UserStatus {
 
-    init(): void {
-        throw new Error("User is already initialized.");
-    }
-    activate(): void {
-        this.user.setStatus(new ActiveUserStatus(this.user));
-    }
-    block(): void {
-        this.user.setStatus(new BlockedUserStatus(this.user));
-    }
-    archive(): void {
-        this.user.setStatus(new ArchivedUserStatus(this.user));
-    }
+  constructor() {
+    super();
+    this.name = "initialized";
+  }
+
+  public setDisplayName(name: string): void {
+    this.user.name = name;
+  }
+
+  public doAction(): void {
+    console.log("doAction");
+  }
+
+
 }

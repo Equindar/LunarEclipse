@@ -1,15 +1,17 @@
-import { User } from "@features/users/core/entities/user";
+import { User } from "@features/users/core/entities/User";
 
 export class UserDTO {
-    id: string;
-    nickname: string
+  uuid: string;
+  nickname: string;
+  status: string;
 
-    constructor(user: User) {
-        this.id = user.uuid;
-        this.nickname = user.name;
-    }
+  constructor(user: User) {
+    this.uuid = user.uuid;
+    this.nickname = user.name;
+    this.status = user.getStatus().name;
+  }
 
-    static fromEntity(user: User): UserDTO {
-        return new UserDTO(user);
-    }
+  static fromEntity(user: User): UserDTO {
+    return new UserDTO(user);
+  }
 }

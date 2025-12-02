@@ -5,18 +5,20 @@ import Character from "./entities/Character";
 import { CharacterStatus } from "./interfaces/characterStatus";
 
 export default class InitializedCharacterStatus implements CharacterStatus {
-    constructor(private character: Character) { }
+  constructor() {
 
-    init(): void {
-        throw new Error("Character is already initialized.");
-    }
-    activate(): void {
-        this.character.setStatus(new ActiveCharacterStatus(this.character));
-    }
-    block(): void {
-        this.character.setStatus(new BlockedCharacterStatus(this.character));
-    }
-    archive(): void {
-        this.character.setStatus(new ArchivedCharacterStatus(this.character));
-    }
+  }
+
+  init(character: Character): void {
+    throw new Error("Character is already initialized.");
+  }
+  activate(character: Character): void {
+    character.setStatus(new ActiveCharacterStatus());
+  }
+  block(character: Character): void {
+    character.setStatus(new BlockedCharacterStatus());
+  }
+  archive(character: Character): void {
+    character.setStatus(new ArchivedCharacterStatus());
+  }
 }

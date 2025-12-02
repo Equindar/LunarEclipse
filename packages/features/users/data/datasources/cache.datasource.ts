@@ -1,5 +1,5 @@
 
-import { User } from "@features/users/core/entities/user";
+import { User } from "@features/users/core/entities/User";
 import { UserDataSource } from "../interfaces/user.datasource";
 
 export default class UserDataSourceImpl implements UserDataSource {

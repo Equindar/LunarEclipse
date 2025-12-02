@@ -1,6 +1,6 @@
 export interface CharacterStatus {
-  init(): void;
-  activate(): void;
-  block(): void;
-  archive(): void;
+  init(character: Character): void;
+  activate(character: Character): void;
+  block(character: Character): void;
+  archive(character: Character): void;
 }
