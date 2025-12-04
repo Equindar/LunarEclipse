@@ -1,5 +1,5 @@
-import { User } from "../../entities/User";
+import { CreateUserRequest } from "@features/users/application/logic/createUser.usecase";
 
 export default interface createUserUseCase {
-    execute(subject: User): Promise<boolean>;
+  execute(req: CreateUserRequest): Promise<boolean>;
 }

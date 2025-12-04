@@ -17,6 +17,7 @@ import UnsupportedApiVersionError from '../errors/UnsupportedAPIVersion';
 export default function extractVersion(defaultVersion = '1') {
   return (req: Request, res: Response, next: NextFunction) => {
     let version = req.headers['x-api-version'];
+    logger.debug(`[REQ] detected APIversion: ${version}`);
     if (version && (!/^\d+$/.test(version as string) || version === '0')) {
       throw new UnsupportedApiVersionError({
         message: 'Invalid X-API-Version header format',
@@ -31,7 +32,7 @@ export default function extractVersion(defaultVersion = '1') {
       version = m ? m[1] : undefined;
     }
     req.apiVersion = (version as string) || defaultVersion;
-    logger.debug(`[REQ] detected APIversion: v${req.apiVersion}`);
+    logger.debug(`[REQ] used APIversion: ${req.apiVersion}`);
     next();
   };
 }

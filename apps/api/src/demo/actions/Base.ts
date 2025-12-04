@@ -17,27 +17,6 @@ export abstract class BaseAction {
   constructor(public type: ActionType) {
   }
 
-  // /**
-  //  * Calculates tempo based on energy invest
-  //  * @param energyInvested spent energy to increase tempo
-  //  * @returns total tempo
-  //  */
-  // calculateTempo(energyInvested: number): number {
-  //   return this.baseTempo + energyInvested;
-  // }
-  // // calculateTempo(action: FighterAction, int: number): number {
-  // //   return this.baseTempo + action.investedTempo;
-  // // }
-
-  // /**
-  //  * calculates impact based on energy invest
-  //  * @param energyInvested spent energy to increase impact
-  //  * @returns total impact
-  //  */
-  // calculateImpact(energyInvested: number): number {
-  //   return this.baseImpact + energyInvested;
-  // }
-
   /**
    * calculates the energy consumption of the action
    * @param energyInvested spent energy to empower the action

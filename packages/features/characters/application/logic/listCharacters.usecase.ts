@@ -8,7 +8,7 @@ import { listCharactersUseCase } from "@features/characters/core/interfaces/usec
  *
  * Path: packages\features\characters\application\logic
  */
-export class listCharacters implements listCharactersUseCase {
+export default class listCharacters implements listCharactersUseCase {
   characterRepository: CharacterRepository
   constructor(repository: CharacterRepository) {
     this.characterRepository = repository

@@ -73,7 +73,6 @@ export default class CombatsController {
       ctx.fighters = combatFighters;
 
       const engine = new CombatEngine(ctx)
-      logger.error(ctx.identifier);
 
       engine.initCombat();
       const limit = req.body.limit ?? 3;
@@ -89,7 +88,7 @@ export default class CombatsController {
               energy: item.energy.actual
             });
           });
-          logger.info(engine.combatContext.log);
+          logger.warn(engine.combatContext.log);
           return res.status(200).json(
             {
               "status": "ended",

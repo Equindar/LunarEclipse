@@ -1,5 +1,4 @@
 import logger from "../../utils/apiLogger";
-import { FighterAction } from "../interfaces/FighterAction";
 import { Rule } from "../interfaces/Rule";
 import { ActionType } from "../types/ActionType";
 

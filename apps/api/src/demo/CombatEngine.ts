@@ -43,7 +43,10 @@ export class CombatEngine {
     // this.registry.applyPhase("preCombatRound", { combat: this.combatContext, round: roundContext });
     // DEBUG Ausgabe
     logger.info(`[${formatDuration(this.combatContext.time.elapsed)}] Runde #${roundContext.roundNumber}:`);
+
     combatlogger.logRound(roundContext, "testing new CombatLogger");
+    combatlogger.log("testing new CombatLogger");
+
     roundContext.fighters.forEach(element => {
       var debug: string = "";
       logger.info(`${element.id}: [HP:${element.health}, E:${element.energy}]`);
@@ -72,6 +75,7 @@ export class CombatEngine {
         const entry = tempoGroup.actions[0];
         // ActionContext erstellen
         const actionContext = roundContext.createActionContext(entry.fighter, entry.actionIndex);
+        combatlogger.logAction(actionContext, "testing new CombatLogger", "combat");
 
         // Ermittle Perspektive (basierend auf actedFighters)
         if (actionContext.selectedTargets) {

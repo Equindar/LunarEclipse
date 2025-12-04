@@ -1,7 +1,5 @@
 import logger from "../../utils/apiLogger";
-import { Fighter } from "../Fighter";
 import { Rule } from "../interfaces/Rule";
-import { ActionType } from "../types/ActionType";
 
 /** VengefulComebackRule
  * Wenn der Charakter unter 0 aktuelles Leben fällt:

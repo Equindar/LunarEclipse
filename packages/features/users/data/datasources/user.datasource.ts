@@ -2,9 +2,9 @@ import { eq, asc } from "drizzle-orm";
 import { users } from "@infrastructure/database/drizzle/migrations/schema";
 import { User } from "@features/users/core/entities/User";
 import { UserDataSource } from "../interfaces/user.datasource";
-import { ulid } from "ulid";
+import { ULID } from "ulid";
 import createDrizzleClient from "@infrastructure/database/client";
-import InitializedUserStatus from "@features/users/core/InitializedUserStatus";
+
 
 type UserDAO = typeof users.$inferInsert;
 
@@ -20,15 +20,15 @@ export default class UserDataSourceImpl implements UserDataSource {
 
   async create(newUser: User): Promise<boolean> {
     const user: UserDAO = {
-      pId: ulid(),
+      pId: newUser.uuid,
       nickname: newUser.name
     }
-    const result = await this.database.insert(users).values(user);
+    await this.database.insert(users).values(user);
     return true;
   }
 
 
-  async get(id: number): Promise<User | null> {
+  async getById(id: number): Promise<User | null> {
     const data = await this.database.select(
       {
         id: users.id,
@@ -36,7 +36,19 @@ export default class UserDataSourceImpl implements UserDataSource {
         name: users.nickname,
       }
     ).from(users).where(eq(users.id, id));
-    return data.length != 0 ? new User(data[0].id, data[0].name, new InitializedUserStatus, data[0].uuid) : null;
+    return data.length != 0 ? User.get(data[0].id, data[0].uuid, data[0].name, new Date()) : null;
+  }
+
+
+  async getByUuid(uuid: ULID): Promise<User | null> {
+    const data = await this.database.select(
+      {
+        id: users.id,
+        uuid: users.pId,
+        name: users.nickname,
+      }
+    ).from(users).where(eq(users.pId, uuid));
+    return data.length != 0 ? User.get(data[0].id, data[0].uuid, data[0].name, new Date()) : null;
   }
 
 
@@ -50,7 +62,8 @@ export default class UserDataSourceImpl implements UserDataSource {
       }
     ).from(users).orderBy(asc(users.id));
     data.forEach((item) => {
-      result.push(new User(item.id, item.name, new InitializedUserStatus, item.uuid));
+      result.push(
+        User.get(item.id, item.uuid, item.name, new Date()));
     });
     return result;
   }

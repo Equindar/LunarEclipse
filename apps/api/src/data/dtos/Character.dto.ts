@@ -1,11 +1,10 @@
 import Character from "@features/characters/core/entities/Character";
 
-export class CharacterDTO {
+export default class CharacterDTO {
   uuid: string;
   name: string;
   experience: number;
   owner: string;
-  // status: string;
 
   constructor(character: Character) {
     this.uuid = character.uuid;

@@ -73,11 +73,12 @@ export class CharacterDataSourceImpl implements CharacterDataSource {
 
   async update(id: number, characterData: Character): Promise<boolean> {
     const data = {
-      name: characterData.name,
-      // userId: characterData.owner.id,
-      updatedAt: sql`NOW()`,
-      // experience: characterData.experience
+      updatedAt: new Date()
     };
+    Object.keys(characterData).forEach(item => {
+      data.item = characterData[item];
+
+    });
     await this.database.update(characters).set(data).where(eq(characters.id, id));
     return true;
   }

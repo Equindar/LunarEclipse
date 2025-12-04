@@ -3,6 +3,7 @@ import { ActionType } from "../types/ActionType";
 import logger from "../../utils/apiLogger";
 import { IActionContext } from "../interfaces/ActionContext";
 import { formatDuration } from "../utils/time";
+import { CombatLogger } from "../../utils/combatLogger";
 
 export class AttackAction extends BaseAction {
   /** Basiswerte */

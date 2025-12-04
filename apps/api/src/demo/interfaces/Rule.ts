@@ -13,7 +13,7 @@ export type RulePhase =
 
 export interface Rule {
   /** Name der Regel */
-  name?: string;
+  name: string;
   /** Phase, in der die Regel angewendet wird */
   phase: RulePhase;
   /** Reihenfolge in der Logik */

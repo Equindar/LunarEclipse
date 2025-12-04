@@ -8,6 +8,7 @@ import { v1Strategy } from './strategies/v1Strategy';
 import { v2Strategy } from './strategies/v2Strategy';
 import apiRouter from './routes';
 import createDrizzleClient from '@infrastructure/database/client';
+import validateRequests from './middlewares/validateRequests';
 
 export type Database = Awaited<ReturnType<typeof createDrizzleClient>>;
 
@@ -40,6 +41,7 @@ export default class Api {
       .use(extractVersion('1'))
       .use(logRequests)
       .use(express.static('./src/public'));
+    // .use(validateRequests);
 
 
     // Router

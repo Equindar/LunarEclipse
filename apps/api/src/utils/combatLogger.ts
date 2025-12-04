@@ -37,7 +37,7 @@ export class CombatLogger {
   constructor(combatCtx?: ICombatContext) {
     this.logger = createLogger({
       levels: myCombatCustomLevels.levels,
-      level: "combat",
+      level: "action",
       format: format.combine(
         // format.colorize({ all: true }),
         format.timestamp({
@@ -94,7 +94,7 @@ export class CombatLogger {
   public logRound(round: IRoundContext | undefined, msg: string) {
     const ms = this.combatCtx?.time.elapsed ?? 0;
     const prefix = this.prefixForMs(ms, round);
-    this.push("round" as any, `${prefix} ${msg}`);
+    this.push("combat" as any, `${prefix} ${msg}`);
   }
 
   // --------- Action-scoped logging: uses scheduledExecutionMs if present ---------
