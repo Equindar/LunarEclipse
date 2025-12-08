@@ -1,9 +1,13 @@
-import { SlashCommandBuilder } from 'discord.js';
+import { InteractionContextType, PermissionFlagsBits, SlashCommandBuilder } from 'discord.js';
 import { Command } from '../types/Command';
 import { errorHandler } from '../index';
 
 const command: Command = {
-  data: new SlashCommandBuilder().setName('fail').setDescription('Simuliert einen Fehler'),
+  data: new SlashCommandBuilder()
+    .setName('fail')
+    .setDescription('Simuliert einen Fehler')
+    .setContexts(InteractionContextType.BotDM)
+    .setDefaultMemberPermissions(PermissionFlagsBits.Administrator),
 
   async execute(interaction) {
     try {
