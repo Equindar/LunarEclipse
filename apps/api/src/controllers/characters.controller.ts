@@ -3,10 +3,10 @@ import getCharacter from '@features/characters/application/logic/getCharacter.us
 import CharacterRepositoryImpl from '@features/characters/application/repositories/Character.repository';
 import { CharacterDataSourceImpl } from '@features/characters/data/datasources/Character.datasource';
 import { Database } from '../app';
-import createCharacter from '@features/characters/application/logic/createCharacter.usecase';
 import listCharacters from '@features/characters/application/logic/listCharacters.usecase';
 import updateCharacter from '@features/characters/application/logic/updateCharacter.usecase';
 import CharacterDTO from '../data/dtos/Character.dto';
+import createCharacter from '@features/characters/application/logic/createCharacter.usecase';
 
 export default class CharactersController {
   public database;

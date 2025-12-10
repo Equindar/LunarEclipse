@@ -1,5 +1,4 @@
 import createCharacterUseCase from "@features/characters/core/interfaces/usecases/createCharacter.usecase"
-import { UserRepository } from "@features/users/core/interfaces/repositories/User.repository"
 import CharacterRepository from "../repositories/Character.repository"
 import Character from "@features/characters/core/entities/Character"
 
