@@ -30,10 +30,12 @@ export async function loadCommands(client: Client) {
     logger.info('Slash Commands werden registriert...');
 
     if (process.env.NODE_ENV === 'production') {
+      logger.debug('production-mode');
       await rest.put(Routes.applicationCommands(process.env.DISCORD_CLIENT_ID!), {
         body: commands.map((cmd) => cmd.data.toJSON()),
       });
     } else {
+
       await rest.put(
         Routes.applicationGuildCommands(
           process.env.DISCORD_CLIENT_ID!,
