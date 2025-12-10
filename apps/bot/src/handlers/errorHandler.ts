@@ -1,5 +1,5 @@
 import { Notifier } from '../types/Notifier';
-import { logger } from '../utils/logger';
+import logger from '../utils/logger';
 
 export class ErrorHandler {
   private notifiers: Notifier[];
@@ -14,6 +14,8 @@ export class ErrorHandler {
       await notifier.notify(message, error);
     }
 
-    logger.error(`${context ? context : ""}${message} \n${error instanceof Error ? error.stack : undefined}`);
+    logger.error(
+      `${context ? context : ''}${message} \n${error instanceof Error ? error.stack : undefined}`,
+    );
   }
 }

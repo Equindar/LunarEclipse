@@ -1,7 +1,7 @@
 import { Events, Message } from 'discord.js';
 import { Event } from '../types/Event';
 import { loadAnalyzers } from '../utils/analyzerLoader';
-import { logger } from '../utils/logger';
+import logger from '../utils/logger';
 
 const analyzers = loadAnalyzers();
 

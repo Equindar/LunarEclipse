@@ -1,7 +1,6 @@
 import { Events, ChatInputCommandInteraction } from 'discord.js';
 import { Event } from '../types/Event';
 import { Command } from '../types/Command';
-import { logger } from '../utils/logger';
 
 const event: Event<typeof Events.InteractionCreate> = {
   name: Events.InteractionCreate,

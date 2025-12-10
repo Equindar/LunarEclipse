@@ -8,19 +8,19 @@ tsconfig.json im Root
 
 --- */
 {
-    "files": [],
-    "references": [
-        {
-            "path": "./apps/api"
-        },
-        {
-            "path": "./apps/web"
-        },
-        {
-            "path": "./apps/bot"
-        },
-        {
-            "path": "./packages/features"
-        },
-    ]
+  "files": [],
+  "references": [
+    {
+      "path": "./apps/api"
+    },
+    {
+      "path": "./apps/web"
+    },
+    {
+      "path": "./apps/bot"
+    },
+    {
+      "path": "./packages"
+    }
+  ]
 }

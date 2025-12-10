@@ -1,35 +1,67 @@
-import express from 'express';
+import express, { Application, Router } from 'express';
+import cors from 'cors';
+import extractVersion from './middlewares/extractVersion';
+import logRequests from './middlewares/logRequests';
+import handleErrors from './middlewares/handleErrors';
 import logger from './utils/apiLogger';
-import router from './routes';
-import configuration from './config';
-import morganMiddleware from './middlewares/morganMiddleware';
-import { apiVersion } from './types/common';
-import { apiVersionMiddleware } from './middlewares/apiVersionMiddleware';
+import { v1Strategy } from './strategies/v1Strategy';
+import { v2Strategy } from './strategies/v2Strategy';
+import apiRouter from './routes';
+import createDrizzleClient from '@infrastructure/database/client';
+import validateRequests from './middlewares/validateRequests';
 
-// --- Init
-const app = express();
+export type Database = Awaited<ReturnType<typeof createDrizzleClient>>;
 
-const supportedVersions: apiVersion = ["1.0"];
+export default class Api {
+  public readonly name: string;
+  public readonly app: Application;
+  public database: Database | null = null;
 
-try {
-    logger.info(`'${configuration.app.name}' wurde gestartet.`);
+  // --- Init
+  constructor(name: string) {
+    this.name = name;
+    // Express Instance
+    this.app = express();
+  }
+
+  public async connectDataBase() {
+    this.database = await createDrizzleClient();
+  }
+
+  public init() {
+    // --- Settings
+    this.app.disable('x-powered-by');
 
     // --- Routing
     // Middlewares
-    // app.use(apiVersionMiddleware(supportedVersions));
-    app.use(morganMiddleware);
+    this.app
+      .use(express.urlencoded({ extended: true }))
+      .use(express.json())
+      .use(cors())
+      .use(extractVersion('1'))
+      .use(logRequests)
+      .use(express.static('./src/public'));
+    // .use(validateRequests);
+
+
     // Router
-    app.use(router);
+    // Strategy setup
+    const router = new apiRouter();
+    if (this.database !== null || undefined) {
+      router.register("1", new v1Strategy(this.database!));
+      router.register("2", new v2Strategy());
+    }
+
+    this.app.use("/api", router.useVersion());
+
     // Error Handling Middleware
-    app.use((err: unknown, req: express.Request, res: express.Response, next: express.NextFunction) => {
-        logger.error(err);
-        res.status(500).json({ error: "Internal Server Error" });
-    });
+    this.app.use(handleErrors);
+  }
 
+  listen(port: number) {
+    this.app.listen(port, () => {
+      logger.info(`Server running on http://localhost:${port}`);
+    })
+  }
 
-
-} catch (error) {
-    logger.error("Start fehlgeschlagen", error);
 }
-
-export default app;

@@ -1,0 +1,14 @@
+{
+  "extends": "../tsconfig.base.json",
+  "compilerOptions": {
+    "composite": true,
+    "outDir": "build",
+    "declaration": true,
+    "declarationMap": true,
+    "typeRoots": ["**/*.d.ts", "./node_modules/@types"]
+  },
+  "include": ["**/*.ts", "**/*.tsx", "**/*.d.ts"]
+  // "exclude": [
+  //   "build",
+  // ],
+}

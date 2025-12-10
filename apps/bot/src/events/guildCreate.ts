@@ -1,6 +1,6 @@
 import { Events, Guild } from 'discord.js';
 import { Event } from '../types/Event';
-import { logger } from '../utils/logger';
+import logger from '../utils/logger';
 
 const event: Event<typeof Events.GuildCreate> = {
   name: Events.GuildCreate,

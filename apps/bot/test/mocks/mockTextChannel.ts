@@ -1,16 +1,14 @@
-import { TextChannel } from "discord.js";
+import { TextChannel } from 'discord.js';
 
 type MockTextChannelOptions = {
-    channelId?: string;
+  channelId?: string;
 };
 
-export function mockTextChannel(
-    options: MockTextChannelOptions = {}
-): TextChannel {
-    const mockChannel = {
-        id: options.channelId ?? "111111",
-        send: jest.fn(),
-        type: 0,
-    } as unknown as TextChannel;
-    return mockChannel;
+export function mockTextChannel(options: MockTextChannelOptions = {}): TextChannel {
+  const mockChannel = {
+    id: options.channelId ?? '111111',
+    send: jest.fn(),
+    type: 0,
+  } as unknown as TextChannel;
+  return mockChannel;
 }

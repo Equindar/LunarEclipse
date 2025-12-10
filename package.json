@@ -1,37 +1,38 @@
 {
-    "name": "lunareclipse",
-    "version": "0.1.0",
-    "description": "A browsergame, written in typescript",
-    "repository": {
-        "type": "git",
-        "url": "git+https://github.com/Equindar/LunarEclipse.git"
-    },
-    "author": "Equindar",
-    "license": "ISC",
-    "bugs": {
-        "url": "https://github.com/Equindar/LunarEclipse/issues"
-    },
-    "homepage": "https://github.com/Equindar/LunarEclipse#readme",
-    "workspaces": [
-        "apps/api",
-        "apps/bot",
-        "apps/web"
-    ],
-    "scripts": {
-        "format": "prettier --write .",
-        "format:check": "prettier --cache --check ."
-    },
-    "dependencies": {
-        "dotenv": "^16.4.5",
-        "prettier": "^3.3.3",
-        "winston": "^3.17.0",
-        "winston-daily-rotate-file": "^5.0.0"
-    },
-    "devDependencies": {
-        "@types/jest": "^30.0.0",
-        "jest": "^30.1.3",
-        "ts-jest": "^29.4.1",
-        "ts-node-dev": "^2.0.0",
-        "typescript": "^5.9.2"
-    }
+  "name": "lunareclipse",
+  "version": "0.1.0",
+  "description": "A browsergame, written in typescript",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Equindar/LunarEclipse.git"
+  },
+  "author": "Equindar",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Equindar/LunarEclipse/issues"
+  },
+  "homepage": "https://github.com/Equindar/LunarEclipse#readme",
+  "workspaces": [
+    "apps/api",
+    "apps/bot",
+    "apps/web",
+    "packages"
+  ],
+  "scripts": {
+    "format": "prettier --write .",
+    "format:check": "prettier --cache --check ."
+  },
+  "dependencies": {
+    "dotenv": "^16.4.5",
+    "prettier": "^3.3.3",
+    "winston": "^3.17.0",
+    "winston-daily-rotate-file": "^5.0.0"
+  },
+  "devDependencies": {
+    "@types/jest": "^30.0.0",
+    "jest": "^30.1.3",
+    "ts-jest": "^29.4.1",
+    "ts-node-dev": "^2.0.0",
+    "typescript": "^5.9.2"
+  }
 }

@@ -5,7 +5,7 @@
   "main": "index.ts",
   "scripts": {
     "dev": "ts-node-dev --respawn --transpile-only src/index.ts",
-    "start": "node build/index.js",
+    "start": "node build/src/index.js",
     "build": "tsc -p tsconfig.json",
     "format": "prettier --write .",
     "format:check": "prettier --cache --check .",
@@ -14,7 +14,7 @@
     "test:coverage": "jest --coverage"
   },
   "dependencies": {
-    "discord.js": "^14.16.3"
+    "discord.js": "^14.24.0"
   },
   "devDependencies": {
     "@types/jest": "^30.0.0",

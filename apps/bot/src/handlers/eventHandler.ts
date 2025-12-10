@@ -1,9 +1,8 @@
 import { Client } from 'discord.js';
 import { readdirSync, statSync } from 'fs';
 import { Event } from '../types/Event';
-import { logger } from '../utils/logger';
 import path from 'path';
-
+import logger from '../utils/logger';
 
 function getEventFiles(dir: string): string[] {
   const files: string[] = [];

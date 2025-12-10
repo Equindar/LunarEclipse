@@ -5,7 +5,7 @@ on:
     branches:
       - production
     tags:
-      - "v*.*.*"
+      - 'v*.*.*'
 
 jobs:
   build-api:

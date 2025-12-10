@@ -6,6 +6,7 @@ node_modules/
 
 # build artifacts
 build/
+*/**/drizzle/migrations/*
 
 # logs
 logs/

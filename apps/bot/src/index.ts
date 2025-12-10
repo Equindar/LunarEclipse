@@ -3,8 +3,9 @@ import { loadCommands } from './handlers/commandHandler';
 import { ErrorHandler } from './handlers/errorHandler';
 import { DiscordNotifier } from './addons/notifiers/DiscordNotifier';
 import dotenv = require('dotenv');
-import { logger } from './utils/logger';
-import createClient from './client';
+import createClient, { updateActivity } from './client';
+import logger from './utils/logger';
+import { ActivityType } from 'discord.js';
 
 // --- Init
 dotenv.config();
@@ -15,6 +16,12 @@ if (!DISCORD_TOKEN || !DISCORD_CLIENT_ID) {
 }
 
 const client = createClient();
+updateActivity(client,
+  {
+    name: "LunarEclispe ruleZ",
+    type: ActivityType.Custom
+  }
+);
 
 // --- Error handling
 export const errorHandler = new ErrorHandler(
@@ -28,7 +35,7 @@ export const errorHandler = new ErrorHandler(
   try {
     await client.login(DISCORD_TOKEN);
   } catch (error) {
-    logger.error("Login fehlgeschlagen: ", error);
+    logger.error('Login fehlgeschlagen: ', error);
   }
 })();
 

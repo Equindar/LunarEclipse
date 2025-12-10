@@ -5,24 +5,25 @@
 
 [![GitHub repo size][repo-size-badge]][repo-size-url]
 
-## General
+## Allgemein
 
-Immerse yourself in a captivating medieval fantasy world where you as a player experience a rich RPG browser game with economic simulation. Travel, trade, build cities and fight in this epic saga that gives you the freedom to customize the game world to your liking.
+Tauchen Sie ein in eine fesselnde mittelalterliche Fantasiewelt, in der Sie als Spieler ein abwechslungsreiches RPG-Browsergame mit Wirtschaftssimulation erleben. Reisen Sie, treiben Sie Handel, bauen Sie Städte und kämpfen Sie in dieser epischen Saga, die Ihnen die Freiheit gibt, die Spielwelt auf eigene Faust zu erleben.
 
-## Getting started
+## Erste Schritte
 
-Right now, im getting started :D
+Ich denke, dem Discord beizutreten und sich zu informieren ist ein guter Anfang. Ansonsten kann man sich hier natürlich auch die ToDos anschauen und sich einzubringen. Die Kommunikation erfolgt direkt über den Discord. Wer will, kann sich dort auch entsprechend seiner Interessen die Rollen zuweisen und das Projekt mitverfolgen.
 
-## Contributing
+## Mitmachen und seinen Teil beitragen
 
 [![GitHub Issues or Pull Requests by label](https://img.shields.io/github/issues/Equindar/LunarEclipse/good-first-issue?logo=github)][search-good-first-issue]
 [![GitHub Issues or Pull Requests by label](https://img.shields.io/github/issues/Equindar/LunarEclipse/help-wanted?logo=github)][search-help-wanted]
 
-:+1::tada: **First off, thanks for taking the time to contribute!** :tada::+1:
+:+1::tada: **Erst einmal danke für dein Interesse und den Willen, sich einzubringen!** :tada::+1:
 
-Unsure where to begin contributing to LunarEclipse? You can start by looking through these "good-first-issue" and "help-wanted" issues.
+Wenn du nicht so recht weisst, wo Du bei LunarEclipse anfangen sollen? Schau Dir doch zunächst die „Good-First-Issue”- und „Help-Wanted”-Issues an.
 
-You can also simply hop on our [Discord][discord-url] or create an [issue](https://github.com/Equindar/LunarEclipse/issues/new/choose).
+
+Ansonsten komm vorbei auf dem [Discord][discord-url] oder erstelle ein [issue](https://github.com/Equindar/LunarEclipse/issues/new/choose), wenn du bereits sicher weisst, was benötigt wird.
 
 [contributors-badge]: https://img.shields.io/github/contributors/Equindar/LunarEclipse.svg
 [contributors-url]: https://GitHub.com/dotnet/docs/graphs/contributors/
