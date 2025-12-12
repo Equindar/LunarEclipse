@@ -2,26 +2,20 @@ import { loadEvents } from './handlers/eventHandler';
 import { loadCommands } from './handlers/commandHandler';
 import { ErrorHandler } from './handlers/errorHandler';
 import { DiscordNotifier } from './addons/notifiers/DiscordNotifier';
-import dotenv = require('dotenv');
 import createClient, { updateActivity } from './client';
 import logger from './utils/logger';
 import { ActivityType } from 'discord.js';
+import path = require('path');
+import Configuration from './config';
 
 // --- Init
-dotenv.config();
-const { DISCORD_TOKEN, DISCORD_CLIENT_ID } = process.env;
-
-if (!DISCORD_TOKEN || !DISCORD_CLIENT_ID) {
-  throw new Error('Missing enviroment variables');
-}
-
-const client = createClient();
-updateActivity(client,
-  {
-    name: "LunarEclispe ruleZ",
-    type: ActivityType.Custom
-  }
+const cfg = new Configuration(
+  // Backup der Konfiguration
+  path.resolve(process.cwd(), './data/config_backup.json'),
+  // Zusätzliche Konfiguration (neben .env Datei)
+  path.resolve(process.cwd(), './config.json')
 );
+const client = createClient();
 
 // --- Error handling
 export const errorHandler = new ErrorHandler(
@@ -30,10 +24,30 @@ export const errorHandler = new ErrorHandler(
 );
 
 (async () => {
+
+
+
+  try {
+    cfg.init();
+  } catch (err) {
+    logger.error('Initialisierung der Konfiguration fehlgeschlagen:', err);
+    process.exit(1);
+  }
+
+  await cfg.load();
+
   await loadEvents(client);
   await loadCommands(client);
+
+  updateActivity(client,
+    {
+      name: "LunarEclispe ruleZ",
+      type: ActivityType.Custom
+    }
+  );
+
   try {
-    await client.login(DISCORD_TOKEN);
+    await client.login(cfg.get<string>('app.token'));
   } catch (error) {
     logger.error('Login fehlgeschlagen: ', error);
   }
