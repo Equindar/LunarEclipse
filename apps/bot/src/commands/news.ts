@@ -35,7 +35,7 @@ let command: Command = {
       const containerComponent = new ContainerBuilder();
       const thumbNail = new ThumbnailBuilder({
         media: {
-          url: "https://images.pexels.com/photos/235970/pexels-photo-235970.jpeg"
+          url: "https://img.freepik.com/free-vector/vintage-lettering-happy-new-year-2021_52683-52108.jpg"
         }
       })
       // .setAccentColor(0xff0000);
@@ -43,14 +43,13 @@ let command: Command = {
         .addTextDisplayComponents(
           new TextDisplayBuilder().setContent(
             [
-              `# Vorweihnachtszeit und Advent`,
-              `Ich bin zwar etwas spät dran, denn der zweite Advent ist mit dem letzten Sonntag nun auch gekommen. Die zweite Kerze - und hoffentlich nur die Kerze - brennt und stimmt euch ein wenig auf die Weihnachtszeit ein.`,
-              `Für den Weihnachtsmarkt ist ein bei mir irgendwie zu warm, der Glühwein trinkt sich definitiv besser bei kälteren Außentemperaturen...
+              `# 2026, Let's go together`,
+              `Für das kommende Jahr wünsche ich euch Gesundheit, Erfolg, viele schöne Momente und natürlich jede Menge Spaß hier auf LunarEclipse.
 
-*Im Hintergrund geht die Entwicklung am Prototypen für den Kampf weiter, auch der DiscordBot bekommt seine ersten Funktionen verpasst.
-Ich plane mal, abends hier im VoiceKanal "Getuschel" anwesend zu sein, falls ihr Fragen habt.*
+Das neue Jahr bringt frische Ideen, spannende Entwicklungen und vielleicht auch die ein oder andere Überraschung mit sich.
+Bleibt neugierig, offen für Neues und begleitet das Projekt mit allem, was noch kommt – es lohnt sich!
 
-Ich wünsche euch eine besinnliche Zeit, wenig Stress beim Einkaufen der Geschenke für eure Lieben und bleibt bei guter Gesundheit!`,
+Danke, dass ihr Teil dieser Community seid. Auf ein großartiges neues Jahr mit euch allen!`,
               `-# ~Equindar`
             ].join('\n'),
           ))
@@ -58,7 +57,7 @@ Ich wünsche euch eine besinnliche Zeit, wenig Stress beim Einkaufen der Geschen
       containerComponent.addSeparatorComponents(new SeparatorBuilder().setSpacing(SeparatorSpacingSize.Large))
       containerComponent.addMediaGalleryComponents(new MediaGalleryBuilder().addItems({
         media: {
-          url: "https://c4.wallpaperflare.com/wallpaper/232/233/70/new-year-christmas-spruce-candles-wallpaper-preview.jpg"
+          url: "https://media.discordapp.net/attachments/1133333220507795486/1455875172002304061/2149539970.jpg"
         }
       }));
 
