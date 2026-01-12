@@ -3,7 +3,6 @@ import { VersionStrategy } from "../types/versionStrategy";
 import path from "path";
 import { readdirSync } from "fs";
 import { Database } from "../app";
-import logger from "../utils/apiLogger";
 
 export class v1Strategy implements VersionStrategy {
   private database;

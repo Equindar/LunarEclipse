@@ -12,7 +12,7 @@ export default function createAccountsRouter(database: Database) {
   const router = Router();
   // Controller for UseCases
   router.get("/login", controller.onLogin);
-  router.get("/token/:code", controller.onToken);
+  router.get("/token/:code", controller.onGetAccessToken);
 
   router.post("/token", (_req, res) => {
     logger.debug(_req.body);

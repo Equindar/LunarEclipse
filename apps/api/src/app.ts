@@ -8,7 +8,7 @@ import { v1Strategy } from './strategies/v1Strategy';
 import { v2Strategy } from './strategies/v2Strategy';
 import apiRouter from './routes';
 import createDrizzleClient from '@infrastructure/database/client';
-import validateRequests from './middlewares/validateRequests';
+// import validateRequests from './middlewares/validateRequests';
 import type { NextFunction, Request, Response } from 'express';
 
 export type Database = Awaited<ReturnType<typeof createDrizzleClient>>;
@@ -32,17 +32,6 @@ export default class Api {
   public init() {
     // --- Settings
     this.app.disable('x-powered-by');
-
-
-    // Testing
-    this.app
-      .use((req: Request, res: Response, next: NextFunction) => {
-        logger.debug(`Testing: M: [${req.method}] U: [${req.url}] - IP: [${req.socket.remoteAddress}]`);
-        res.on('finish', () => {
-          logger.debug(`Testing: M: [${req.method}] U: [${req.url}] S:[${res.statusCode}] - IP: [${req.socket.remoteAddress}]`);
-        })
-        next();
-      });
 
     // --- Routing
     // Middlewares
