@@ -8,8 +8,8 @@ import { v1Strategy } from './strategies/v1Strategy';
 import { v2Strategy } from './strategies/v2Strategy';
 import apiRouter from './routes';
 import createDrizzleClient from '@infrastructure/database/client';
-// import validateRequests from './middlewares/validateRequests';
-import type { NextFunction, Request, Response } from 'express';
+import validateRequests from './middlewares/validateRequests';
+import cookieParser from 'cookie-parser';
 
 export type Database = Awaited<ReturnType<typeof createDrizzleClient>>;
 
@@ -38,6 +38,7 @@ export default class Api {
     this.app
       .use(express.urlencoded({ extended: true }))
       .use(express.json())
+      .use(cookieParser())
       .use(cors())
       .use(extractVersion('1'))
       .use(logRequests)

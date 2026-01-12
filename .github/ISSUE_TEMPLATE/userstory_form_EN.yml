@@ -1,0 +1,26 @@
+name: User Story Template [EN]
+description: Create a user story
+title: 'User-Story [EN]'
+labels: ['userstory']
+projects: ['Equindar/2']
+assignees:
+  - Equindar
+body:
+  - type: input
+    id: contact
+    attributes:
+      label: Contact Details
+      description: How can we get in touch with you if we need more info?
+      placeholder: ex. email@example.com, discord-ID
+    validations:
+      required: false
+  - type: textarea
+    id: user-story
+    attributes:
+      label: Description of the User-Story
+      description: As a [type of user], I want to [perform some task] so that I can [achieve some goal].
+    validations:
+      required: true
+  - type: markdown
+    attributes:
+      value: By submitting this issue, you agree to follow our [Code of Conduct](https://github.com/Equindar/LunarEclipse/blob/main/CODE_OF_CONDUCT.md)

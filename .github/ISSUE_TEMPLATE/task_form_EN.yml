@@ -1,0 +1,16 @@
+name: Task Template [EN]
+description: Create a new task
+title: 'Task [EN]'
+labels: ['task']
+projects: ['Equindar/2']
+body:
+  - type: textarea
+    id: task-description
+    attributes:
+      label: Description of the Task
+      description: Provide a brief Description what has to be done
+    validations:
+      required: true
+  - type: markdown
+    attributes:
+      value: By submitting this issue, you agree to follow our [Code of Conduct](https://github.com/Equindar/LunarEclipse/blob/main/CODE_OF_CONDUCT.md)

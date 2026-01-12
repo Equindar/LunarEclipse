@@ -1,6 +1,6 @@
-import Character from "@features/characters/core/entities/Character"
-import { CharacterRepository } from "@features/characters/core/interfaces/repositories/Character.repository"
-import getCharacterUseCase from "@features/characters/core/interfaces/usecases/getCharacter.usecase"
+import Character from "@features/characters/core/entities/Character";
+import getCharacterUseCase from "@features/characters/core/interfaces/usecases/getCharacter.usecase";
+import CharacterRepository from "../repositories/Character.repository";
 
 /**
  * Implementation of the getCharacter UseCase (Location: ApplicationLayer)

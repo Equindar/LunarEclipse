@@ -1,13 +1,17 @@
-import jwt, { JwtPayload } from 'jsonwebtoken';
+import jwt from 'jsonwebtoken';
 import configuration from '../config';
 import { Request, Response, NextFunction } from 'express';
 import AuthenticationError from '../errors/AuthenticationError';
-import { JWTPayload } from 'express-oauth2-jwt-bearer';
+import logger from '../utils/apiLogger';
 
 const authenticateUser = (req: Request, res: Response, next: NextFunction) => {
+  logger.debug("Middleware: authenticateUser.ts");
+  logger.debug(req.headers.authorization);
+
   const authHeader = req.headers.authorization;
 
-  if (!authHeader || authHeader.startsWith("Bearer ")) {
+  // Check AuthHeader information
+  if (!authHeader || !authHeader.startsWith("Bearer ")) {
     throw new AuthenticationError({
       message: "Authorization header missing or malformed",
       statusCode: 401,
@@ -18,28 +22,20 @@ const authenticateUser = (req: Request, res: Response, next: NextFunction) => {
   // Extract AuthHeader information
   const token = authHeader.split(" ")[1];
 
-  try {
-    const decoded = jwt.verify(token, configuration.app.secret! as jwt.Secret);
-    if (typeof decoded === "string" || !("payload" in decoded)) {
-      throw new AuthenticationError({
-        message: "JwtPayload incorrect",
-        statusCode: 401,
-        code: "ERR_AUTH",
-      });
-    }
-
-    req.auth = {
-      payload: decoded.payload as JwtPayload,
-      token,
-    };
-    next();
-  } catch (error) {
-    throw new AuthenticationError({
-      message: "You are not authorized to perform this operation",
-      statusCode: 403,
-      code: "ERR_AUTH",
-    })
-  }
+  jwt.verify(
+    token,
+    configuration.auth.accessTokenSecret,
+    (error, decoded) => {
+      if (error)
+        throw new AuthenticationError({
+          message: "You are not authorized to perform this operation",
+          statusCode: 403,
+          code: "ERR_AUTH",
+        });
+      logger.debug(req.auth)
+      logger.debug(decoded);
+      next();
+    });
 };
 
 export default authenticateUser;

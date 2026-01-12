@@ -14,11 +14,13 @@ export class DiscordNotifier implements Notifier {
     const channel = await this.client.channels.fetch(this.channelId);
     if (!channel || !channel.isTextBased()) return;
 
-    const errorMessage =
-      error instanceof Error
-        ? `${message}\n\`\`\`${error.message}\n${error.stack}\`\`\``
-        : `${message}\n\`\`\`${String(error)}\`\`\``;
+    if (channel.isSendable()) {
+      const errorMessage =
+        error instanceof Error
+          ? `${message}\n\`\`\`${error.message}\n${error.stack}\`\`\``
+          : `${message}\n\`\`\`${String(error)}\`\`\``;
 
-    (channel as TextChannel).send(errorMessage).catch(console.error);
+      (channel as TextChannel).send(errorMessage).catch(console.error);
+    }
   }
 }

@@ -40,10 +40,11 @@ tsconfig.base.json:
     "skipLibCheck": true,
     /* Disable emitting comments. */
     "removeComments": true,
-    /* Ensure that casing is correct in imports. */
+    /* Ensure that casing is the same in filenames and in imports in the source code. */
     "forceConsistentCasingInFileNames": true,
     /* When type checking, take into account 'null' and 'undefined'. */
     "strictNullChecks": true,
-    "noImplicitAny": true
+    "noImplicitAny": true,
+    "sourceMap": false
   }
 }
