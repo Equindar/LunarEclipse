@@ -1,5 +1,30 @@
 import { relations } from "drizzle-orm/relations";
-import { users, characters, charactersInventory, inventories, items, charactersWallet, itemsBlueprint, itemsRarity, itemsBlueprintVersion, itemsVersion, monstersBlueprint, monsters, monstersBlueprintVersion, monstersVersion, news } from "./schema";
+import { users, accounts, characters, charactersInventory, inventories, itemsVersion, charactersWallet, itemsBlueprint, items, itemsRarity, itemsBlueprintVersion, monstersBlueprint, monsters, monstersBlueprintVersion, monstersVersion, news, usersLogins } from "./schema";
+
+export const accountsRelations = relations(accounts, ({one, many}) => ({
+	user: one(users, {
+		fields: [accounts.owner],
+		references: [users.id],
+		relationName: "accounts_owner_users_id"
+	}),
+	users: many(users, {
+		relationName: "users_accountId_accounts_id"
+	}),
+}));
+
+export const usersRelations = relations(users, ({one, many}) => ({
+	accounts: many(accounts, {
+		relationName: "accounts_owner_users_id"
+	}),
+	characters: many(characters),
+	news: many(news),
+	account: one(accounts, {
+		fields: [users.accountId],
+		references: [accounts.id],
+		relationName: "users_accountId_accounts_id"
+	}),
+	usersLogins: many(usersLogins),
+}));
 
 export const charactersRelations = relations(characters, ({one, many}) => ({
 	user: one(users, {
@@ -8,11 +33,6 @@ export const charactersRelations = relations(characters, ({one, many}) => ({
 	}),
 	charactersInventories: many(charactersInventory),
 	charactersWallets: many(charactersWallet),
-}));
-
-export const usersRelations = relations(users, ({many}) => ({
-	characters: many(characters),
-	news: many(news),
 }));
 
 export const charactersInventoryRelations = relations(charactersInventory, ({one}) => ({
@@ -24,9 +44,9 @@ export const charactersInventoryRelations = relations(charactersInventory, ({one
 		fields: [charactersInventory.inventoryId],
 		references: [inventories.id]
 	}),
-	item: one(items, {
-		fields: [charactersInventory.itemId],
-		references: [items.id]
+	itemsVersion: one(itemsVersion, {
+		fields: [charactersInventory.id],
+		references: [itemsVersion.id]
 	}),
 }));
 
@@ -34,8 +54,26 @@ export const inventoriesRelations = relations(inventories, ({many}) => ({
 	charactersInventories: many(charactersInventory),
 }));
 
-export const itemsRelations = relations(items, ({one, many}) => ({
+export const itemsVersionRelations = relations(itemsVersion, ({one, many}) => ({
 	charactersInventories: many(charactersInventory),
+	item: one(items, {
+		fields: [itemsVersion.itemId],
+		references: [items.id]
+	}),
+	itemsBlueprintVersion: one(itemsBlueprintVersion, {
+		fields: [itemsVersion.blueprintVersionId],
+		references: [itemsBlueprintVersion.id]
+	}),
+}));
+
+export const charactersWalletRelations = relations(charactersWallet, ({one}) => ({
+	character: one(characters, {
+		fields: [charactersWallet.characterId],
+		references: [characters.id]
+	}),
+}));
+
+export const itemsRelations = relations(items, ({one, many}) => ({
 	itemsBlueprint: one(itemsBlueprint, {
 		fields: [items.blueprintId],
 		references: [itemsBlueprint.id]
@@ -45,13 +83,6 @@ export const itemsRelations = relations(items, ({one, many}) => ({
 		references: [itemsRarity.id]
 	}),
 	itemsVersions: many(itemsVersion),
-}));
-
-export const charactersWalletRelations = relations(charactersWallet, ({one}) => ({
-	character: one(characters, {
-		fields: [charactersWallet.characterId],
-		references: [characters.id]
-	}),
 }));
 
 export const itemsBlueprintRelations = relations(itemsBlueprint, ({many}) => ({
@@ -69,17 +100,6 @@ export const itemsBlueprintVersionRelations = relations(itemsBlueprintVersion, (
 		references: [itemsBlueprint.id]
 	}),
 	itemsVersions: many(itemsVersion),
-}));
-
-export const itemsVersionRelations = relations(itemsVersion, ({one}) => ({
-	item: one(items, {
-		fields: [itemsVersion.itemId],
-		references: [items.id]
-	}),
-	itemsBlueprintVersion: one(itemsBlueprintVersion, {
-		fields: [itemsVersion.blueprintVersionId],
-		references: [itemsBlueprintVersion.id]
-	}),
 }));
 
 export const monstersRelations = relations(monsters, ({one, many}) => ({
@@ -117,6 +137,13 @@ export const monstersVersionRelations = relations(monstersVersion, ({one}) => ({
 export const newsRelations = relations(news, ({one}) => ({
 	user: one(users, {
 		fields: [news.userId],
+		references: [users.id]
+	}),
+}));
+
+export const usersLoginsRelations = relations(usersLogins, ({one}) => ({
+	user: one(users, {
+		fields: [usersLogins.userId],
 		references: [users.id]
 	}),
 }));
