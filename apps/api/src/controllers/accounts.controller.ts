@@ -71,23 +71,23 @@ export default class AccountsController {
           code: "ERR_AUTH"
         });
 
-      verify(
-        refreshToken,
-        configuration.auth.refreshTokenSecret,
-        (error, decoded) => {
-          if (error || decoded.sub !== "Equindar")
-            throw new AuthenticationError({
-              message: "Authorization failed, Cookie information invalid",
-              statusCode: 403,
-              code: "ERR_AUTH"
-            });
-          const accessToken = sign(
-            { "sub": decoded.sub },
-            configuration.auth.accessTokenSecret,
-            { expiresIn: '1m' }
-          )
-          res.json({ accessToken });
-        });
+      // verify(
+      //   refreshToken,
+      //   configuration.auth.refreshTokenSecret,
+      //   (error, decoded) => {
+      //     if (error || decoded.sub !== "Equindar")
+      //       throw new AuthenticationError({
+      //         message: "Authorization failed, Cookie information invalid",
+      //         statusCode: 403,
+      //         code: "ERR_AUTH"
+      //       });
+      //     const accessToken = sign(
+      //       { "sub": decoded.sub },
+      //       configuration.auth.accessTokenSecret,
+      //       { expiresIn: '1m' }
+      //     )
+      //     res.json({ accessToken });
+      //   });
     }
     catch (error) {
       next(error);
