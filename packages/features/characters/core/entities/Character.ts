@@ -1,7 +1,7 @@
 import { CharacterStatus } from "../interfaces/characterStatus";
 import InitializedCharacterStatus from "../InitializedCharacterStatus";
-import { User } from "@features/users/core/entities/User";
 import { ULID, ulid } from "ulid";
+import { User } from "@features/users/core/entities/User";
 
 interface CharacterProps {
   name: string;

@@ -13,6 +13,7 @@ export class User {
     readonly createdDate: Date
   ) { }
 
+
   static register(nickname: string): User {
     return new User(
       ulid(),
@@ -21,6 +22,7 @@ export class User {
       new Date()
     );
   }
+
 
   static get(id: number, uuid: ULID, nickname: string, createdDate: Date): User {
     const user = new User(
@@ -45,19 +47,17 @@ export class User {
   }
 
 
-
-
-
-
   public setStatus(status: UserStatus): void {
     console.log(`User: setStatus to ${(<any>status).constructor.name}.`);
     this.status = status;
     this.status.setUser(this);
   }
 
+
   public getStatus(): UserStatus {
     return this.status;
   }
+
 
   public isBlocked(): boolean {
     return this.getStatus instanceof BlockedUserStatus;
