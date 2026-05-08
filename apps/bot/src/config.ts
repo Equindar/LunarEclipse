@@ -11,6 +11,8 @@ dotenv.config();
 const { DISCORD_CLIENT_ID, DISCORD_TOKEN } = process.env;
 const { LOG_LEVEL, LOG_DIRECTORY } = process.env;
 const { DATABASE_HOST, DATABASE_USER, DATABASE_PASSWORD, DATABASE_NAME } = process.env;
+const { OPENAI_API_KEY, OPENAI_MODEL } = process.env;
+
 
 if (!DATABASE_HOST || !DATABASE_USER || !DATABASE_PASSWORD || !DATABASE_NAME) {
   throw new Error('Missing enviroment variables');
@@ -32,6 +34,12 @@ const configuration = {
     level: LOG_LEVEL,
     dir: LOG_DIRECTORY,
   },
+  integrations: {
+    openai: {
+      key: OPENAI_API_KEY,
+      model: OPENAI_MODEL || ''
+    }
+  }
 };
 
 export default configuration;

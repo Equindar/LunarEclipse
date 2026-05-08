@@ -12,6 +12,7 @@
     "url": "https://github.com/Equindar/LunarEclipse/issues"
   },
   "homepage": "https://github.com/Equindar/LunarEclipse#readme",
+  "packageManager": "npm@11.11.0",
   "workspaces": [
     "apps/api",
     "apps/bot",

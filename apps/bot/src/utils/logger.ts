@@ -38,7 +38,11 @@ const logger = createLogger({
       maxFiles: '14d',
       format: format.combine(
         format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss.SSS A' }),
-        format.json(),
+        format((data) => {
+          const { timestamp, level, message, ...args } = data;
+          return { timestamp, level, message, ...args };
+        })(),
+        format.json({ deterministic: false })
       ),
     }),
 

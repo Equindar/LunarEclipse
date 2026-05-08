@@ -11,7 +11,7 @@ export const shareAnalyzer: MessageAnalyzer = {
     if (match) {
       const shareId = match[1];
       logger.debug(
-        `Share-Link gefunden in Guild "${message.guild?.name}" (${message.guildId}): ID = ${shareId}`,
+        `Share-Link gefunden in Server "${message.guild?.name}" (${message.guildId}): ID = ${shareId}`,
       );
     }
   },

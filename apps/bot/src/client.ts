@@ -20,11 +20,6 @@ export default function createClient(): Client {
   });
 }
 
-export function updateActivity(client: Client, activity: ActivitiesOptions): void {
-  client.user?.setPresence({
-    status: "online",
-    activities: [
-      activity
-    ]
-  })
+export function updateActivity(client: Client, message: string, activity: ActivitiesOptions): void {
+  client.user?.setActivity(message, activity)
 }

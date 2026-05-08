@@ -16,9 +16,9 @@ if (!DISCORD_TOKEN || !DISCORD_CLIENT_ID) {
 }
 
 const client = createClient();
-updateActivity(client,
+updateActivity(client, "LunarEclispe ruleZ",
   {
-    name: "LunarEclispe ruleZ",
+    name: 'Game',
     type: ActivityType.Custom
   }
 );
