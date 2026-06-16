@@ -39,7 +39,7 @@ export function LoginForm({ className, ...props }: React.ComponentPropsWithoutRe
             Or continue with
           </span>
         </div>
-        <Link to="http://localhost:3001/login">
+        <Link to="/login">
           <Button
             variant="outline"
             className="flex w-full items-center rounded-lg border border-gray-300 bg-[#5865F2] px-6 py-2 text-sm font-medium text-white shadow-md hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2"

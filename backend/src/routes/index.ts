@@ -1,6 +1,6 @@
 import express, { Errback, NextFunction, Request, Response } from 'express';
-import { getStatus } from '../controllers/status/status';
-import { getMonsters } from '../controllers/monsters/monsters';
+import { getStatus } from '../application/status/status';
+import { getMonsters } from '../application/monsters/monsters';
 import auth from './auth';
 
 /**

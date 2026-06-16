@@ -11,7 +11,7 @@ import loggingMiddleware from './middlewares/LogMiddleware';
 const app = express();
 
 app.use(cors({ origin: process.env.CORS_URL, optionsSuccessStatus: 200 }));
-app.use(loggingMiddleware);
+// app.use(loggingMiddleware);
 
 // Routes
 app.use('/', routes);

@@ -1,4 +1,3 @@
-import app from 'app';
 import { Request, Response } from 'express';
 
 export async function getStatus(_req: Request, res: Response) {
