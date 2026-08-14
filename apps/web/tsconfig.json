@@ -1,5 +1,5 @@
 {
-  "extends": "../../tsconfig.base.json",
+  "extends": "@lunareclipse/typescript/base.json",
   "compilerOptions": {
     "composite": true,
     "jsx": "react-jsx",
@@ -11,12 +11,7 @@
     }
   },
   "include": [
-    "src",
-    "test"
+    "src/**/*",
+    "@types/**/*"
   ],
-  "references": [
-    {
-      "path": "../../packages"
-    }
-  ]
 }

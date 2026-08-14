@@ -1,7 +1,7 @@
 import { createLogger, transports, format } from 'winston';
-import DailyRotateFile = require('winston-daily-rotate-file');
-import fs = require('fs');
-import path = require('path');
+import DailyRotateFile from 'winston-daily-rotate-file';
+import fs from 'fs';
+import path from 'path';
 
 const logDir = process.env.LOG_DIRECTORY || path.join(__dirname, '../../logs');
 

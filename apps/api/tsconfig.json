@@ -1,14 +1,13 @@
 {
-  "extends": "../../tsconfig.base.json",
+  "extends": "@lunareclipse/typescript/base.json",
   "compilerOptions": {
-    "composite": true,
     // --- Paths
     /* Specify the root folder within your source files. */
     // "rootDir": ".",
     /* Specify an output folder for all emitted files. */
     "outDir": "./build",
     /* Specify the base directory to resolve non-relative module names. */
-    // "baseUrl": ".",
+    "baseUrl": ".",
     /* Specify a set of entries that re-map imports to additional lookup locations. */
     // "paths": {},
     /* Specify multiple folders that act like './node_modules/@types'. */
@@ -19,17 +18,13 @@
     ]
   },
   "include": [
-    "src"
+    "src/**/*",
+    "@types/**/*"
   ],
   "exclude": [
     "build",
     "node_modules",
     "**/*.test.ts"
-  ],
-  "references": [
-    {
-      "path": "../../packages"
-    }
   ],
   // WorkAround for ts-jest with module: nodenext + moduleresolution: nodenext
   "noEmitOnError": false
