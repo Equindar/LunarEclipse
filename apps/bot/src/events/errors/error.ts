@@ -1,5 +1,5 @@
 import { Events } from 'discord.js';
-import { Event } from '../../types/Event';
+import { Event } from '../../types/Event.js';
 
 const event: Event<typeof Events.Error> = {
   name: Events.Error,

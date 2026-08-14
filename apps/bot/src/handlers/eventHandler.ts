@@ -1,25 +1,26 @@
-import { Client } from 'discord.js';
-import { readdirSync, statSync } from 'fs';
-import { Event } from '../types/Event';
-import path from 'path';
-import logger from '../utils/logger';
+import { readdirSync, statSync } from "node:fs";
+import { fileURLToPath } from "node:url";
+import path from "node:path";
+import { Event } from '../types/Event.js';
+import type { Client } from "discord.js";
+import logger from "../utils/logger.js";
+
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 function getEventFiles(dir: string): string[] {
   const files: string[] = [];
   const items = readdirSync(dir);
-
   for (const item of items) {
     const fullPath = path.join(dir, item);
     const stats = statSync(fullPath);
-
     if (stats.isDirectory()) {
-      // Rekursiver Aufruf für Unterordner
       files.push(...getEventFiles(fullPath));
-    } else if (item.endsWith('.ts') || item.endsWith('.js')) {
+    } else if (item.endsWith(".ts") || item.endsWith(".js")) {
       files.push(fullPath);
     }
   }
-
   return files;
 }
 

@@ -1,6 +1,6 @@
-import { CustomEvent } from '../../types/CustomEvent';
+import { CustomEvent } from '../../types/CustomEvent.js';
 import { EmbedBuilder, TextChannel } from 'discord.js';
-import logger from '../../utils/logger';
+import logger from '../../utils/logger.js';
 
 interface ServerStatusData {
   online: boolean;
