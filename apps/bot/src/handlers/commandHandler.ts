@@ -1,8 +1,8 @@
 import { Client, Collection, REST, Routes } from 'discord.js';
 import { readdirSync } from 'fs';
 import path = require('path');
-import { Command } from '../types/Command';
-import logger from '../utils/logger';
+import { Command } from '../types/Command.js';
+import logger from '../utils/logger.js';
 
 export async function loadCommands(client: Client) {
   const commandsPath = path.join(__dirname, '..', 'commands');

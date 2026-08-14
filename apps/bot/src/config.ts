@@ -8,31 +8,21 @@ type Server = {
 // --- Init
 dotenv.config();
 
-const { DISCORD_CLIENT_ID, DISCORD_TOKEN } = process.env;
+const { DISCORD_CLIENT_ID, DISCORD_TOKEN, DISCORD_SERVER_ID } = process.env;
 const { LOG_LEVEL, LOG_DIRECTORY } = process.env;
-const { DATABASE_HOST, DATABASE_USER, DATABASE_PASSWORD, DATABASE_NAME } = process.env;
 const { OPENAI_API_KEY, OPENAI_MODEL } = process.env;
-
-
-if (!DATABASE_HOST || !DATABASE_USER || !DATABASE_PASSWORD || !DATABASE_NAME) {
-  throw new Error('Missing enviroment variables');
-}
 
 const configuration = {
   app: {
     name: DISCORD_CLIENT_ID || '',
     secret: DISCORD_TOKEN || '',
   },
-  servers: [],
-  database: {
-    host: DATABASE_HOST,
-    user: DATABASE_USER,
-    password: DATABASE_PASSWORD,
-    database: DATABASE_NAME,
-  },
+  servers: [
+    DISCORD_SERVER_ID
+  ],
   logging: {
     level: LOG_LEVEL,
-    dir: LOG_DIRECTORY,
+    directory: LOG_DIRECTORY,
   },
   integrations: {
     openai: {

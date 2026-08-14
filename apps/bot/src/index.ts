@@ -1,17 +1,21 @@
-import { loadEvents } from './handlers/eventHandler';
-import { loadCommands } from './handlers/commandHandler';
-import { ErrorHandler } from './handlers/errorHandler';
-import { DiscordNotifier } from './addons/notifiers/DiscordNotifier';
-import dotenv = require('dotenv');
-import createClient, { updateActivity } from './client';
-import logger from './utils/logger';
+
+// import logger from './utils/logger';
 import { ActivityType } from 'discord.js';
+// import configuration from './config';
+import dotenv from 'dotenv';
+import { DiscordNotifier } from './addons/notifiers/DiscordNotifier.js';
+import createClient, { updateActivity } from './client.js';
+import { loadCommands } from './handlers/commandHandler.js';
+import { ErrorHandler } from './handlers/errorHandler.js';
+import { loadEvents } from './handlers/eventHandler.js';
+import logger from './utils/logger.js';
 
 // --- Init
 dotenv.config();
-const { DISCORD_TOKEN, DISCORD_CLIENT_ID } = process.env;
 
-if (!DISCORD_TOKEN || !DISCORD_CLIENT_ID) {
+logger.info("Ich bin am Leben.");
+
+if (!process.env.DISCORD_TOKEN || !process.env.DISCORD_CLIENT_ID) {
   throw new Error('Missing enviroment variables');
 }
 
@@ -31,9 +35,9 @@ export const errorHandler = new ErrorHandler(
 
 (async () => {
   await loadEvents(client);
-  await loadCommands(client);
+  // await loadCommands(client);
   try {
-    await client.login(DISCORD_TOKEN);
+    await client.login(process.env.DISCORD_TOKEN);
   } catch (error) {
     logger.error('Login fehlgeschlagen: ', error);
   }
