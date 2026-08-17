@@ -1,8 +1,11 @@
-import { Client } from 'discord.js';
-import { readdirSync, statSync } from 'fs';
-import { Event } from '../types/Event';
-import path from 'path';
-import logger from '../utils/logger';
+import { readdirSync, statSync } from "node:fs";
+import path from "node:path";
+import type { Client } from "discord.js";
+import type { Event } from "../types/Event.js";
+import { dirnameFromMeta, importModule } from "../utils/esm.js";
+import logger from "../utils/logger.js";
+
+const __dirname = dirnameFromMeta(import.meta.url);
 
 function getEventFiles(dir: string): string[] {
   const files: string[] = [];
@@ -24,24 +27,24 @@ function getEventFiles(dir: string): string[] {
 }
 
 export async function loadEvents(client: Client) {
-  const eventsPath = path.join(__dirname, '..', 'events');
+  const eventsPath = path.join(__dirname, "..", "events");
   const eventFiles = getEventFiles(eventsPath);
 
   try {
-    logger.info('Events werden geladen...');
+    logger.info("Events werden geladen...");
     for (const filePath of eventFiles) {
-      const event: Event<any> = (await import(filePath)).default;
-
+      const event = (await importModule<{ default: Event<any> }>(filePath)).default;
       if (event.once) {
         client.once(event.name, (...args) => event.execute(...args));
       } else {
         client.on(event.name, (...args) => event.execute(...args));
       }
-
-      logger.debug(`Event geladen: ${event.name} (Quelle: ${path.relative(eventsPath, filePath)})`);
+      logger.debug(
+        `Event geladen: ${event.name} (Quelle: ${path.relative(eventsPath, filePath)})`
+      );
     }
-    logger.info('Events erfolgreich geladen.');
+    logger.info("Events erfolgreich geladen.");
   } catch (error) {
-    logger.error('Laden (Events): fehlgeschlagen: ', error);
+    logger.error("Laden (Events): fehlgeschlagen: ", error);
   }
 }

@@ -1,5 +1,5 @@
 import { Client, TextChannel } from 'discord.js';
-import { Notifier } from '../../types/Notifier';
+import { Notifier } from '../../types/Notifier.js';
 
 export class DiscordNotifier implements Notifier {
   private client: Client;

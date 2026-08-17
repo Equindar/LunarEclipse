@@ -1,7 +1,7 @@
 import { Events, Message } from 'discord.js';
-import { Event } from '../types/Event';
-import { loadAnalyzers } from '../utils/analyzerLoader';
-import logger from '../utils/logger';
+import { Event } from '../types/Event.js';
+import { loadAnalyzers } from '../utils/analyzerLoader.js';
+import logger from '../utils/logger.js';
 
 const analyzers = loadAnalyzers();
 
@@ -12,7 +12,7 @@ const event: Event<typeof Events.MessageCreate> = {
     // Ignoriere Nachrichten von Bots
     if (message.author.bot) return;
 
-    for (const analyzer of analyzers) {
+    for (const analyzer of await analyzers) {
       try {
         await analyzer.analyze(message);
       } catch (error) {

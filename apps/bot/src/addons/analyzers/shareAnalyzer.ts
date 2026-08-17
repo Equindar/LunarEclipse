@@ -1,5 +1,5 @@
-import { MessageAnalyzer } from '../../types/MessageAnalyzer';
-import logger from '../../utils/logger';
+import { MessageAnalyzer } from "../../types/MessageAnalyzer.js";
+import logger from "../../utils/logger.js";
 
 const urlPrefix = /http:\/\/test/;
 const shareRegex = /\/share\/([A-Za-z0-9_-]+)/;

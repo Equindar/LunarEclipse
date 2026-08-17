@@ -1,6 +1,6 @@
-import { MessageAnalyzer } from '../../types/MessageAnalyzer';
-import logger from '../../utils/logger';
-import { processAudio } from '../voice-to-text/processAudio';
+import { MessageAnalyzer } from "../../types/MessageAnalyzer.js";
+import logger from "../../utils/logger.js";
+import { processAudio } from "../voice-to-text/processAudio.js";
 
 export const voiceMessageAnalyzer: MessageAnalyzer = {
   name: 'voiceMessageAnalyzer',

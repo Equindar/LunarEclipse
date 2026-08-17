@@ -1,11 +1,11 @@
-import { loadEvents } from './handlers/eventHandler';
-import { loadCommands } from './handlers/commandHandler';
-import { ErrorHandler } from './handlers/errorHandler';
-import { DiscordNotifier } from './addons/notifiers/DiscordNotifier';
-import dotenv = require('dotenv');
-import createClient, { updateActivity } from './client';
-import logger from './utils/logger';
 import { ActivityType } from 'discord.js';
+import { DiscordNotifier } from './addons/notifiers/DiscordNotifier.js';
+import createClient, { updateActivity } from './client.js';
+import { loadCommands } from './handlers/commandHandler.js';
+import { ErrorHandler } from './handlers/errorHandler.js';
+import { loadEvents } from './handlers/eventHandler.js';
+import logger from './utils/logger.js';
+import dotenv from 'dotenv';
 
 // --- Init
 dotenv.config();

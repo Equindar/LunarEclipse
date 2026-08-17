@@ -1,5 +1,5 @@
 import { Client, GatewayIntentBits, Collection, Partials, ActivityType, ActivitiesOptions } from 'discord.js';
-import { Command } from './types/Command';
+import { Command } from './types/Command.js';
 
 declare module 'discord.js' {
   export interface Client {

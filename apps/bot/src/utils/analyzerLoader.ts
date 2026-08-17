@@ -1,28 +1,39 @@
-import { readdirSync } from 'fs';
-import path from 'path';
-import { MessageAnalyzer } from '../types/MessageAnalyzer';
-import logger from './logger';
+import { readdirSync } from "node:fs";
+import path from "node:path";
+import type { MessageAnalyzer } from "../types/MessageAnalyzer.js";
+import { dirnameFromMeta, importModule } from "../utils/esm.js";
+import logger from "./logger.js";
 
-export function loadAnalyzers(): MessageAnalyzer[] {
-  logger.info('Analyzers werden geladen...');
+const __dirname = dirnameFromMeta(import.meta.url);
+
+export async function loadAnalyzers(): Promise<MessageAnalyzer[]> {
+  logger.info("Analyzers werden geladen...");
   const analyzers: MessageAnalyzer[] = [];
 
   try {
-    const analyzersPath = path.join(__dirname, '..', 'addons', 'analyzers');
-    const files = readdirSync(analyzersPath).filter((f) => f.endsWith('.ts') || f.endsWith('.js'));
+    const analyzersPath = path.join(__dirname, "..", "addons", "analyzers");
+    const files = readdirSync(analyzersPath).filter(
+      (f) => f.endsWith(".ts") || f.endsWith(".js")
+    );
 
     for (const file of files) {
       const filePath = path.join(analyzersPath, file);
-      // dynamischer Import
-      const module = require(filePath);
+      const module = await importModule<Record<string, MessageAnalyzer>>(filePath);
+
       for (const key in module) {
-        analyzers.push(module[key] as MessageAnalyzer);
-        logger.debug(`Analyzer geladen: ${module[key].name}`);
+        const analyzer = module[key];
+        if (!analyzer) {
+          logger.debug(`Übersprungen: Export "${key}" ist kein gültiger Analyzer.`);
+          continue;
+        }
+        analyzers.push(analyzer);
+        logger.debug(`Analyzer geladen: ${analyzer.name}`);
       }
     }
-    logger.info('Analyzers erfolgreich geladen.');
+
+    logger.info("Analyzers erfolgreich geladen.");
   } catch (error) {
-    logger.error('Laden (Analyzers): fehlgeschlagen: ', error);
+    logger.error("Laden (Analyzers): fehlgeschlagen: ", error);
   }
 
   return analyzers;
