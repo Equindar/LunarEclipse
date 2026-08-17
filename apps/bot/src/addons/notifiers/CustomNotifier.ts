@@ -1,4 +1,4 @@
-import { Notifier } from '../../types/Notifier';
+import { Notifier } from "../../types/Notifier.js";
 
 export class CustomNotifier implements Notifier {
   async notify(message: string, error?: unknown): Promise<void> {

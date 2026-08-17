@@ -1,66 +1,14 @@
-import { createLogger, transports, format } from 'winston';
-import DailyRotateFile from 'winston-daily-rotate-file';
-import fs from 'fs';
-import path from 'path';
 
-const logDir = process.env.LOG_DIRECTORY || path.join(__dirname, '../../logs');
+import path from 'node:path';
+import { createLogger, type Logger } from '@lunareclipse/logging';
+import configuration from '../config.js';
 
-if (!fs.existsSync(logDir)) {
-  fs.mkdirSync(logDir, { recursive: true });
-}
-
-// --- Default-Logger
-const logger = createLogger({
-  level: process.env.NODE_ENV === 'production' ? 'info' : 'debug',
-  format: format.combine(
-    format.timestamp({
-      format: 'YYYY-MM-DD HH:mm:ss.SSS Z',
-    }),
-    format.errors({ stack: true }),
-  ),
-  transports: [
-    new transports.Console({
-      format: format.combine(
-        format.colorize({ all: true }),
-        format.timestamp(),
-        format.errors({ stack: true }),
-        format.printf((info) => `[${info.timestamp}] ${info.level}: ${info.message}`),
-      ),
-    }),
-
-    new DailyRotateFile({
-      dirname: logDir,
-      filename: '%DATE%.info.log',
-      datePattern: 'YYYY-MM-DD',
-      zippedArchive: true,
-      level: 'info',
-      maxSize: '20m',
-      maxFiles: '14d',
-      format: format.combine(
-        format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss.SSS A' }),
-        format((data) => {
-          const { timestamp, level, message, ...args } = data;
-          return { timestamp, level, message, ...args };
-        })(),
-        format.json({ deterministic: false })
-      ),
-    }),
-
-    new DailyRotateFile({
-      dirname: logDir,
-      filename: '%DATE%.error.log',
-      datePattern: 'YYYY-MM-DD',
-      zippedArchive: true,
-      level: 'error',
-      maxSize: '20m',
-      maxFiles: '30d',
-      format: format.combine(
-        format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss.SSS A' }),
-        format.errors({ stack: true }),
-        format.json(),
-      ),
-    }),
-  ],
+const logger: Logger = createLogger({
+  service: "bot",
+  level: configuration.logging.level,
+  logDir: configuration.logging.directory ?? path.join(process.cwd(), "logs"),
+  enableFile: process.env.NODE_ENV === "production",
+  errorRetention: "30d",
 });
 
 export default logger;
