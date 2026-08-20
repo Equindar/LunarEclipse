@@ -1,10 +1,9 @@
-import UserStatus from "./interfaces/userStatus";
+import UserStatus from './interfaces/userStatus';
 
 export default class InitializedUserStatus extends UserStatus {
-
   constructor() {
     super();
-    this.name = "initialized";
+    this.name = 'initialized';
   }
 
   public setDisplayName(name: string): void {
@@ -12,8 +11,6 @@ export default class InitializedUserStatus extends UserStatus {
   }
 
   public doAction(): void {
-    console.log("doAction");
+    console.log('doAction');
   }
-
-
 }

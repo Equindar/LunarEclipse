@@ -1,4 +1,4 @@
-import RuleContext from "./RuleContext";
+import RuleContext from './RuleContext';
 
 /** RulePhase(s)
  * * preRound — vor Aktionswahl / Setup (z. B. Runde 1 Boni).
@@ -8,8 +8,16 @@ import RuleContext from "./RuleContext";
  * * postGroup — nach einer Tempo-Gruppenauflösung (commit group planned effects).
  * * postRound — nach kompletter Round, vor Commit to GameState. */
 export type RulePhase =
-  "preCombat" | "preCombatRound" | "preActionRound" | "preGroup" | "preAction" |
-  "postAction" | "postGroup" | "postActionRound" | "postCombatRound" | "postCombat";
+  | 'preCombat'
+  | 'preCombatRound'
+  | 'preActionRound'
+  | 'preGroup'
+  | 'preAction'
+  | 'postAction'
+  | 'postGroup'
+  | 'postActionRound'
+  | 'postCombatRound'
+  | 'postCombat';
 
 export interface Rule {
   /** Name der Regel */

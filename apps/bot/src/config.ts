@@ -3,7 +3,7 @@ import dotenv from 'dotenv';
 type Server = {
   id: string;
   name: string;
-}
+};
 
 // --- Init
 dotenv.config();
@@ -17,9 +17,7 @@ const configuration = {
     name: DISCORD_CLIENT_ID || '',
     secret: DISCORD_TOKEN || '',
   },
-  servers: [
-    DISCORD_SERVER_ID
-  ],
+  servers: [DISCORD_SERVER_ID],
   logging: {
     level: LOG_LEVEL,
     directory: LOG_DIRECTORY,
@@ -27,9 +25,9 @@ const configuration = {
   integrations: {
     openai: {
       key: OPENAI_API_KEY,
-      model: OPENAI_MODEL || ''
-    }
-  }
+      model: OPENAI_MODEL || '',
+    },
+  },
 };
 
 export default configuration;

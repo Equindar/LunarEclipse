@@ -1,5 +1,5 @@
-import { FighterId } from "../Fighter";
-import { FighterAction } from "./FighterAction";
+import { FighterId } from '../Fighter';
+import { FighterAction } from './FighterAction';
 
 export type TempoGroupEntry = {
   /** Kämpfer der Aktion */
@@ -8,7 +8,7 @@ export type TempoGroupEntry = {
   action: FighterAction;
   /** Index im Aktionsmuster */
   actionIndex: number;
-}
+};
 
 export interface TempoGroup {
   /** Tempo Indikator für Gruppierung */

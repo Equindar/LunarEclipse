@@ -15,33 +15,37 @@ export default class CharactersController {
     this.database = db;
   }
 
-
   // UseCase in Feature/application
   public onGetCharacter = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const id = parseInt(`${req.params.id}`);
-      const data = await new getCharacter(new CharacterRepositoryImpl(new CharacterDataSourceImpl(this.database))).execute(id);
+      const data = await new getCharacter(
+        new CharacterRepositoryImpl(new CharacterDataSourceImpl(this.database)),
+      ).execute(id);
       return res.status(200).send(CharacterDTO.fromEntity(data!));
-    }
-    catch (error) {
+    } catch (error) {
       next(error);
     }
-
   };
 
   public onListCharacters = async (req: Request, res: Response, next: NextFunction) => {
-    const data = await new listCharacters(new CharacterRepositoryImpl(new CharacterDataSourceImpl(this.database))).execute();
-    const result: CharacterDTO[] = []
-    data.forEach(item => { result.push(CharacterDTO.fromEntity(item)) });
+    const data = await new listCharacters(
+      new CharacterRepositoryImpl(new CharacterDataSourceImpl(this.database)),
+    ).execute();
+    const result: CharacterDTO[] = [];
+    data.forEach((item) => {
+      result.push(CharacterDTO.fromEntity(item));
+    });
     return res.status(200).send(result);
   };
 
   public onCreateCharacter = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      await new createCharacter(new CharacterRepositoryImpl(new CharacterDataSourceImpl(this.database))).execute(req.body.character, req.body.userId);
+      await new createCharacter(
+        new CharacterRepositoryImpl(new CharacterDataSourceImpl(this.database)),
+      ).execute(req.body.character, req.body.userId);
       return res.sendStatus(201);
-    }
-    catch (error) {
+    } catch (error) {
       next(error);
     }
   };
@@ -49,12 +53,12 @@ export default class CharactersController {
   public onUpdateCharacter = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const id = parseInt(`${req.params.id}`);
-      await new updateCharacter(new CharacterRepositoryImpl(new CharacterDataSourceImpl(this.database))).execute(id, req.body.character);
+      await new updateCharacter(
+        new CharacterRepositoryImpl(new CharacterDataSourceImpl(this.database)),
+      ).execute(id, req.body.character);
       return res.sendStatus(200);
-    }
-    catch (error) {
+    } catch (error) {
       next(error);
     }
-
   };
 }

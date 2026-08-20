@@ -1,6 +1,6 @@
-import Character from "@features/characters/core/entities/Character";
-import getCharacterUseCase from "@features/characters/core/interfaces/usecases/getCharacter.usecase";
-import CharacterRepository from "../repositories/Character.repository";
+import Character from '@features/characters/core/entities/Character';
+import getCharacterUseCase from '@features/characters/core/interfaces/usecases/getCharacter.usecase';
+import CharacterRepository from '../repositories/Character.repository';
 
 /**
  * Implementation of the getCharacter UseCase (Location: ApplicationLayer)
@@ -8,9 +8,9 @@ import CharacterRepository from "../repositories/Character.repository";
  * Path: packages\features\characters\application\logic
  */
 export default class getCharacter implements getCharacterUseCase {
-  characterRepository: CharacterRepository
+  characterRepository: CharacterRepository;
   constructor(repository: CharacterRepository) {
-    this.characterRepository = repository
+    this.characterRepository = repository;
   }
 
   /**

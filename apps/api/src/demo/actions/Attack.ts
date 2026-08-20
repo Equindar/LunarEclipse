@@ -1,9 +1,9 @@
-import { BaseAction } from "./Base";
-import { ActionType } from "../types/ActionType";
-import logger from "../../utils/apiLogger";
-import { IActionContext } from "../interfaces/ActionContext";
-import { formatDuration } from "../utils/time";
-import { CombatLogger } from "../../utils/combatLogger";
+import { BaseAction } from './Base';
+import { ActionType } from '../types/ActionType';
+import logger from '../../utils/apiLogger';
+import { IActionContext } from '../interfaces/ActionContext';
+import { formatDuration } from '../utils/time';
+import { CombatLogger } from '../../utils/combatLogger';
 
 export class AttackAction extends BaseAction {
   /** Basiswerte */
@@ -19,14 +19,17 @@ export class AttackAction extends BaseAction {
     const actor = ctx.actor.id;
     const targets = ctx.selectedTargets;
     const state = ctx.ctxRound.fighters.get(actor)!;
-    const execution = ctx.ctxCombat.time.elapsed + (1000 - (ctx.actor.action.investedTempo * 100));
+    const execution = ctx.ctxCombat.time.elapsed + (1000 - ctx.actor.action.investedTempo * 100);
     // logger.verbose(targets);
 
-    const damage = this.baseDamage + ctx.actor.action.investedImpact + ctx.actor.state.nextAttackBonus;
-    targets?.forEach(element => {
+    const damage =
+      this.baseDamage + ctx.actor.action.investedImpact + ctx.actor.state.nextAttackBonus;
+    targets?.forEach((element) => {
       ctx.ctxRound.addPlannedDamage(element.id, damage);
     });
-    logger.debug(`[${formatDuration(execution)}] ${actor} greift an: ${ctx.selectedTargets![0].id} erleidet ${this.baseDamage} + ${ctx.actor.action.investedImpact} + ${ctx.actor.state.nextAttackBonus} Schaden.`);
+    logger.debug(
+      `[${formatDuration(execution)}] ${actor} greift an: ${ctx.selectedTargets![0].id} erleidet ${this.baseDamage} + ${ctx.actor.action.investedImpact} + ${ctx.actor.state.nextAttackBonus} Schaden.`,
+    );
     state.resetAttackBuff();
   }
 

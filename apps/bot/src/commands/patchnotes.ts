@@ -1,8 +1,15 @@
-import { ChannelType, EmbedBuilder, InteractionContextType, PermissionFlagsBits, SlashCommandBuilder, TextChannel } from 'discord.js';
-import { Command } from '../types/Command';
-import { errorHandler } from '../index';
-import { isServerOwner } from '../utils/isServerOwner';
-import logger from '../utils/logger';
+import {
+  ChannelType,
+  EmbedBuilder,
+  InteractionContextType,
+  PermissionFlagsBits,
+  SlashCommandBuilder,
+  TextChannel,
+} from 'discord.js';
+import { errorHandler } from '../index.js';
+import { Command } from '../types/Command.js';
+import { isServerOwner } from '../utils/isServerOwner.js';
+import logger from '../utils/logger.js';
 
 let command: Command = {
   data: new SlashCommandBuilder()
@@ -15,14 +22,10 @@ let command: Command = {
         .setName('channel')
         .setDescription('Kanal, in den das Embed gesendet werden soll')
         .addChannelTypes(ChannelType.PublicThread)
-        .setRequired(true)
+        .setRequired(true),
     )
     .addNumberOption((option) =>
-      option
-        .setName('issue')
-        .setDescription('Nummer des Issues')
-        .setMinValue(0)
-        .setRequired(true)
+      option.setName('issue').setDescription('Nummer des Issues').setMinValue(0).setRequired(true),
     ),
 
   async execute(interaction) {
@@ -36,10 +39,9 @@ let command: Command = {
       // Gather Data from, Github
       const response = await fetch(
         `https://api.github.com/repos/Equindar/LunarEclipse/issues/${issue}`,
-        { headers: { 'Authorization': `Bearer ${process.env.GITHUB_PAT}` } }
+        { headers: { Authorization: `Bearer ${process.env.GITHUB_PAT}` } },
       );
-      if (!response.ok)
-        throw new Error("Keine Daten von GitHub erhalten.")
+      if (!response.ok) throw new Error('Keine Daten von GitHub erhalten.');
       const content = await response.json();
 
       if (!channel.isSendable())
@@ -55,19 +57,17 @@ let command: Command = {
               {
                 name: 'Zeitstempel',
                 value: `erstellt: ${content.created_at}\ngeändert: ${content.updated_at}\ngeschlossen: ${content.closed_at ?? ''}`,
-                inline: true
+                inline: true,
               },
               { name: 'Bearbeiter', value: content.assignee ?? '---', inline: true },
-
             )
             .setTimestamp()
             .setFooter({
-              text: "--- verlinktes Issue im GitHub ---"
-            }
-            ),
+              text: '--- verlinktes Issue im GitHub ---',
+            }),
         ],
       });
-      logger.debug(content.state)
+      logger.debug(content.state);
 
       await interaction.reply('performed patchnotes command');
     } catch (error) {
@@ -76,7 +76,6 @@ let command: Command = {
     }
   },
 };
-
 
 // Mit Decorator wrappen
 command = isServerOwner(command);

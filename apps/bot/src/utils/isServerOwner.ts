@@ -1,6 +1,6 @@
-import { Command } from '../types/Command';
+import { Command } from '../types/Command.js';
 import { ChatInputCommandInteraction } from 'discord.js';
-import logger from './logger';
+import logger from './logger.js';
 
 export function isServerOwner(command: Command): Command {
   return {

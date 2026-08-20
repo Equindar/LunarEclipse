@@ -1,9 +1,11 @@
 {
   "name": "@lunareclipse/features",
   "version": "1.0.0",
+  "private": true,
   "type": "module",
   "exports": {
-    "./*": "./src/*.ts"
+    "types": "./**/*.ts",
+    "default": "./**/*.ts"
   },
   "scripts": {
     "lint": "eslint . --max-warnings 0",

@@ -1,7 +1,7 @@
-import { CharacterStatus } from "../interfaces/characterStatus";
-import InitializedCharacterStatus from "../InitializedCharacterStatus";
-import { ULID, ulid } from "ulid";
-import { User } from "@features/users/core/entities/User";
+import { CharacterStatus } from '../interfaces/characterStatus';
+import InitializedCharacterStatus from '../InitializedCharacterStatus';
+import { ULID, ulid } from 'ulid';
+import { User } from '@features/users/core/entities/User';
 
 interface CharacterProps {
   name: string;
@@ -18,14 +18,20 @@ export default class Character implements CharacterProps {
   status: CharacterStatus = new InitializedCharacterStatus();
   owner: User;
 
-  constructor(name: string, status: CharacterStatus, owner: User, exp?: number, id?: number, uuid?: string) {
+  constructor(
+    name: string,
+    status: CharacterStatus,
+    owner: User,
+    exp?: number,
+    id?: number,
+    uuid?: string,
+  ) {
     this.name = name;
     this.experience = exp ?? this.experience;
     this.owner = owner;
     this.status = status;
     this.id = id ?? this.id;
     this.uuid = uuid ?? this.uuid;
-
   }
 
   public setStatus(status: CharacterStatus): void {

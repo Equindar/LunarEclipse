@@ -1,8 +1,8 @@
-import { Router } from "express";
-import { VersionStrategy } from "../types/versionStrategy";
-import path from "path";
-import { readdirSync } from "fs";
-import { Database } from "../app";
+import { Router } from 'express';
+import { VersionStrategy } from '../types/versionStrategy';
+import path from 'path';
+import { readdirSync } from 'fs';
+import { Database } from '../app';
 
 export class v1Strategy implements VersionStrategy {
   private database;
@@ -13,11 +13,11 @@ export class v1Strategy implements VersionStrategy {
 
   getRouter(): Router {
     const router = Router();
-    const routesPath = path.join(__dirname, "../routes/v1");
+    const routesPath = path.join(__dirname, '../routes/v1');
 
     // Alle Dateien in /routes/v1 einlesen
-    const files = readdirSync(routesPath).filter((file) =>
-      file.endsWith(".routes.js") || file.endsWith(".routes.ts")
+    const files = readdirSync(routesPath).filter(
+      (file) => file.endsWith('.routes.js') || file.endsWith('.routes.ts'),
     );
 
     for (const file of files) {
@@ -28,8 +28,8 @@ export class v1Strategy implements VersionStrategy {
 
       // Route mounten: Dateiname bestimmt den Pfad
       // z. B. users.routes.ts → /users
-      const routeName = file.replace(".routes.ts", "").replace(".routes.js", "");
-      const basePath = `/${routeName.replace(".routes", "")}`;
+      const routeName = file.replace('.routes.ts', '').replace('.routes.js', '');
+      const basePath = `/${routeName.replace('.routes', '')}`;
 
       router.use(basePath, routeFactory(this.database));
     }

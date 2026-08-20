@@ -1,5 +1,5 @@
-import { FighterId } from "../Fighter";
-import { ActionPattern } from "./ActionPattern";
+import { FighterId } from '../Fighter';
+import { ActionPattern } from './ActionPattern';
 
 export interface IRoundFighterState {
   id: FighterId;

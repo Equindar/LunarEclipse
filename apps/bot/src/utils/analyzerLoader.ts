@@ -1,20 +1,18 @@
-import { readdirSync } from "node:fs";
-import path from "node:path";
-import type { MessageAnalyzer } from "../types/MessageAnalyzer.js";
-import { dirnameFromMeta, importModule } from "../utils/esm.js";
-import logger from "./logger.js";
+import { readdirSync } from 'node:fs';
+import path from 'node:path';
+import type { MessageAnalyzer } from '../types/MessageAnalyzer.js';
+import { dirnameFromMeta, importModule } from '../utils/esm.js';
+import logger from './logger.js';
 
 const __dirname = dirnameFromMeta(import.meta.url);
 
 export async function loadAnalyzers(): Promise<MessageAnalyzer[]> {
-  logger.info("Analyzers werden geladen...");
+  logger.info('Analyzers werden geladen...');
   const analyzers: MessageAnalyzer[] = [];
 
   try {
-    const analyzersPath = path.join(__dirname, "..", "addons", "analyzers");
-    const files = readdirSync(analyzersPath).filter(
-      (f) => f.endsWith(".ts") || f.endsWith(".js")
-    );
+    const analyzersPath = path.join(__dirname, '..', 'addons', 'analyzers');
+    const files = readdirSync(analyzersPath).filter((f) => f.endsWith('.ts') || f.endsWith('.js'));
 
     for (const file of files) {
       const filePath = path.join(analyzersPath, file);
@@ -31,9 +29,9 @@ export async function loadAnalyzers(): Promise<MessageAnalyzer[]> {
       }
     }
 
-    logger.info("Analyzers erfolgreich geladen.");
+    logger.info('Analyzers erfolgreich geladen.');
   } catch (error) {
-    logger.error("Laden (Analyzers): fehlgeschlagen: ", error);
+    logger.error('Laden (Analyzers): fehlgeschlagen: ', error);
   }
 
   return analyzers;

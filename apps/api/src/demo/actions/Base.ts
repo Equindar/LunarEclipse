@@ -1,6 +1,6 @@
-import { IActionContext } from "../interfaces/ActionContext";
-import { FighterAction } from "../interfaces/FighterAction";
-import { ActionType } from "../types/ActionType";
+import { IActionContext } from '../interfaces/ActionContext';
+import { FighterAction } from '../interfaces/FighterAction';
+import { ActionType } from '../types/ActionType';
 
 export abstract class BaseAction {
   /** Basiswerte */
@@ -13,9 +13,7 @@ export abstract class BaseAction {
   baseBlock = 5;
   energyGain = 0;
 
-
-  constructor(public type: ActionType) {
-  }
+  constructor(public type: ActionType) {}
 
   /**
    * calculates the energy consumption of the action
@@ -33,24 +31,21 @@ export abstract class BaseAction {
   abstract resolveAsEngage(ctx: IActionContext): void;
 
   /**
- * Actor reacts to an incoming action, based on the lower tempo
- * @param props
- */
-  abstract resolveAsReaction(
-    ctx: IActionContext
-    // ,
-    // targettedBy: {
-    //   id: FighterId;
-    //   state: RoundFighterState;
-    //   action: FighterAction;
-    //   primary?: boolean;
-    // }[]
-  ): void;
+   * Actor reacts to an incoming action, based on the lower tempo
+   * @param props
+   */
+  abstract resolveAsReaction(ctx: IActionContext) // ,
+  // targettedBy: {
+  //   id: FighterId;
+  //   state: RoundFighterState;
+  //   action: FighterAction;
+  //   primary?: boolean;
+  // }[]
+  : void;
 
   /**
    * Actor performs the action in the same moment, based on the equal tempo
    * @param props
    */
   abstract resolveAsMoment(ctx: IActionContext): void;
-
 }

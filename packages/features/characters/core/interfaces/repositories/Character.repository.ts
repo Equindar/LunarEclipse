@@ -1,4 +1,4 @@
-import Character from "../../entities/Character";
+import Character from '../../entities/Character';
 
 export interface CharacterRepository {
   create(subject: Character, userId: number): Promise<boolean>;

@@ -12,5 +12,5 @@ function pad(n: number) {
 }
 
 function pad3(n: number) {
-  return n.toString().padStart(3, "0");
+  return n.toString().padStart(3, '0');
 }

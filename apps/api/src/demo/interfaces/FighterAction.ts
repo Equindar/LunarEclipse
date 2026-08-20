@@ -1,4 +1,4 @@
-import { BaseAction } from "../actions/Base";
+import { BaseAction } from '../actions/Base';
 
 export interface FighterAction {
   /** Typ der Aktion */

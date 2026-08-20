@@ -1,6 +1,6 @@
-import logger from "../utils/apiLogger";
-import { RulePhase, Rule } from "./interfaces/Rule";
-import RuleContext from "./interfaces/RuleContext";
+import logger from '../utils/apiLogger';
+import { RulePhase, Rule } from './interfaces/Rule';
+import RuleContext from './interfaces/RuleContext';
 
 export class RuleRegistry {
   private rulesByPhase: Map<RulePhase, Rule[]> = new Map();
@@ -12,10 +12,12 @@ export class RuleRegistry {
     this.rulesByPhase.set(rule.phase, arr);
   }
 
-
   unregister(ruleId: string) {
     for (const [phase, arr] of this.rulesByPhase.entries()) {
-      this.rulesByPhase.set(phase, arr.filter(r => r.name !== ruleId));
+      this.rulesByPhase.set(
+        phase,
+        arr.filter((r) => r.name !== ruleId),
+      );
     }
   }
 
@@ -26,7 +28,7 @@ export class RuleRegistry {
       try {
         if (r.matches(ctx)) {
           r.apply(ctx);
-          logger.debug(`Rule:${r.name} angewendet in ${phase}`)
+          logger.debug(`Rule:${r.name} angewendet in ${phase}`);
           // ctx.round.log.push(`rule:${r.name} applied in ${phase}`);
           if (r.stopPropagation) break;
         }

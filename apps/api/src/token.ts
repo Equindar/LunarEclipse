@@ -1,13 +1,13 @@
-import jwt from "jsonwebtoken";
-import configuration from "./config";
+import jwt from 'jsonwebtoken';
+import configuration from './config';
 
 const payload = {
-    sub: "equindar",
+  sub: 'equindar',
 };
 
 const token = jwt.sign(payload, configuration.app.secret!, {
-    expiresIn: "1h",
-    issuer: "lunareclipse-api",
+  expiresIn: '1h',
+  issuer: 'lunareclipse-api',
 });
 
 console.log(token);

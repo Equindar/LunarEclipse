@@ -1,7 +1,7 @@
 import { Events, MessageReaction, PartialMessageReaction, PartialUser, User } from 'discord.js';
 import { errorHandler } from '../index.js';
 import logger from '../utils/logger.js';
-import { Event } from '../types/Event.js'
+import { Event } from '../types/Event.js';
 
 const event: Event<typeof Events.MessageReactionAdd> = {
   name: Events.MessageReactionAdd,

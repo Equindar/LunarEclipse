@@ -2,7 +2,6 @@ import dotenv from 'dotenv';
 import Api from './app';
 import logger from './utils/apiLogger';
 
-
 async function server() {
   // --- Init
   dotenv.config();
@@ -17,7 +16,7 @@ async function server() {
 
   // Start API
   const app = new Api(API_NAME);
-  await app.connectDataBase();
+  //await app.connectDataBase();
   app.init();
 
   // Mapping to Port
@@ -34,4 +33,3 @@ async function server() {
 }
 
 server();
-

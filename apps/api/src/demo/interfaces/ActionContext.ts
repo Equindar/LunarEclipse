@@ -1,37 +1,39 @@
-
-import { RoundContext } from "../contexts/RoundContext";
-import { FighterId } from "../Fighter";
-import { RoundFighterState } from "../RoundFighterState";
-import { RuleRegistry } from "../RuleRegistry";
-import { ActionPhase } from "./ActionPhase";
-import { ICombatContext } from "./CombatContext";
-import { FighterAction } from "./FighterAction";
-
+import { RoundContext } from '../contexts/RoundContext';
+import { FighterId } from '../Fighter';
+import { RoundFighterState } from '../RoundFighterState';
+import { RuleRegistry } from '../RuleRegistry';
+import { ActionPhase } from './ActionPhase';
+import { ICombatContext } from './CombatContext';
+import { FighterAction } from './FighterAction';
 
 export interface IActionContext {
   readonly ctxCombat: ICombatContext;
   // Actor
   actor: {
-    id: FighterId,
-    state: RoundFighterState,
-    action: FighterAction
-  }
+    id: FighterId;
+    state: RoundFighterState;
+    action: FighterAction;
+  };
 
   // Target(s)
   // ausgehend
-  selectedTargets?: [{
-    id: FighterId;
-    state: RoundFighterState;
-    action: FighterAction;
-    primary?: boolean;
-  }]
+  selectedTargets?: [
+    {
+      id: FighterId;
+      state: RoundFighterState;
+      action: FighterAction;
+      primary?: boolean;
+    },
+  ];
   // eingehend
-  targettedBy?: [{
-    id: FighterId;
-    state: RoundFighterState;
-    action: FighterAction;
-    primary?: boolean;
-  }];
+  targettedBy?: [
+    {
+      id: FighterId;
+      state: RoundFighterState;
+      action: FighterAction;
+      primary?: boolean;
+    },
+  ];
 
   scheduledTime?: number;
 
@@ -44,5 +46,4 @@ export interface IActionContext {
 
   execute(perspective: ActionPhase, registry?: RuleRegistry): void;
   commit(): void;
-
 }

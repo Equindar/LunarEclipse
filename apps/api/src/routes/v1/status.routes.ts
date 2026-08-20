@@ -1,6 +1,6 @@
 import { Router } from 'express';
 
-export default function createStatusRouter(database: any) {
+export default function createStatusRouter(database: any): Router {
   const router = Router();
 
   router.get('/', (_req, res) => {

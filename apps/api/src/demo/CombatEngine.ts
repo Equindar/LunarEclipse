@@ -1,11 +1,11 @@
-import logger from "../utils/apiLogger";
-import { CombatLogger } from "../utils/combatLogger";
-import { IRoundContext } from "./interfaces/RoundContext";
-import { ICombatContext } from "./interfaces/CombatContext";
-import { ActionPattern } from "./interfaces/ActionPattern";
-import { EarlyEnergyBoostRule } from "./rules/EarlyEnergyBoost.rule";
-import { VengefulComebackRule } from "./rules/VengefulComeback.rule";
-import { formatDuration } from "./utils/time";
+import logger from '../utils/apiLogger';
+import { CombatLogger } from '../utils/combatLogger';
+import { IRoundContext } from './interfaces/RoundContext';
+import { ICombatContext } from './interfaces/CombatContext';
+import { ActionPattern } from './interfaces/ActionPattern';
+import { EarlyEnergyBoostRule } from './rules/EarlyEnergyBoost.rule';
+import { VengefulComebackRule } from './rules/VengefulComeback.rule';
+import { formatDuration } from './utils/time';
 
 export class CombatEngine {
   /** Rundenlänge in Millisekunden */
@@ -22,14 +22,14 @@ export class CombatEngine {
     this.combatContext.currentRound = 0;
 
     // Register Rules in RuleRegistry
-    this.combatContext.ruleRegistry.register(EarlyEnergyBoostRule)
-    this.combatContext.ruleRegistry.register(VengefulComebackRule)
+    this.combatContext.ruleRegistry.register(EarlyEnergyBoostRule);
+    this.combatContext.ruleRegistry.register(VengefulComebackRule);
 
-    this.combatContext.ruleRegistry.applyPhase("preCombat", { combatContext: this.combatContext });
+    this.combatContext.ruleRegistry.applyPhase('preCombat', { combatContext: this.combatContext });
   }
 
   public calculateLooting() {
-    throw new Error("not implemented yet.")
+    throw new Error('not implemented yet.');
   }
 
   public resolveCombatRound() {
@@ -42,15 +42,17 @@ export class CombatEngine {
 
     // this.registry.applyPhase("preCombatRound", { combat: this.combatContext, round: roundContext });
     // DEBUG Ausgabe
-    logger.info(`[${formatDuration(this.combatContext.time.elapsed)}] Runde #${roundContext.roundNumber}:`);
+    logger.info(
+      `[${formatDuration(this.combatContext.time.elapsed)}] Runde #${roundContext.roundNumber}:`,
+    );
 
-    combatlogger.logRound(roundContext, "testing new CombatLogger");
-    combatlogger.log("testing new CombatLogger");
+    combatlogger.logRound(roundContext, 'testing new CombatLogger');
+    combatlogger.log('testing new CombatLogger');
 
-    roundContext.fighters.forEach(element => {
-      var debug: string = "";
+    roundContext.fighters.forEach((element) => {
+      var debug: string = '';
       logger.info(`${element.id}: [HP:${element.health}, E:${element.energy}]`);
-      element.actions.pattern.forEach(element => {
+      element.actions.pattern.forEach((element) => {
         debug += `${element.action.type}:t${element.investedTempo},i${element.investedImpact} `;
       });
       logger.debug(`${element.actions.name} (${element.actions.probability}) - ${debug}`);
@@ -66,8 +68,11 @@ export class CombatEngine {
     // logger.debug(roundContext);
 
     for (const tempoGroup of groups) {
-      this.combatContext.ruleRegistry.applyPhase("preGroup", { combatContext: this.combatContext, roundContext: roundContext });
-      let perspective: "Engage" | "Reaction" = "Engage";
+      this.combatContext.ruleRegistry.applyPhase('preGroup', {
+        combatContext: this.combatContext,
+        roundContext: roundContext,
+      });
+      let perspective: 'Engage' | 'Reaction' = 'Engage';
 
       if (tempoGroup.actions.length === 1) {
         // Es ist genau eine Aktion in dieser TempoGruppe vorhanden
@@ -75,32 +80,54 @@ export class CombatEngine {
         const entry = tempoGroup.actions[0];
         // ActionContext erstellen
         const actionContext = roundContext.createActionContext(entry.fighter, entry.actionIndex);
-        combatlogger.logAction(actionContext, "testing new CombatLogger", "combat");
+        combatlogger.logAction(actionContext, 'testing new CombatLogger', 'combat');
 
         // Ermittle Perspektive (basierend auf actedFighters)
         if (actionContext.selectedTargets) {
-          const anyTargetActed = actionContext.selectedTargets.some(item => actedFighters.has(item.id));
-          perspective = anyTargetActed ? "Reaction" : "Engage";
+          const anyTargetActed = actionContext.selectedTargets.some((item) =>
+            actedFighters.has(item.id),
+          );
+          perspective = anyTargetActed ? 'Reaction' : 'Engage';
         }
 
-        this.combatContext.ruleRegistry.applyPhase("preAction", { combatContext: this.combatContext, roundContext: roundContext, actionContext: actionContext });
+        this.combatContext.ruleRegistry.applyPhase('preAction', {
+          combatContext: this.combatContext,
+          roundContext: roundContext,
+          actionContext: actionContext,
+        });
         actionContext.execute(perspective, this.combatContext.ruleRegistry);
         combatlogger.logAction(actionContext, `Aktion wurde ausgeführt!`);
-        this.combatContext.ruleRegistry.applyPhase("postAction", { combatContext: this.combatContext, roundContext: roundContext, actionContext: actionContext });
+        this.combatContext.ruleRegistry.applyPhase('postAction', {
+          combatContext: this.combatContext,
+          roundContext: roundContext,
+          actionContext: actionContext,
+        });
 
         actionContext.commit();
         // Füge Kämpfer zur Liste 'actedFighters' hinzu
-        actedFighters.add(entry.fighter)
+        actedFighters.add(entry.fighter);
       } else {
         // Es sind mehr als eine Aktion in dieser TempoGruppe vorhanden
         // logger.error(`tempoGroup.actions.length: ${tempoGroup.actions.length}`);
         // simultaneous group: preAction for all, then resolve all, then postAction for all
-        const actionCtxs = tempoGroup.actions.map(action => roundContext.createActionContext(action.fighter, action.actionIndex));
-        for (const ctx of actionCtxs) this.combatContext.ruleRegistry.applyPhase("preAction", { combatContext: this.combatContext, roundContext: roundContext, actionContext: ctx });
+        const actionCtxs = tempoGroup.actions.map((action) =>
+          roundContext.createActionContext(action.fighter, action.actionIndex),
+        );
+        for (const ctx of actionCtxs)
+          this.combatContext.ruleRegistry.applyPhase('preAction', {
+            combatContext: this.combatContext,
+            roundContext: roundContext,
+            actionContext: ctx,
+          });
 
-        for (const ctx of actionCtxs) ctx.execute("Moment", this.combatContext.ruleRegistry);
+        for (const ctx of actionCtxs) ctx.execute('Moment', this.combatContext.ruleRegistry);
 
-        for (const ctx of actionCtxs) this.combatContext.ruleRegistry.applyPhase("postAction", { combatContext: this.combatContext, roundContext: roundContext, actionContext: ctx });
+        for (const ctx of actionCtxs)
+          this.combatContext.ruleRegistry.applyPhase('postAction', {
+            combatContext: this.combatContext,
+            roundContext: roundContext,
+            actionContext: ctx,
+          });
 
         for (const ctx of actionCtxs) ctx.commit();
         // commit group-level effects (recommended) - e.g. resolve area-of-effect application, mark KOs
@@ -110,25 +137,31 @@ export class CombatEngine {
         for (const element of tempoGroup.actions) actedFighters.add(element.fighter);
       }
 
-      this.combatContext.ruleRegistry.applyPhase("postGroup", { combatContext: this.combatContext, roundContext: roundContext });
+      this.combatContext.ruleRegistry.applyPhase('postGroup', {
+        combatContext: this.combatContext,
+        roundContext: roundContext,
+      });
 
       // Optional: prune fighters with hp <= 0 from remaining groups (if you want immediate KO removal)
       // this.removeDeadFromFutureGroups(roundContext, groups);
     }
     roundContext.commit();
-    this.combatContext.ruleRegistry.applyPhase("postActionRound", { combatContext: this.combatContext, roundContext: roundContext });
+    this.combatContext.ruleRegistry.applyPhase('postActionRound', {
+      combatContext: this.combatContext,
+      roundContext: roundContext,
+    });
 
     this.advanceActionIndices(roundContext);
     this.commitCombatRound(roundContext);
 
-    roundContext.fighters.forEach(fighter => {
+    roundContext.fighters.forEach((fighter) => {
       if (fighter.health <= 0) {
         // this.combatContext.fighters.delete(element.name);
         logger.error(`${fighter.id} wurde entfernt. (HP unter 0)`);
         combatlogger.log(`${fighter.id} wurde entfernt. (HP unter 0)`);
       }
     });
-    this.combatContext.log?.forEach(item => logger.debug(item));
+    this.combatContext.log?.forEach((item) => logger.debug(item));
   }
 
   public commitCombatRound(ctx: IRoundContext) {
@@ -198,7 +231,9 @@ export class CombatEngine {
   public isCombatOver(): boolean {
     // Gibt es nur noch einen Überlebenden? (Free for All)
     const remainingFighters = new Map(
-      [...this.combatContext.fighters.entries()].filter(([id, fighter]) => fighter.health.actual > 0)
+      [...this.combatContext.fighters.entries()].filter(
+        ([id, fighter]) => fighter.health.actual > 0,
+      ),
     );
     return remainingFighters.size === 1;
   }
@@ -239,7 +274,11 @@ export class CombatEngine {
     }
   }
 
-  private getNewActionPattern(ctx: ICombatContext, fighterId: string, random?: () => number): ActionPattern {
+  private getNewActionPattern(
+    ctx: ICombatContext,
+    fighterId: string,
+    random?: () => number,
+  ): ActionPattern {
     // Parameter: Kämpfer
     const fighter = ctx.fighters.get(fighterId);
 
@@ -255,7 +294,8 @@ export class CombatEngine {
     // Wahrscheinlichkeiten erkennen + Check auf Typ:Number
     const probs = fighter.actions!.map((item) => {
       const p = Number(item.probability);
-      if (Number.isNaN(p)) throw new Error(`Ungültige Wahrscheinlichkeit bei Muster '${item.name}'`);
+      if (Number.isNaN(p))
+        throw new Error(`Ungültige Wahrscheinlichkeit bei Muster '${item.name}'`);
       return p;
     });
 
@@ -274,7 +314,10 @@ export class CombatEngine {
     probs?.forEach((p, i) => {
       if (p === -1) wildcardIndices.push(i);
       else if (p >= 0) sumSpecified += p;
-      else throw new Error(`Probability darf nur größer/gleich 0 oder -1 (Wildcard) sein. Gefunden: ${p} in ${fighter.actions![i].name}`);
+      else
+        throw new Error(
+          `Probability darf nur größer/gleich 0 oder -1 (Wildcard) sein. Gefunden: ${p} in ${fighter.actions![i].name}`,
+        );
     });
 
     // Check: keine Wildcards in Aktionsmustern?
@@ -347,8 +390,7 @@ export class CombatEngine {
     return {
       name: action.name,
       probability: action.probability,
-      pattern: action.pattern
+      pattern: action.pattern,
     };
   }
 }
-

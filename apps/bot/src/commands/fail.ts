@@ -1,6 +1,6 @@
 import { InteractionContextType, PermissionFlagsBits, SlashCommandBuilder } from 'discord.js';
-import { Command } from '../types/Command';
-import { errorHandler } from '../index';
+import { Command } from '../types/Command.js';
+import { errorHandler } from '../index.js';
 
 const command: Command = {
   data: new SlashCommandBuilder()

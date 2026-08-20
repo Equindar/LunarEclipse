@@ -1,14 +1,13 @@
-import { User } from "@features/users/core/entities/User"
-import { UserRepository } from "@features/users/core/interfaces/repositories/User.repository"
-import { UserDataSource } from "@features/users/data/interfaces/user.datasource"
-import { ULID } from "ulid"
-
+import { User } from '@features/users/core/entities/User';
+import { UserRepository } from '@features/users/core/interfaces/repositories/User.repository';
+import { UserDataSource } from '@features/users/data/interfaces/user.datasource';
+import { ULID } from 'ulid';
 
 export default class UserRepositoryImpl implements UserRepository {
-  dataSource: UserDataSource
+  dataSource: UserDataSource;
 
   constructor(characterDataSource: UserDataSource) {
-    this.dataSource = characterDataSource
+    this.dataSource = characterDataSource;
   }
 
   async create(subject: User): Promise<boolean> {
@@ -28,6 +27,6 @@ export default class UserRepositoryImpl implements UserRepository {
     return data;
   }
   update(subject: User): Promise<User> {
-    throw new Error("Method not implemented.")
+    throw new Error('Method not implemented.');
   }
 }

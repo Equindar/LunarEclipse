@@ -1,0 +1,15 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "build:api",
+      "type": "shell",
+      "command": "pnpm turbo run build --filter=@lunareclipse/api"
+    },
+    {
+      "label": "build:bot",
+      "type": "shell",
+      "command": "pnpm turbo run build --filter=@lunareclipse/discordbot"
+    }
+  ]
+}

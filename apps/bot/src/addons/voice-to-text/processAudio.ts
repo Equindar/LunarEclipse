@@ -1,9 +1,9 @@
-import { downloadAudio } from "./downloadAudio";
-import { summarize } from "./summarize";
-import { transcribe } from "./transcribe";
+import { downloadAudio } from './downloadAudio';
+import { summarize } from './summarize';
+import { transcribe } from './transcribe';
 
 export async function processAudio(url: string): Promise<string> {
-  const filePath = "./temp.ogg";
+  const filePath = './temp.ogg';
 
   await downloadAudio(url, filePath);
 

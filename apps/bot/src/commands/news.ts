@@ -1,11 +1,24 @@
-import { ButtonBuilder, ButtonStyle, ChannelType, ContainerBuilder, EmbedBuilder, InteractionContextType, MediaGalleryBuilder, MessageCreateOptions, MessageFlags, PermissionFlagsBits, resolveColor, SectionBuilder, SeparatorBuilder, SeparatorSpacingSize, SlashCommandBuilder, TextChannel, TextDisplayBuilder, ThumbnailBuilder } from 'discord.js';
-import { Command } from '../types/Command';
-import { errorHandler } from '../index';
-import { isServerOwner } from '../utils/isServerOwner';
-import formatDateTime from '../utils/formatDateTime';
+import {
+  ChannelType,
+  ContainerBuilder,
+  InteractionContextType,
+  MediaGalleryBuilder,
+  MessageFlags,
+  PermissionFlagsBits,
+  SectionBuilder,
+  SeparatorBuilder,
+  SeparatorSpacingSize,
+  SlashCommandBuilder,
+  TextChannel,
+  TextDisplayBuilder,
+  ThumbnailBuilder,
+} from 'discord.js';
+import { errorHandler } from '../index.js';
+import { Command } from '../types/Command.js';
+import { isServerOwner } from '../utils/isServerOwner.js';
 
 let command: Command = {
-  scope: ["627529082246135808"],
+  scope: ['627529082246135808'],
   data: new SlashCommandBuilder()
     .setName('news')
     .setDescription('Führt Github Funktionen aus')
@@ -20,8 +33,8 @@ let command: Command = {
             .setName('channel')
             .setDescription('Nachrichten-Ziel Kanal')
             .addChannelTypes([ChannelType.GuildAnnouncement, ChannelType.GuildText])
-            .setRequired(true)
-        )
+            .setRequired(true),
+        ),
     ),
 
   async execute(interaction) {
@@ -35,41 +48,51 @@ let command: Command = {
       const containerComponent = new ContainerBuilder();
       const thumbNail = new ThumbnailBuilder({
         media: {
-          url: "https://images.pexels.com/photos/235970/pexels-photo-235970.jpeg"
-        }
-      })
+          url: 'https://images.pexels.com/photos/235970/pexels-photo-235970.jpeg',
+        },
+      });
       // .setAccentColor(0xff0000);
-      containerComponent.addSectionComponents(new SectionBuilder()
-        .addTextDisplayComponents(
-          new TextDisplayBuilder().setContent(
-            [
-              `# Vorweihnachtszeit und Advent`,
-              `Ich bin zwar etwas spät dran, denn der zweite Advent ist mit dem letzten Sonntag nun auch gekommen. Die zweite Kerze - und hoffentlich nur die Kerze - brennt und stimmt euch ein wenig auf die Weihnachtszeit ein.`,
-              `Für den Weihnachtsmarkt ist ein bei mir irgendwie zu warm, der Glühwein trinkt sich definitiv besser bei kälteren Außentemperaturen...
+      containerComponent.addSectionComponents(
+        new SectionBuilder()
+          .addTextDisplayComponents(
+            new TextDisplayBuilder().setContent(
+              [
+                `# Vorweihnachtszeit und Advent`,
+                `Ich bin zwar etwas spät dran, denn der zweite Advent ist mit dem letzten Sonntag nun auch gekommen. Die zweite Kerze - und hoffentlich nur die Kerze - brennt und stimmt euch ein wenig auf die Weihnachtszeit ein.`,
+                `Für den Weihnachtsmarkt ist ein bei mir irgendwie zu warm, der Glühwein trinkt sich definitiv besser bei kälteren Außentemperaturen...
 
 *Im Hintergrund geht die Entwicklung am Prototypen für den Kampf weiter, auch der DiscordBot bekommt seine ersten Funktionen verpasst.
 Ich plane mal, abends hier im VoiceKanal "Getuschel" anwesend zu sein, falls ihr Fragen habt.*
 
 Ich wünsche euch eine besinnliche Zeit, wenig Stress beim Einkaufen der Geschenke für eure Lieben und bleibt bei guter Gesundheit!`,
-              `-# ~Equindar`
-            ].join('\n'),
-          ))
-        .setThumbnailAccessory(thumbNail));
-      containerComponent.addSeparatorComponents(new SeparatorBuilder().setSpacing(SeparatorSpacingSize.Large))
-      containerComponent.addMediaGalleryComponents(new MediaGalleryBuilder().addItems({
-        media: {
-          url: "https://c4.wallpaperflare.com/wallpaper/232/233/70/new-year-christmas-spruce-candles-wallpaper-preview.jpg"
-        }
-      }));
+                `-# ~Equindar`,
+              ].join('\n'),
+            ),
+          )
+          .setThumbnailAccessory(thumbNail),
+      );
+      containerComponent.addSeparatorComponents(
+        new SeparatorBuilder().setSpacing(SeparatorSpacingSize.Large),
+      );
+      containerComponent.addMediaGalleryComponents(
+        new MediaGalleryBuilder().addItems({
+          media: {
+            url: 'https://c4.wallpaperflare.com/wallpaper/232/233/70/new-year-christmas-spruce-candles-wallpaper-preview.jpg',
+          },
+        }),
+      );
 
       // DisplayComponent - Send
       const message = await channel!.send({
         flags: MessageFlags.IsComponentsV2,
-        components: [containerComponent]
-      })
+        components: [containerComponent],
+      });
       await interaction.reply({ content: 'Erfolgreich ausgeführt', flags: MessageFlags.Ephemeral });
     } catch (error) {
-      await interaction.reply({ content: 'Embbed konnte nicht versendet werden', flags: MessageFlags.Ephemeral });
+      await interaction.reply({
+        content: 'Embbed konnte nicht versendet werden',
+        flags: MessageFlags.Ephemeral,
+      });
       errorHandler.handle(error, this.data.name);
     }
   },

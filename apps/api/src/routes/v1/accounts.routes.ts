@@ -1,7 +1,7 @@
-import { Router } from "express";
-import { Database } from "../../app";
-import logger from "../../utils/apiLogger";
-import AccountsController from "../../controllers/accounts.controller";
+import { Router } from 'express';
+import { Database } from '../../app';
+import logger from '../../utils/apiLogger';
+import AccountsController from '../../controllers/accounts.controller';
 
 export default function createAccountsRouter(database: Database) {
   // --- Init
@@ -11,8 +11,8 @@ export default function createAccountsRouter(database: Database) {
   // Router
   const router = Router();
   // Controller for UseCases
-  router.get("/login", controller.onLogin);
-  router.get("/token", controller.onToken);
+  router.get('/login', controller.onLogin);
+  router.get('/token', controller.onToken);
 
   return router;
 }

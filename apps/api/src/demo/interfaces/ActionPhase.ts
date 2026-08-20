@@ -1,1 +1,1 @@
-export type ActionPhase = "preAction" | "Engage" | "Reaction" | "Moment" | "postAction"
+export type ActionPhase = 'preAction' | 'Engage' | 'Reaction' | 'Moment' | 'postAction';

@@ -1,8 +1,8 @@
 import { InteractionContextType, PermissionFlagsBits, SlashCommandBuilder } from 'discord.js';
-import { Command } from '../types/Command';
-import { isServerOwner } from '../utils/isServerOwner';
-import logger from '../utils/logger';
-import { errorHandler } from '..';
+import { errorHandler } from '../index.js';
+import { Command } from '../types/Command.js';
+import { isServerOwner } from '../utils/isServerOwner.js';
+import logger from '../utils/logger.js';
 
 let shutdownCommand: Command = {
   data: new SlashCommandBuilder()
@@ -17,7 +17,7 @@ let shutdownCommand: Command = {
       logger.info('Shutdown wird durchgeführt.');
       process.exit(0);
     } catch (error) {
-      await interaction.reply({ content: 'Berunterfahren fehlgeschlagen' });
+      await interaction.reply({ content: 'Herunterfahren fehlgeschlagen' });
       errorHandler.handle(error, this.data.name);
     }
   },

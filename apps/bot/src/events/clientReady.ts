@@ -1,7 +1,7 @@
 import { Client, Events } from 'discord.js';
-import { Event } from '../types/Event';
-import logger from '../utils/logger';
-import { startServerStatusWatcher } from '../utils/serverStatusWatcher';
+import { Event } from '../types/Event.js';
+import logger from '../utils/logger.js';
+import { startServerStatusWatcher } from '../utils/serverStatusWatcher.js';
 
 const event: Event<typeof Events.ClientReady> = {
   name: Events.ClientReady,

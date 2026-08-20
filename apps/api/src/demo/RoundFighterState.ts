@@ -1,7 +1,7 @@
-import { Fighter, FighterId } from "./Fighter";
-import { ActionPattern } from "./interfaces/ActionPattern";
-import { IRoundFighterState } from "./interfaces/RoundFighterState";
-import { ActionType } from "./types/ActionType";
+import { Fighter, FighterId } from './Fighter';
+import { ActionPattern } from './interfaces/ActionPattern';
+import { IRoundFighterState } from './interfaces/RoundFighterState';
+import { ActionType } from './types/ActionType';
 
 export class RoundFighterState implements IRoundFighterState {
   constructor(
@@ -11,8 +11,8 @@ export class RoundFighterState implements IRoundFighterState {
     public nextAttackBonus: number = 0,
     public nextDefenseBonus: number = 0,
     public actions: ActionPattern,
-    public actionIndex: number = 0
-  ) { }
+    public actionIndex: number = 0,
+  ) {}
 
   static create(fighter: Fighter): RoundFighterState {
     return new RoundFighterState(
@@ -22,7 +22,7 @@ export class RoundFighterState implements IRoundFighterState {
       fighter.buffs.nextAttack ?? 0,
       fighter.buffs.nextDefense ?? 0,
       fighter.currentPattern ?? fighter.actions[0],
-      fighter.currentActionIndex ?? 0
+      fighter.currentActionIndex ?? 0,
     );
   }
 

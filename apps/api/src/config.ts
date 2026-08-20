@@ -15,7 +15,7 @@ if (!DATABASE_HOST || !DATABASE_USER || !DATABASE_PASSWORD || !DATABASE_NAME) {
 const configuration = {
   app: {
     name: API_NAME || '',
-    secret: APP_SECRET || ''
+    secret: APP_SECRET || '',
   },
   database: {
     host: DATABASE_HOST,
@@ -30,8 +30,7 @@ const configuration = {
   auth: {
     accessTokenSecret: AUTH_ACCESS_TOKEN_SECRET || '',
     refreshTokenSecret: AUTH_REFRESH_TOKEN_SECRET || '',
-
-  }
+  },
 };
 
 export default configuration;

@@ -1,7 +1,6 @@
-
 import { Router } from 'express';
 
-import { Database } from "../../app";
+import { Database } from '../../app';
 import CombatsController from '../../controllers/combats.controller';
 
 export default function createCombatRouter(database: Database) {

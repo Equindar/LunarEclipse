@@ -1,17 +1,16 @@
-
-import { User } from "@features/users/core/entities/User";
-import { UserDataSource } from "../interfaces/user.datasource";
-import { ULID } from "ulid";
+import { User } from '@features/users/core/entities/User';
+import { UserDataSource } from '../interfaces/user.datasource';
+import { ULID } from 'ulid';
 
 export default class UserDataSourceImpl implements UserDataSource {
   private readonly cache: User[] = [];
 
-  constructor() { }
+  constructor() {}
   getById(id: number): Promise<User | null> {
-    throw new Error("Method not implemented.");
+    throw new Error('Method not implemented.');
   }
   getByUuid(uuid: ULID): Promise<User | null> {
-    throw new Error("Method not implemented.");
+    throw new Error('Method not implemented.');
   }
 
   async create(user: User): Promise<boolean> {
@@ -19,27 +18,22 @@ export default class UserDataSourceImpl implements UserDataSource {
     return true;
   }
 
-
   async get(id: number): Promise<User | null> {
-    const result = this.cache.find(item => item.uuid === id.toString());
+    const result = this.cache.find((item) => item.uuid === id.toString());
     return result ?? null;
   }
-
 
   async getAll(): Promise<User[]> {
     return this.cache;
   }
 
-
   async delete(id: string): Promise<void> {
-    const result = this.cache.find(item => item.uuid === id);
+    const result = this.cache.find((item) => item.uuid === id);
     this.cache.pop();
-    return
+    return;
   }
-
 
   update(id: string, data: User): Promise<void> {
-    throw new Error("Method not implemented.");
+    throw new Error('Method not implemented.');
   }
-
 }

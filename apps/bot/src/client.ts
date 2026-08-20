@@ -1,4 +1,11 @@
-import { Client, GatewayIntentBits, Collection, Partials, ActivityType, ActivitiesOptions } from 'discord.js';
+import {
+  Client,
+  GatewayIntentBits,
+  Collection,
+  Partials,
+  ActivityType,
+  ActivitiesOptions,
+} from 'discord.js';
 import { Command } from './types/Command.js';
 
 declare module 'discord.js' {
@@ -14,12 +21,12 @@ export default function createClient(): Client {
       GatewayIntentBits.GuildMessages,
       GatewayIntentBits.MessageContent,
       GatewayIntentBits.GuildMessageReactions,
-      GatewayIntentBits.GuildPresences
+      GatewayIntentBits.GuildPresences,
     ],
     partials: [Partials.Message, Partials.Channel, Partials.Reaction],
   });
 }
 
 export function updateActivity(client: Client, message: string, activity: ActivitiesOptions): void {
-  client.user?.setActivity(message, activity)
+  client.user?.setActivity(message, activity);
 }

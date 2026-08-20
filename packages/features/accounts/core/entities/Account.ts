@@ -1,8 +1,8 @@
-import Character from "@features/characters/core/entities/Character";
-import { User } from "@features/users/core/entities/User";
-import { ULID, ulid } from "ulid";
+import Character from '@features/characters/core/entities/Character';
+import { User } from '@features/users/core/entities/User';
+import { ULID, ulid } from 'ulid';
 
-type AccountStatus = "init" | "active" | "inactive" | "locked";
+type AccountStatus = 'init' | 'active' | 'inactive' | 'locked';
 
 interface AccountProps {
   uuid: ULID;
@@ -20,7 +20,7 @@ export default class Account implements AccountProps {
   users: User[] = [];
   characters: Character[] = [];
 
-  constructor(status: AccountStatus = "init", owner?: User, id?: number) {
+  constructor(status: AccountStatus = 'init', owner?: User, id?: number) {
     this.status = status;
     this.id = id ?? this.id;
   }

@@ -1,11 +1,11 @@
 import { Client, TextChannel, EmbedBuilder } from 'discord.js';
-import logger from './logger';
+import logger from './logger.js';
 
 interface ServerStatusData {
   data: {
     online: boolean;
     latency: number;
-  }
+  };
 }
 
 let lastData: ServerStatusData | null = null;
@@ -22,7 +22,11 @@ export async function startServerStatusWatcher(client: Client) {
       const result: ServerStatusData = await response.json();
 
       // nur triggern, wenn sich etwas geändert hat
-      if (!lastData || result.data.online !== lastData.data.online || result.data.latency !== lastData.data.latency) {
+      if (
+        !lastData ||
+        result.data.online !== lastData.data.online ||
+        result.data.latency !== lastData.data.latency
+      ) {
         lastData = result;
 
         if (performance.length >= 60) {
@@ -34,7 +38,11 @@ export async function startServerStatusWatcher(client: Client) {
           .setTitle('LunarEclipse Server')
           .setColor(result.data.online ? 0x00ff00 : 0xff0000)
           .addFields(
-            { name: 'Status', value: result.data.online ? '🟢 Online' : '🔴 Offline', inline: true },
+            {
+              name: 'Status',
+              value: result.data.online ? '🟢 Online' : '🔴 Offline',
+              inline: true,
+            },
             { name: 'Latenz', value: `${result.data.latency} ms`, inline: true },
             { name: '\u200B', value: `ø ${Math.round(avg * 10) / 10} ms`, inline: true },
           )

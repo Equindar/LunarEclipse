@@ -1,14 +1,14 @@
-import { BaseAction } from "../actions/Base";
-import { FighterId } from "../Fighter";
-import { IActionContext } from "../interfaces/ActionContext";
-import { ICombatContext } from "../interfaces/CombatContext";
-import { FighterAction } from "../interfaces/FighterAction";
-import { IRoundContext } from "../interfaces/RoundContext";
-import { TempoGroup, TempoGroupEntry } from "../interfaces/TempoGroup";
-import { RoundFighterState } from "../RoundFighterState";
-import { RuleRegistry } from "../RuleRegistry";
-import { ActionContext } from "./ActionContext";
-import { CombatContext } from "./CombatContext";
+import { BaseAction } from '../actions/Base';
+import { FighterId } from '../Fighter';
+import { IActionContext } from '../interfaces/ActionContext';
+import { ICombatContext } from '../interfaces/CombatContext';
+import { FighterAction } from '../interfaces/FighterAction';
+import { IRoundContext } from '../interfaces/RoundContext';
+import { TempoGroup, TempoGroupEntry } from '../interfaces/TempoGroup';
+import { RoundFighterState } from '../RoundFighterState';
+import { RuleRegistry } from '../RuleRegistry';
+import { ActionContext } from './ActionContext';
+import { CombatContext } from './CombatContext';
 
 export class RoundContext implements IRoundContext {
   roundNumber: number;
@@ -28,17 +28,11 @@ export class RoundContext implements IRoundContext {
   tempoGroups?: TempoGroup[];
   log: string[] = [];
 
-
-  constructor(
-    roundNumber: number,
-    ctx: ICombatContext,
-    registry: RuleRegistry
-  ) {
+  constructor(roundNumber: number, ctx: ICombatContext, registry: RuleRegistry) {
     this.roundNumber = roundNumber;
     this.combatContext = ctx;
     this.ruleRegistry = registry;
   }
-
 
   commit(): void {
     for (const [id, stage] of this.fighters.entries()) {
@@ -50,7 +44,9 @@ export class RoundContext implements IRoundContext {
       const finalDamage = Math.max(0, Math.floor(raw - block));
       // apply to round snapshot
       stage.health = stage.health - finalDamage;
-      this.log.push(`[commit] ${stage.id} takes ${finalDamage} dmg (base=${base}, extra=${extra}, mult=${mult}, block=${block})`);
+      this.log.push(
+        `[commit] ${stage.id} takes ${finalDamage} dmg (base=${base}, extra=${extra}, mult=${mult}, block=${block})`,
+      );
     }
 
     // energy gains
@@ -82,7 +78,10 @@ export class RoundContext implements IRoundContext {
     this.energyGainAddById = new Map();
     this.damageMultipliersById = new Map();
 
-    this.ruleRegistry.applyPhase("preActionRound", { combatContext: this.combatContext, roundContext: this });
+    this.ruleRegistry.applyPhase('preActionRound', {
+      combatContext: this.combatContext,
+      roundContext: this,
+    });
   }
 
   createActionContext(actorId: FighterId, actionIndex?: number): IActionContext {
@@ -92,14 +91,19 @@ export class RoundContext implements IRoundContext {
       roundCtx: this,
       actorId,
       actionIndex: actionIndex ?? 0,
-      combatCtx: this.combatContext
-    })
+      combatCtx: this.combatContext,
+    });
     return actionCtx;
   }
 
   calculateTempoGroups(): TempoGroup[] {
     var result: TempoGroup[] = [];
-    type Internal = { fighter: FighterId; actionIndex: number; action: FighterAction; totalTempo: number };
+    type Internal = {
+      fighter: FighterId;
+      actionIndex: number;
+      action: FighterAction;
+      totalTempo: number;
+    };
     const temp: Internal[] = [];
 
     for (const [id, state] of this.fighters.entries()) {

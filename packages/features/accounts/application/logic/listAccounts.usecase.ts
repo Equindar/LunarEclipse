@@ -1,6 +1,6 @@
-import Account from "@features/accounts/core/entities/Account"
-import AccountRepository from "../repositories/Account.repository"
-import listAccountsUseCase from "@features/accounts/core/interfaces/usecases/listAccounts.usecase"
+import Account from '@features/accounts/core/entities/Account';
+import AccountRepository from '../repositories/Account.repository';
+import listAccountsUseCase from '@features/accounts/core/interfaces/usecases/listAccounts.usecase';
 
 /**
  * Implementation of the getCharacters UseCase (Location: ApplicationLayer)
@@ -8,9 +8,9 @@ import listAccountsUseCase from "@features/accounts/core/interfaces/usecases/lis
  * Path: packages\features\characters\application\logic
  */
 export default class listAccounts implements listAccountsUseCase {
-  accountRepository: AccountRepository
+  accountRepository: AccountRepository;
   constructor(repository: AccountRepository) {
-    this.accountRepository = repository
+    this.accountRepository = repository;
   }
 
   /**
@@ -18,7 +18,7 @@ export default class listAccounts implements listAccountsUseCase {
    * @returns List of Character Objects
    */
   async execute(): Promise<Account[]> {
-    const result = await this.accountRepository.list()
-    return result
+    const result = await this.accountRepository.list();
+    return result;
   }
 }

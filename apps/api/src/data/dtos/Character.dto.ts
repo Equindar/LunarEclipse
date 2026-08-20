@@ -1,4 +1,4 @@
-import Character from "@features/characters/core/entities/Character";
+import Character from '@features/characters/core/entities/Character';
 
 export default class CharacterDTO {
   uuid: string;

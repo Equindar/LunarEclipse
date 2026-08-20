@@ -1,8 +1,16 @@
-import { BaseChannel, EmbedBuilder, InteractionContextType, PermissionFlagsBits, SlashCommandBuilder, SlashCommandRoleOption, TextChannel } from 'discord.js';
-import { Command } from '../types/Command';
-import { errorHandler } from '..';
-import { isServerOwner } from '../utils/isServerOwner';
-import logger from '../utils/logger';
+import {
+  BaseChannel,
+  EmbedBuilder,
+  InteractionContextType,
+  PermissionFlagsBits,
+  SlashCommandBuilder,
+  SlashCommandRoleOption,
+  TextChannel,
+} from 'discord.js';
+import { errorHandler } from '../index.js';
+import { Command } from '../types/Command.js';
+import { isServerOwner } from '../utils/isServerOwner.js';
+import logger from '../utils/logger.js';
 
 let command: Command = {
   data: new SlashCommandBuilder()
@@ -13,10 +21,10 @@ let command: Command = {
 
   async execute(interaction) {
     try {
-      const channel = await interaction.channel as BaseChannel;
+      const channel = (await interaction.channel) as BaseChannel;
       logger.debug(channel.type);
 
-      await interaction.reply("hab ich gehört, hier im Post: " + channel.id)
+      await interaction.reply('hab ich gehört, hier im Post: ' + channel.id);
 
       // await interaction.client.user.send({
       //   embeds: [

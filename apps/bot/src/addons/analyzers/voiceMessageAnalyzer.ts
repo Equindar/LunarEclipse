@@ -1,13 +1,13 @@
-import { MessageAnalyzer } from "../../types/MessageAnalyzer.js";
-import logger from "../../utils/logger.js";
-import { processAudio } from "../voice-to-text/processAudio.js";
+import { MessageAnalyzer } from '../../types/MessageAnalyzer.js';
+import logger from '../../utils/logger.js';
+import { processAudio } from '../voice-to-text/processAudio.js';
 
 export const voiceMessageAnalyzer: MessageAnalyzer = {
   name: 'voiceMessageAnalyzer',
   async analyze(message) {
     const attachment = message.attachments.first();
     if (!attachment) return;
-    if (!attachment.contentType?.startsWith("audio")) return;
+    if (!attachment.contentType?.startsWith('audio')) return;
 
     try {
       const result = await processAudio(attachment.url);
@@ -16,10 +16,10 @@ export const voiceMessageAnalyzer: MessageAnalyzer = {
     } catch (err) {
       if (isRateLimitError(err)) {
         const reply = await message.reply(
-          "⚠️ RateLimit erreicht.\nReagiere mit 🔄, um die Analyse erneut zu starten."
+          '⚠️ RateLimit erreicht.\nReagiere mit 🔄, um die Analyse erneut zu starten.',
         );
 
-        await reply.react("🔄");
+        await reply.react('🔄');
 
         pendingRetries.set(reply.id, {
           audioUrl: attachment.url,
@@ -27,7 +27,7 @@ export const voiceMessageAnalyzer: MessageAnalyzer = {
         });
       } else {
         console.error(err);
-        await message.reply("❌ Fehler bei der Verarbeitung.");
+        await message.reply('❌ Fehler bei der Verarbeitung.');
       }
     }
 

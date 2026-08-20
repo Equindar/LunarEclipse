@@ -1,7 +1,6 @@
-import Character from "@features/characters/core/entities/Character"
-import { CharacterRepository } from "@features/characters/core/interfaces/repositories/Character.repository"
-import { listCharactersUseCase } from "@features/characters/core/interfaces/usecases/listCharacters.usecase"
-
+import Character from '@features/characters/core/entities/Character';
+import { CharacterRepository } from '@features/characters/core/interfaces/repositories/Character.repository';
+import { listCharactersUseCase } from '@features/characters/core/interfaces/usecases/listCharacters.usecase';
 
 /**
  * Implementation of the getCharacters UseCase (Location: ApplicationLayer)
@@ -9,9 +8,9 @@ import { listCharactersUseCase } from "@features/characters/core/interfaces/usec
  * Path: packages\features\characters\application\logic
  */
 export default class listCharacters implements listCharactersUseCase {
-  characterRepository: CharacterRepository
+  characterRepository: CharacterRepository;
   constructor(repository: CharacterRepository) {
-    this.characterRepository = repository
+    this.characterRepository = repository;
   }
 
   /**
@@ -19,7 +18,7 @@ export default class listCharacters implements listCharactersUseCase {
    * @returns List of Character Objects
    */
   async execute(): Promise<Character[]> {
-    const result = await this.characterRepository.list()
-    return result
+    const result = await this.characterRepository.list();
+    return result;
   }
 }

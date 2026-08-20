@@ -1,13 +1,12 @@
-import Account from "@features/accounts/core/entities/Account";
-import { AccountRepository } from "@features/accounts/core/interfaces/repositories/Account.repository";
-import { AccountDataSource } from "@features/accounts/data/interfaces/account.datasource";
-
+import Account from '@features/accounts/core/entities/Account';
+import { AccountRepository } from '@features/accounts/core/interfaces/repositories/Account.repository';
+import { AccountDataSource } from '@features/accounts/data/interfaces/account.datasource';
 
 export default class AccountRepositoryImpl implements AccountRepository {
-  dataSource: AccountDataSource
+  dataSource: AccountDataSource;
 
   constructor(characterDataSource: AccountDataSource) {
-    this.dataSource = characterDataSource
+    this.dataSource = characterDataSource;
   }
 
   async create(subject: Account): Promise<boolean> {

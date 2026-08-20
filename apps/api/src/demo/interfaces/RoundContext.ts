@@ -1,9 +1,8 @@
-import { FighterId } from "../Fighter";
-import { RoundFighterState } from "../RoundFighterState";
-import { IActionContext } from "./ActionContext";
+import { FighterId } from '../Fighter';
+import { RoundFighterState } from '../RoundFighterState';
+import { IActionContext } from './ActionContext';
 
-import { TempoGroup } from "./TempoGroup";
-
+import { TempoGroup } from './TempoGroup';
 
 export interface IRoundContext {
   readonly roundNumber: number;
@@ -19,6 +18,6 @@ export interface IRoundContext {
 
   build(): void;
   createActionContext(actorId: FighterId, patternIndex?: number): IActionContext;
-  calculateTempoGroups(): TempoGroup[]
+  calculateTempoGroups(): TempoGroup[];
   commit(): void;
 }

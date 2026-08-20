@@ -1,6 +1,6 @@
-import { IActionContext } from "./ActionContext";
-import { ICombatContext } from "./CombatContext";
-import { IRoundContext } from "./RoundContext";
+import { IActionContext } from './ActionContext';
+import { ICombatContext } from './CombatContext';
+import { IRoundContext } from './RoundContext';
 
 /** RuleContext
  *
@@ -9,7 +9,7 @@ export default interface RuleContext {
   /** CombatContext (readonly Reference)
    *
    * wird benötigt für Regeln auf Umwelt
-  */
+   */
   combatContext: ICombatContext;
   /** RoundContext
    * wird benötigt, um Werte im Context anzupassen

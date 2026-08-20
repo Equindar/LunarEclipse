@@ -1,13 +1,13 @@
-import OpenAI from "openai";
-import configuration from "../../config";
+import OpenAI from 'openai';
+import configuration from '../../config';
 
 const openai = new OpenAI({
-  apiKey: configuration.integrations.openai.key
+  apiKey: configuration.integrations.openai.key,
 });
 
 export async function summarize(text: string) {
   const response = await openai.responses.create({
-    model: "gpt-4.1",
+    model: 'gpt-4.1',
     input: `
 Du bist ein Bug-Report-Analyzer.
 

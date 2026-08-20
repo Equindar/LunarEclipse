@@ -1,7 +1,6 @@
 /** Basis-Typ für Zahlenwerte von Schaden */
 export type DamageAmount = number;
 
-
 /** Physische Schadenstypen */
 export interface PhysicalDamage {
   /** normaler physischer Schaden */
@@ -13,11 +12,10 @@ export interface PhysicalDamage {
   total?: DamageAmount;
 }
 
-
 /** Magische Schadenstypen
  *
  * beinhaltet Feuer, Wasser, Natur sowie Licht und Schatten
-*/
+ */
 export interface MagicalDamage {
   /** Schaden durch Feuer-Magie */
   fire: DamageAmount;
@@ -34,7 +32,6 @@ export interface MagicalDamage {
   total?: DamageAmount;
 }
 
-
 /** Vollständige Aufschlüsselung eines Damage-Blocks für einen Fighter */
 export interface DamageBreakdown {
   physical: PhysicalDamage;
@@ -46,6 +43,5 @@ export interface DamageBreakdown {
   /** Freies Feld für zusätzliche Meta-Infos (z.B. Quellen/Procs) */
   meta?: Record<string, unknown>;
 }
-
 
 export type DamageByFighter = Record<string, DamageBreakdown>;

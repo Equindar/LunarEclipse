@@ -1,5 +1,5 @@
-import { fileURLToPath, pathToFileURL } from "node:url";
-import path from "node:path";
+import { fileURLToPath, pathToFileURL } from 'node:url';
+import path from 'node:path';
 
 /**
  * Ersatz für __dirname in ESM.

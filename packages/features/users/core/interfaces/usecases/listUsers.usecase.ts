@@ -1,5 +1,5 @@
-import { User } from "../../entities/User";
+import { User } from '../../entities/User';
 
 export default interface listUsersUseCase {
-    execute(): Promise<User[]>;
+  execute(): Promise<User[]>;
 }

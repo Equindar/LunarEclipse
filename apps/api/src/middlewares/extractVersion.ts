@@ -22,7 +22,7 @@ export default function extractVersion(defaultVersion = '1') {
       throw new UnsupportedApiVersionError({
         message: 'Invalid X-API-Version header format',
         statusCode: 400,
-        code: 'ERR_API'
+        code: 'ERR_API',
       });
     }
 

@@ -1,5 +1,5 @@
-import { User } from "@features/users/core/entities/User";
-import { ULID } from "ulid";
+import { ULID } from 'ulid';
+import { User } from '../../core/entities/User';
 
 export interface UserDataSource {
   create(user: User): void;

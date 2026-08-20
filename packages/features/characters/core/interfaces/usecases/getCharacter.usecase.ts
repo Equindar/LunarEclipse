@@ -1,5 +1,5 @@
-import Character from "../../entities/Character";
+import Character from '../../entities/Character';
 
 export default interface getCharacterUseCase {
-    execute(id: number): Promise<Character | null>;
+  execute(id: number): Promise<Character | null>;
 }

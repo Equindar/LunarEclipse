@@ -1,6 +1,6 @@
-import { createLogger as createWinstonLogger, type Logger } from "winston";
-import { baseFormat } from "./format";
-import { createConsoleTransport, createRotateFileTransport } from "./transports";
+import { createLogger as createWinstonLogger, type Logger } from 'winston';
+import { baseFormat } from './format';
+import { createConsoleTransport, createRotateFileTransport } from './transports';
 
 export interface LoggerOptions {
   service: string;
@@ -14,8 +14,7 @@ export interface LoggerOptions {
 }
 
 export function createLogger(options: LoggerOptions): Logger {
-  const level =
-    options.level ?? (process.env.NODE_ENV === "production" ? "info" : "debug");
+  const level = options.level ?? (process.env.NODE_ENV === 'production' ? 'info' : 'debug');
 
   const logger = createWinstonLogger({
     level,
@@ -26,28 +25,26 @@ export function createLogger(options: LoggerOptions): Logger {
 
   if (options.enableFile) {
     if (!options.logDir) {
-      throw new Error(
-        "[@repo/logger] enableFile=true requires a logDir to be provided."
-      );
+      throw new Error('[@repo/logger] enableFile=true requires a logDir to be provided.');
     }
 
     logger.add(
       createRotateFileTransport({
         logDir: options.logDir,
-        level: "info",
-        filenameSuffix: "info",
-        maxFiles: options.infoRetention ?? "14d",
-      })
+        level: 'info',
+        filenameSuffix: 'info',
+        maxFiles: options.infoRetention ?? '14d',
+      }),
     );
 
     logger.add(
       createRotateFileTransport({
         logDir: options.logDir,
-        level: "error",
-        filenameSuffix: "error",
-        maxFiles: options.errorRetention ?? "30d",
+        level: 'error',
+        filenameSuffix: 'error',
+        maxFiles: options.errorRetention ?? '30d',
         includeStack: true,
-      })
+      }),
     );
   }
 
@@ -55,6 +52,6 @@ export function createLogger(options: LoggerOptions): Logger {
 }
 
 // Re-Export für App-seitige Erweiterungen (eigene Transports, Tests, etc.)
-export { baseFormat, consoleFormat, fileJsonFormat } from "./format";
-export { createConsoleTransport, createRotateFileTransport } from "./transports";
-export type { Logger } from "winston";
+export { baseFormat, consoleFormat, fileJsonFormat } from './format';
+export { createConsoleTransport, createRotateFileTransport } from './transports';
+export type { Logger } from 'winston';

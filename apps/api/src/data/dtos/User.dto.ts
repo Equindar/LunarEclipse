@@ -1,5 +1,5 @@
-import { User } from "@features/users/core/entities/User";
-import { ULID } from "ulid";
+import { User } from '@features/users/core/entities/User';
+import { ULID } from 'ulid';
 
 export default class UserDTO {
   uuid: string;

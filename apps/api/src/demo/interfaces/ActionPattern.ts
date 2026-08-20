@@ -1,4 +1,4 @@
-import { FighterAction } from "./FighterAction";
+import { FighterAction } from './FighterAction';
 
 /** Referenz auf hinterlegte Aktionsmuster eines Charakters / Kämpfers
  *

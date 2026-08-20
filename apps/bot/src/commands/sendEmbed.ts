@@ -1,7 +1,15 @@
-import { ChannelType, EmbedBuilder, InteractionContextType, InteractionResponse, PermissionFlagsBits, SlashCommandBuilder, TextChannel } from 'discord.js';
-import { Command } from '../types/Command';
-import { errorHandler } from '..';
-import { isServerOwner } from '../utils/isServerOwner';
+import {
+  ChannelType,
+  EmbedBuilder,
+  InteractionContextType,
+  InteractionResponse,
+  PermissionFlagsBits,
+  SlashCommandBuilder,
+  TextChannel,
+} from 'discord.js';
+import { errorHandler } from '../index.js';
+import { Command } from '../types/Command.js';
+import { isServerOwner } from '../utils/isServerOwner.js';
 
 let command: Command = {
   data: new SlashCommandBuilder()
@@ -14,7 +22,7 @@ let command: Command = {
         .setName('channel')
         .setDescription('Kanal, in den das Embed gesendet werden soll')
         .addChannelTypes(ChannelType.GuildText)
-        .setRequired(true)
+        .setRequired(true),
     ),
 
   async execute(interaction) {

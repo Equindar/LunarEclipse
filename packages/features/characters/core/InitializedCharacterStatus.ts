@@ -1,16 +1,14 @@
-import ActiveCharacterStatus from "./ActiveCharacterStatus";
-import ArchivedCharacterStatus from "./ArchivedCharacterStatus";
-import BlockedCharacterStatus from "./BlockedCharacterStatus";
-import Character from "./entities/Character";
-import { CharacterStatus } from "./interfaces/characterStatus";
+import ActiveCharacterStatus from './ActiveCharacterStatus';
+import ArchivedCharacterStatus from './ArchivedCharacterStatus';
+import BlockedCharacterStatus from './BlockedCharacterStatus';
+import Character from './entities/Character';
+import { CharacterStatus } from './interfaces/characterStatus';
 
 export default class InitializedCharacterStatus implements CharacterStatus {
-  constructor() {
-
-  }
+  constructor() {}
 
   init(character: Character): void {
-    throw new Error("Character is already initialized.");
+    throw new Error('Character is already initialized.');
   }
   activate(character: Character): void {
     character.setStatus(new ActiveCharacterStatus());

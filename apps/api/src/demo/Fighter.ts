@@ -1,4 +1,4 @@
-import { ActionPattern } from "./interfaces/ActionPattern";
+import { ActionPattern } from './interfaces/ActionPattern';
 
 export type FighterId = string;
 
@@ -15,14 +15,20 @@ export class Fighter {
   buffs: {
     nextAttack: number;
     nextDefense: number;
-  }
+  };
   skills?: string[];
   actions: ActionPattern[];
 
   currentActionIndex: number;
   currentPattern?: ActionPattern;
 
-  constructor(name: string, health = { maximal: 100, actual: 100 }, energy = { maximal: 50, actual: 50 }, buffs = { nextAttack: 0, nextDefense: 0 }, actions: ActionPattern[]) {
+  constructor(
+    name: string,
+    health = { maximal: 100, actual: 100 },
+    energy = { maximal: 50, actual: 50 },
+    buffs = { nextAttack: 0, nextDefense: 0 },
+    actions: ActionPattern[],
+  ) {
     this.name = name;
     this.health = health;
     this.energy = energy;

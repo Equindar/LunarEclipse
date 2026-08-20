@@ -1,6 +1,6 @@
-import { Request, Response, NextFunction, Router } from "express";
-import { VersionStrategy } from "../types/versionStrategy";
-import UnsupportedApiVersionError from "../errors/UnsupportedAPIVersion";
+import { Request, Response, NextFunction, Router } from 'express';
+import { VersionStrategy } from '../types/versionStrategy';
+import UnsupportedApiVersionError from '../errors/UnsupportedAPIVersion';
 
 export default class apiRouter {
   private strategies: Map<string, VersionStrategy> = new Map();
@@ -16,7 +16,7 @@ export default class apiRouter {
         throw new UnsupportedApiVersionError({
           message: 'Unsupported X-API-Version.',
           statusCode: 400,
-          code: 'ERR_API'
+          code: 'ERR_API',
         });
       }
 

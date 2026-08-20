@@ -7,7 +7,7 @@ import logger from './utils/apiLogger';
 import { v1Strategy } from './strategies/v1Strategy';
 import { v2Strategy } from './strategies/v2Strategy';
 import apiRouter from './routes';
-import createDrizzleClient from '@infrastructure/database/client';
+import createDrizzleClient from '@lunareclipse/database';
 import validateRequests from './middlewares/validateRequests';
 import cookieParser from 'cookie-parser';
 
@@ -45,16 +45,15 @@ export default class Api {
       .use(express.static('./src/public'));
     // .use(validateRequests);
 
-
     // Router
     // Strategy setup
     const router = new apiRouter();
     if (this.database !== null || undefined) {
-      router.register("1", new v1Strategy(this.database!));
-      router.register("2", new v2Strategy());
+      router.register('1', new v1Strategy(this.database!));
+      router.register('2', new v2Strategy());
     }
 
-    this.app.use("/api", router.useVersion());
+    this.app.use('/api', router.useVersion());
 
     // Error Handling Middleware
     this.app.use(handleErrors);
@@ -63,7 +62,6 @@ export default class Api {
   listen(port: number) {
     this.app.listen(port, () => {
       logger.info(`Server running on http://localhost:${port}`);
-    })
+    });
   }
-
 }
