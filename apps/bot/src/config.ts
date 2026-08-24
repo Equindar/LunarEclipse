@@ -1,4 +1,5 @@
 import dotenv from 'dotenv';
+import { errorHandler } from './index.js';
 
 type Server = {
   id: string;
@@ -7,6 +8,10 @@ type Server = {
 
 // --- Init
 dotenv.config();
+
+if (!process.env.DISCORD_TOKEN || !process.env.DISCORD_CLIENT_ID) {
+  errorHandler.handle(new Error('Missing environment variables'));
+}
 
 const { DISCORD_CLIENT_ID, DISCORD_TOKEN, DISCORD_SERVER_ID } = process.env;
 const { LOG_LEVEL, LOG_DIRECTORY } = process.env;

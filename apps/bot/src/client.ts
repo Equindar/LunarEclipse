@@ -3,10 +3,10 @@ import {
   GatewayIntentBits,
   Collection,
   Partials,
-  ActivityType,
   ActivitiesOptions,
 } from 'discord.js';
 import { Command } from './types/Command.js';
+import { errorHandler } from './index.js';
 
 declare module 'discord.js' {
   export interface Client {
@@ -14,19 +14,30 @@ declare module 'discord.js' {
   }
 }
 
-export default function createClient(): Client {
-  return new Client({
-    intents: [
-      GatewayIntentBits.Guilds,
-      GatewayIntentBits.GuildMessages,
-      GatewayIntentBits.MessageContent,
-      GatewayIntentBits.GuildMessageReactions,
-      GatewayIntentBits.GuildPresences,
-    ],
-    partials: [Partials.Message, Partials.Channel, Partials.Reaction],
-  });
+export default function createClient(): Client | undefined {
+  try {
+    return new Client({
+      intents: [
+        GatewayIntentBits.Guilds,
+        GatewayIntentBits.GuildMessages,
+        GatewayIntentBits.MessageContent,
+        GatewayIntentBits.GuildMessageReactions,
+        GatewayIntentBits.GuildPresences,
+      ],
+      partials: [Partials.Message, Partials.Channel, Partials.Reaction],
+    });
+  } catch (error) {
+    errorHandler.handle(error, 'Fehler beim Erstellen des Discord-Clients:');
+  }
 }
 
 export function updateActivity(client: Client, message: string, activity: ActivitiesOptions): void {
-  client.user?.setActivity(message, activity);
+  try {
+    if (!client.user) {
+      throw new Error('Client-Benutzer ist nicht verfügbar.');
+    }
+    client.user.setActivity(message, activity);
+  } catch (error) {
+    errorHandler.handle(error, 'Fehler beim Aktualisieren der Aktivität:');
+  }
 }

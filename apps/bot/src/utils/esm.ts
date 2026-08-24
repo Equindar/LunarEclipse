@@ -24,5 +24,9 @@ export function filenameFromMeta(metaUrl: string): string {
  * Dateisystempfads (z.B. "C:\...") erwartet.
  */
 export async function importModule<T = unknown>(filePath: string): Promise<T> {
-  return import(pathToFileURL(filePath).href) as Promise<T>;
+  try {
+    return await import(pathToFileURL(filePath).href) as Promise<T>;
+  } catch (error) {
+    throw new Error(`Fehler beim Importieren des Moduls '${filePath}': ${error}`);
+  }
 }

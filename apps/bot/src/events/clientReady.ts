@@ -14,7 +14,7 @@ const event: Event<typeof Events.ClientReady> = {
       logger.debug(`- ${guild.name} (ID: ${guild.id})`);
     });
 
-    startServerStatusWatcher(client);
+    // startServerStatusWatcher(client);
   },
 };
 

@@ -4,8 +4,12 @@ import logger from '../utils/logger.js';
 export class ErrorHandler {
   private notifiers: Notifier[];
 
-  constructor(...notifiers: Notifier[]) {
-    this.notifiers = notifiers;
+  constructor() {
+    this.notifiers = [];
+  }
+
+  attachNotifier = (notifier: Notifier) => {
+    this.notifiers.push(notifier);
   }
 
   async handle(error: unknown, context?: string): Promise<void> {
