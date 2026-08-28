@@ -28,7 +28,7 @@ errorHandler.attachNotifier(new DiscordNotifier(client, process.env.ERROR_CHANNE
     errorHandler.handle(error, 'Login fehlgeschlagen');
   }
 
-  updateActivity(client, 'LunarEclispe ruleZ', {
+  updateActivity(client, 'LunarEclipse ruleZ', {
     name: 'Game',
     type: ActivityType.Custom,
   });

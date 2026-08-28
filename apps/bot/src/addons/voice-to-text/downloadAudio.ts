@@ -1,5 +1,5 @@
 import fs from 'fs';
-import { getFileName } from '../../utils/getFileName';
+import { getFileName } from '../../utils/getFileName.js';
 
 export async function downloadAudio(url: string, messageId: string) {
   const res = await fetch(url);

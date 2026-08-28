@@ -1,7 +1,9 @@
-import { User } from '@features/users/core/entities/User';
-import { UserRepository } from '@features/users/core/interfaces/repositories/User.repository';
-import { UserDataSource } from '@features/users/data/interfaces/user.datasource';
+
 import { ULID } from 'ulid';
+import { UserRepository } from '../../core/interfaces/repositories/User.repository';
+import { UserDataSource } from '../../data/interfaces/user.datasource';
+import { User } from '../../core/entities/User';
+
 
 export default class UserRepositoryImpl implements UserRepository {
   dataSource: UserDataSource;

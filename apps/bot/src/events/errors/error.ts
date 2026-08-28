@@ -1,11 +1,12 @@
 import { Events } from 'discord.js';
 import { Event } from '../../types/Event.js';
+import { errorHandler } from '../../index.js';
 
 const event: Event<typeof Events.Error> = {
   name: Events.Error,
   once: false,
   execute(error: Error) {
-    console.error('DiscordJS Framework Error:', error);
+    errorHandler.handle(error, 'DiscordJS Framework Error',);
   },
 };
 
