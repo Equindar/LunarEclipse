@@ -13,13 +13,15 @@ if (!process.env.DISCORD_TOKEN || !process.env.DISCORD_CLIENT_ID) {
   errorHandler.handle(new Error('Missing environment variables'));
 }
 
+const { SERVICE_NAME } = process.env;
 const { DISCORD_CLIENT_ID, DISCORD_TOKEN, DISCORD_SERVER_ID } = process.env;
 const { LOG_LEVEL, LOG_DIRECTORY } = process.env;
 const { OPENAI_API_KEY, OPENAI_MODEL } = process.env;
 
 const configuration = {
   app: {
-    name: DISCORD_CLIENT_ID || '',
+    name: SERVICE_NAME,
+    clientId: DISCORD_CLIENT_ID || '',
     secret: DISCORD_TOKEN || '',
   },
   servers: [DISCORD_SERVER_ID],
