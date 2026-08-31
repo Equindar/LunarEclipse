@@ -1,5 +1,5 @@
 import fs from 'fs';
-import { getFileName } from './getFileName';
+import { getFileName } from './getFileName.js';
 
 export async function markAsDone(messageId: string) {
   const oldPath = getFileName(messageId);

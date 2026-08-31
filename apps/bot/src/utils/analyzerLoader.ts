@@ -5,9 +5,10 @@ import { dirnameFromMeta, importModule } from '../utils/esm.js';
 import logger from './logger.js';
 
 const __dirname = dirnameFromMeta(import.meta.url);
+const addonLogger = logger.child({ module: 'Addons' });
 
 export async function loadAnalyzers(): Promise<MessageAnalyzer[]> {
-  logger.info('Analyzers werden geladen...');
+  addonLogger.info('Analyzers werden geladen...');
   const analyzers: MessageAnalyzer[] = [];
 
   try {
@@ -21,17 +22,17 @@ export async function loadAnalyzers(): Promise<MessageAnalyzer[]> {
       for (const key in module) {
         const analyzer = module[key];
         if (!analyzer) {
-          logger.debug(`Übersprungen: Export "${key}" ist kein gültiger Analyzer.`);
+          addonLogger.debug(`Übersprungen: Export "${key}" ist kein gültiger Analyzer.`);
           continue;
         }
         analyzers.push(analyzer);
-        logger.debug(`Analyzer geladen: ${analyzer.name}`);
+        addonLogger.debug(`Analyzer geladen: ${analyzer.name}`);
       }
     }
 
-    logger.info('Analyzers erfolgreich geladen.');
+    addonLogger.info('Analyzers erfolgreich geladen.');
   } catch (error) {
-    logger.error('Laden (Analyzers): fehlgeschlagen: ', error);
+    addonLogger.error('Laden (Analyzers): fehlgeschlagen: ', error);
   }
 
   return analyzers;

@@ -2,9 +2,16 @@ import { readdirSync, statSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import path from 'node:path';
 import { Event } from '../types/Event.js';
-import type { Client } from 'discord.js';
+import { DirectoryChannel, type Client } from 'discord.js';
 import logger from '../utils/logger.js';
 import { importModule } from '../utils/esm.js';
+import { EventLoadingError } from '../errors/EventLoadingError.js';
+import { EventExecutionError } from '../errors/EventExecutionError.js';
+import { errorHandler } from '../index.js';
+import { kMaxLength } from 'node:buffer';
+
+// Module-Logger
+const eventLogger = logger.child({ module: 'Events' });
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -24,23 +31,61 @@ function getEventFiles(dir: string): string[] {
   return files;
 }
 
-export async function loadEvents(client: Client) {
-  const eventsPath = path.join(__dirname, '..', 'events');
+export async function loadEvents(directory: string): Promise<Event<any>[]> {
+  const eventsPath = path.join(__dirname, '..', directory);
   const eventFiles = getEventFiles(eventsPath);
+  const events: Event<any>[] = [];
+  const loaded = new Set<string>();
+
+  eventLogger.info('Events werden geladen...');
 
   try {
-    logger.info('Events werden geladen...');
     for (const filePath of eventFiles) {
-      const event = (await importModule<{ default: Event<any> }>(filePath)).default;
-      if (event.once) {
-        client.once(event.name, (...args) => event.execute(...args));
-      } else {
-        client.on(event.name, (...args) => event.execute(...args));
+      const source = path.relative(eventsPath, filePath);
+      let module: { default?: Event<any> };
+
+      try {
+        module = (await importModule<{ default: Event<any> }>(filePath));
+      } catch (error) {
+        throw new EventLoadingError(`Fehler beim Laden des Events (Quelle: ${source}): ${error}`);
       }
-      logger.debug(`Event geladen: ${event.name} (Quelle: ${path.relative(eventsPath, filePath)})`);
+
+      const event = module.default;
+      if (!event || !event?.name || typeof event.execute !== 'function') {
+        throw new EventLoadingError(`Ungültiges Event: ${event?.name || 'Unbekannt'} (Quelle: ${source})`);
+      }
+
+      if (loaded.has(event.name)) {
+        throw new EventLoadingError(`Doppelte Event-Registrierung: ${event.name} (Quelle: ${source})`);
+      }
+      loaded.add(event.name);
+      events.push(event);
+
+      eventLogger.debug(`Event geladen: ${event.name} (Quelle: ${path.relative(eventsPath, filePath)})`);
     }
-    logger.info('Events erfolgreich geladen.');
+    eventLogger.info(`${loaded.size}/${eventFiles.length} Events erfolgreich geladen`);
   } catch (error) {
-    logger.error('Laden (Events): fehlgeschlagen: ', error);
+    eventLogger.error('Laden fehlgeschlagen: ', error);
+    eventLogger.warn(`${loaded.size}/${eventFiles.length} Events geladen`);
+  }
+  return events;
+}
+
+export function registerEvents(client: Client, events: Event<any>[]): void {
+  for (const event of events) {
+    const wrapped = async (...args: unknown[]) => {
+      try {
+        await event.execute(...args);
+      } catch (error) {
+        const wrappedError =
+          error instanceof EventExecutionError
+            ? error
+            : new EventExecutionError(event.name, `Ausführung von "${event.name}" fehlgeschlagen`, error);
+
+        await errorHandler.handle(wrappedError, `Event "${event.name}": `);
+      }
+    };
+
+    client[event.once ? "once" : "on"](event.name, wrapped);
   }
 }

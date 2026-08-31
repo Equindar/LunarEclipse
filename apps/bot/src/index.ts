@@ -2,9 +2,9 @@ import { ErrorHandler } from './handlers/errorHandler.js';
 import configuration from './config.js';
 import { DiscordNotifier } from './addons/notifiers/DiscordNotifier.js';
 import createClient, { updateActivity } from './client.js';
-import { ActivityType } from 'discord.js';
+import { ActivityType, Events } from 'discord.js';
 import { loadCommands } from './handlers/commandHandler.js';
-import { loadEvents } from './handlers/eventHandler.js';
+import { loadEvents, registerEvents } from './handlers/eventHandler.js';
 
 // --- Init
 const client = createClient();
@@ -20,7 +20,16 @@ if (!client) {
 errorHandler.attachNotifier(new DiscordNotifier(client, process.env.ERROR_CHANNEL_ID!));
 
 (async () => {
-  await loadEvents(client);
+  let events;
+
+  try {
+    events = await loadEvents('./events');
+  } catch (error) {
+    errorHandler.handle(error, 'Fehler beim Laden der Events');
+    process.exit(1);
+  }
+
+  registerEvents(client, events);
   await loadCommands(client);
   try {
     await client.login(configuration.app.secret);
