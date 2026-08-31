@@ -1,10 +1,11 @@
 import { ErrorHandler } from './handlers/errorHandler.js';
-import configuration from './config.js';
 import { DiscordNotifier } from './addons/notifiers/DiscordNotifier.js';
 import createClient, { updateActivity } from './client.js';
-import { ActivityType, Events } from 'discord.js';
+import configuration from './config.js';
+import { ActivityType } from 'discord.js';
 import { loadCommands } from './handlers/commandHandler.js';
 import { loadEvents, registerEvents } from './handlers/eventHandler.js';
+import { loadAnalyzers } from './utils/analyzerLoader.js';
 
 // --- Init
 const client = createClient();
@@ -20,17 +21,25 @@ if (!client) {
 errorHandler.attachNotifier(new DiscordNotifier(client, process.env.ERROR_CHANNEL_ID!));
 
 (async () => {
+  // --- Loading
+  // Events
   let events;
-
   try {
     events = await loadEvents('./events');
   } catch (error) {
     errorHandler.handle(error, 'Fehler beim Laden der Events');
     process.exit(1);
   }
+  // Commands
+  client.commands = await loadCommands('./commands');
+  // Analyzers
+  client.analyzers = await loadAnalyzers((error) => {
+    errorHandler.handle(error, 'Fehler beim Laden der Analyzer');
+  });
 
+  // --- Registration
   registerEvents(client, events);
-  await loadCommands(client);
+  // --- Login
   try {
     await client.login(configuration.app.secret);
   } catch (error) {

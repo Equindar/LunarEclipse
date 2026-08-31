@@ -1,16 +1,18 @@
 import { Events, ChatInputCommandInteraction } from 'discord.js';
 import { Event } from '../types/Event.js';
 import { Command } from '../types/Command.js';
+import { CommandExecutionError } from '../errors/CommandExecutionError.js';
 
 const event: Event<typeof Events.InteractionCreate> = {
   name: Events.InteractionCreate,
+  once: false,
   async execute(interaction) {
     if (!interaction.isChatInputCommand()) return;
 
-    const command = interaction.client.commands.get(interaction.commandName) as Command | undefined;
+    const command = interaction.client.commands.get(interaction.commandName);
 
     if (!command) {
-      throw new Error(`Command '${interaction.commandName}' not found`);
+      throw new CommandExecutionError(interaction.commandName, `Command '${interaction.commandName}' nicht gefunden`);
     }
 
     try {
@@ -21,12 +23,16 @@ const event: Event<typeof Events.InteractionCreate> = {
 
       await command.execute(interaction as ChatInputCommandInteraction);
     } catch (error) {
-      if (interaction.deferred || interaction.replied) {
-        await interaction.editReply('Beim Ausführen des Commands ist ein Fehler aufgetreten!');
-      } else {
-        await interaction.reply({ content: 'Fehler beim Command!', ephemeral: true });
+      if (interaction.isRepliable()) {
+        const payload = { content: 'Beim Ausführen des Commands ist ein Fehler aufgetreten!', ephemeral: true };
+
+        await (interaction.deferred || interaction.replied
+          ? interaction.editReply(payload)
+          : interaction.reply(payload)
+        ).catch(() => { });
       }
-    }
+      throw new CommandExecutionError(interaction.commandName, 'Fehler beim Ausführen des Commands', error);
+    };
   },
 };
 

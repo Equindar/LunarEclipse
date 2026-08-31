@@ -1,5 +1,5 @@
 import dotenv from 'dotenv';
-import { errorHandler } from './index.js';
+import { MissingConfigurationError } from './errors/MissingConfigurationError.js';
 
 type Server = {
   id: string;
@@ -9,9 +9,16 @@ type Server = {
 // --- Init
 dotenv.config();
 
-if (!process.env.DISCORD_TOKEN || !process.env.DISCORD_CLIENT_ID) {
-  errorHandler.handle(new Error('Missing environment variables'));
+type RequiredEnvVar = 'DISCORD_TOKEN' | 'DISCORD_CLIENT_ID';
+
+function requireEnv(keys: RequiredEnvVar[]): void {
+  const missing = keys.filter((key) => !process.env[key]);
+  if (missing.length > 0) {
+    throw new MissingConfigurationError(`Fehlende Environment-Variablen: ${missing.join(', ')}`);
+  }
 }
+
+requireEnv(['DISCORD_TOKEN', 'DISCORD_CLIENT_ID']);
 
 const { SERVICE_NAME } = process.env;
 const { DISCORD_CLIENT_ID, DISCORD_TOKEN, DISCORD_SERVER_ID } = process.env;

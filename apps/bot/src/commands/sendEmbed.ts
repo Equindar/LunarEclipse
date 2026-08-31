@@ -2,14 +2,14 @@ import {
   ChannelType,
   EmbedBuilder,
   InteractionContextType,
-  InteractionResponse,
+  MessageFlags,
   PermissionFlagsBits,
   SlashCommandBuilder,
-  TextChannel,
 } from 'discord.js';
 import { errorHandler } from '../index.js';
 import { Command } from '../types/Command.js';
 import { isServerOwner } from '../utils/isServerOwner.js';
+import { ChannelNotSendableError } from '../errors/ChannelNotSendableError.js';
 
 let command: Command = {
   data: new SlashCommandBuilder()
@@ -27,10 +27,15 @@ let command: Command = {
 
   async execute(interaction) {
     try {
-      const channel = interaction.options.getChannel('channel') as TextChannel;
+      const channel = interaction.options.getChannel('channel', true, [ChannelType.GuildText]);
+
+      if (channel.type !== ChannelType.GuildText) {
+        throw new ChannelNotSendableError(channel.id, channel.name);
+      }
 
       if (!channel.isSendable())
-        throw new Error(`Im Channel [ID: ${channel}] kann nicht gesendet werden.`);
+        throw new ChannelNotSendableError(channel.id, channel.name);
+
       await channel!.send({
         embeds: [
           new EmbedBuilder()
@@ -40,7 +45,7 @@ let command: Command = {
         ],
       });
     } catch (error) {
-      await interaction.reply({ content: 'Embbed konnte nicht versendet werden' });
+      await interaction.reply({ content: 'Embbed konnte nicht versendet werden', flags: MessageFlags.Ephemeral });
       errorHandler.handle(error, this.data.name);
     }
   },

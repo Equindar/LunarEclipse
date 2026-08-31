@@ -1,9 +1,8 @@
 import { Events, Message } from 'discord.js';
 import { Event } from '../types/Event.js';
-import { loadAnalyzers } from '../utils/analyzerLoader.js';
-import logger from '../utils/logger.js';
-
-const analyzers = loadAnalyzers();
+import { errorHandler } from '../index.js';
+import { AddonExecutionError } from '../errors/AddonExecutionError.js';
+import { type MessageAnalyzer } from '../types/MessageAnalyzer.js';
 
 const event: Event<typeof Events.MessageCreate> = {
   name: Events.MessageCreate,
@@ -12,11 +11,14 @@ const event: Event<typeof Events.MessageCreate> = {
     // Ignoriere Nachrichten von Bots
     if (message.author.bot) return;
 
-    for (const analyzer of await analyzers) {
+    for (const analyzer of message.client.analyzers) {
       try {
         await analyzer.analyze(message);
       } catch (error) {
-        logger.error(`Fehler im Analyzer "${analyzer.name}":`, error);
+        await errorHandler.handle(
+          new AddonExecutionError('Analyzer', analyzer.name, `Analyzer "${analyzer.name}" fehlgeschlagen`, error),
+          'MessageCreate: ',
+        );
       }
     }
   },

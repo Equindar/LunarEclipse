@@ -1,11 +1,8 @@
 import {
   BaseChannel,
-  EmbedBuilder,
   InteractionContextType,
   PermissionFlagsBits,
   SlashCommandBuilder,
-  SlashCommandRoleOption,
-  TextChannel,
 } from 'discord.js';
 import { errorHandler } from '../index.js';
 import { Command } from '../types/Command.js';
@@ -22,7 +19,6 @@ let command: Command = {
   async execute(interaction) {
     try {
       const channel = (await interaction.channel) as BaseChannel;
-      logger.debug(channel.type);
 
       await interaction.reply('hab ich gehört, hier im Post: ' + channel.id);
 

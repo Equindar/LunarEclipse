@@ -1,6 +1,8 @@
-import { InteractionContextType, PermissionFlagsBits, SlashCommandBuilder } from 'discord.js';
+import { InteractionContextType, MessageFlags, PermissionFlagsBits, SlashCommandBuilder } from 'discord.js';
 import { Command } from '../types/Command.js';
 import { errorHandler } from '../index.js';
+import logger from '../utils/logger.js';
+import { CommandExecutionError } from '../errors/CommandExecutionError.js';
 
 const command: Command = {
   data: new SlashCommandBuilder()
@@ -10,13 +12,16 @@ const command: Command = {
     .setDefaultMemberPermissions(PermissionFlagsBits.Administrator),
 
   async execute(interaction) {
+    logger.info(`Simulierter Fehler durch ${interaction.user.tag} (${interaction.user.id})`);
     try {
-      throw new Error('Testfehler 🚨');
+      throw new CommandExecutionError(interaction.commandName, 'Dies ist ein simuliertes Fehlerereignis für Testzwecke.');
     } catch (error) {
-      await interaction.reply({ content: 'Es ist ein Fehler aufgetreten!' });
-      await errorHandler.handle(error, this.data.name);
+      errorHandler.handle(error, 'Simulierter Fehler durch /fail');
+      if (interaction.isRepliable()) {
+        await interaction.reply({ content: 'Ein simuliertes Fehlerereignis wurde ausgelöst und protokolliert.', flags: MessageFlags.Ephemeral });
+      }
     }
-  },
+  }
 };
 
 export default command;

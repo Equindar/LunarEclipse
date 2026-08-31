@@ -2,13 +2,12 @@ import { readdirSync, statSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import path from 'node:path';
 import { Event } from '../types/Event.js';
-import { DirectoryChannel, type Client } from 'discord.js';
+import { type Client } from 'discord.js';
 import logger from '../utils/logger.js';
 import { importModule } from '../utils/esm.js';
 import { EventLoadingError } from '../errors/EventLoadingError.js';
 import { EventExecutionError } from '../errors/EventExecutionError.js';
 import { errorHandler } from '../index.js';
-import { kMaxLength } from 'node:buffer';
 
 // Module-Logger
 const eventLogger = logger.child({ module: 'Events' });

@@ -1,39 +1,26 @@
-import { readdirSync } from 'node:fs';
+// utils/analyzerLoader.ts
 import path from 'node:path';
+import { dirnameFromMeta } from './esm.js';
+import { AddonLoadingError } from '../errors/AddonLoadingError.js';
 import type { MessageAnalyzer } from '../types/MessageAnalyzer.js';
-import { dirnameFromMeta, importModule } from '../utils/esm.js';
-import logger from './logger.js';
+import { loadAddons } from '../handlers/addonHandler.js';
 
 const __dirname = dirnameFromMeta(import.meta.url);
-const addonLogger = logger.child({ module: 'Addons' });
 
-export async function loadAnalyzers(): Promise<MessageAnalyzer[]> {
-  addonLogger.info('Analyzers werden geladen...');
-  const analyzers: MessageAnalyzer[] = [];
+function isMessageAnalyzer(value: unknown): value is MessageAnalyzer {
+  return (
+    typeof (value as MessageAnalyzer).name === 'string' &&
+    typeof (value as MessageAnalyzer).analyze === 'function'
+  );
+}
 
-  try {
-    const analyzersPath = path.join(__dirname, '..', 'addons', 'analyzers');
-    const files = readdirSync(analyzersPath).filter((f) => f.endsWith('.ts') || f.endsWith('.js'));
-
-    for (const file of files) {
-      const filePath = path.join(analyzersPath, file);
-      const module = await importModule<Record<string, MessageAnalyzer>>(filePath);
-
-      for (const key in module) {
-        const analyzer = module[key];
-        if (!analyzer) {
-          addonLogger.debug(`Übersprungen: Export "${key}" ist kein gültiger Analyzer.`);
-          continue;
-        }
-        analyzers.push(analyzer);
-        addonLogger.debug(`Analyzer geladen: ${analyzer.name}`);
-      }
-    }
-
-    addonLogger.info('Analyzers erfolgreich geladen.');
-  } catch (error) {
-    addonLogger.error('Laden (Analyzers): fehlgeschlagen: ', error);
-  }
-
-  return analyzers;
+export function loadAnalyzers(
+  onLoadError?: (error: AddonLoadingError) => void | Promise<void>,
+): Promise<MessageAnalyzer[]> {
+  return loadAddons<MessageAnalyzer>({
+    addonType: 'Analyzer',
+    directory: path.join(__dirname, '..', 'addons', 'analyzers'),
+    isValid: isMessageAnalyzer,
+    onLoadError,
+  });
 }
