@@ -31,6 +31,11 @@ const configuration = {
     clientId: DISCORD_CLIENT_ID || '',
     secret: DISCORD_TOKEN || '',
   },
+  notifiers: {
+    discord: {
+      channelId: process.env.ERROR_CHANNEL_ID || '',
+    },
+  },
   servers: [DISCORD_SERVER_ID],
   logging: {
     level: LOG_LEVEL,

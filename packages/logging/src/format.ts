@@ -12,7 +12,7 @@ export function consoleFormat(): Logform.Format {
     format.colorize({ all: true }),
     format.timestamp(),
     format.errors({ stack: true }),
-    format.printf((info) => `[${info.timestamp}] ${info.level}: ${info.message}`),
+    format.printf((info) => `[${info.timestamp}] ${info.service ? `[${info.service}` : ''}${info.module ? `:${info.module}]` : ']'} ${info.level}: ${info.message}`),
   );
 }
 

@@ -3,13 +3,10 @@ import {
   ButtonStyle,
   ChannelType,
   ContainerBuilder,
-  EmbedBuilder,
   InteractionContextType,
   MediaGalleryBuilder,
-  MessageCreateOptions,
   MessageFlags,
   PermissionFlagsBits,
-  resolveColor,
   SectionBuilder,
   SeparatorBuilder,
   SeparatorSpacingSize,
@@ -17,7 +14,6 @@ import {
   TextChannel,
   TextDisplayBuilder,
 } from 'discord.js';
-import { errorHandler } from '../index.js';
 import { Command } from '../types/Command.js';
 import formatDateTime from '../utils/formatDateTime.js';
 import { isServerOwner } from '../utils/isServerOwner.js';
@@ -162,7 +158,7 @@ let command: Command = {
         content: 'Embbed konnte nicht versendet werden',
         flags: MessageFlags.Ephemeral,
       });
-      errorHandler.handle(error, this.data.name);
+      await interaction.client.errorHandler.handle(error, this.data.name);
     }
   },
 };

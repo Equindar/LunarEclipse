@@ -1,40 +1,37 @@
-import { ErrorHandler } from './handlers/errorHandler.js';
-import { DiscordNotifier } from './addons/notifiers/DiscordNotifier.js';
 import createClient, { updateActivity } from './client.js';
 import configuration from './config.js';
 import { ActivityType } from 'discord.js';
 import { loadCommands } from './handlers/commandHandler.js';
 import { loadEvents, registerEvents } from './handlers/eventHandler.js';
 import { loadAnalyzers } from './utils/analyzerLoader.js';
+import { createErrorHandler } from './handlers/createErrorHandler.js';
 
-// --- Init
-const client = createClient();
 
-// --- Error handling
-export const errorHandler = new ErrorHandler();
+async function main() {
+  // --- Init
+  const client = createClient();
+  if (!client) {
+    console.error('Discord-Client konnte nicht erstellt werden');
+    process.exit(1);
+  }
 
-if (!client) {
-  errorHandler.handle(new Error('Discord-Client konnte nicht erstellt werden'));
-  process.exit(1);
-}
+  // --- Error handling
+  client.errorHandler = await createErrorHandler(client);
 
-errorHandler.attachNotifier(new DiscordNotifier(client, process.env.ERROR_CHANNEL_ID!));
-
-(async () => {
   // --- Loading
   // Events
   let events;
   try {
     events = await loadEvents('./events');
   } catch (error) {
-    errorHandler.handle(error, 'Fehler beim Laden der Events');
+    client.errorHandler.handle(error, 'Fehler beim Laden der Events');
     process.exit(1);
   }
   // Commands
   client.commands = await loadCommands('./commands');
   // Analyzers
   client.analyzers = await loadAnalyzers((error) => {
-    errorHandler.handle(error, 'Fehler beim Laden der Analyzer');
+    client.errorHandler.handle(error, 'Fehler beim Laden der Analyzer');
   });
 
   // --- Registration
@@ -43,21 +40,42 @@ errorHandler.attachNotifier(new DiscordNotifier(client, process.env.ERROR_CHANNE
   try {
     await client.login(configuration.app.secret);
   } catch (error) {
-    errorHandler.handle(error, 'Login fehlgeschlagen');
+    await client.errorHandler.handle(error, 'Login fehlgeschlagen');
   }
 
-  updateActivity(client, 'LunarEclipse ruleZ', {
-    name: 'Game',
-    type: ActivityType.Custom,
-  });
+  await client.errorHandler.initNotifiers?.();
 
-})();
+  try {
+    updateActivity(client, 'LunarEclipse ruleZ', {
+      name: 'Game',
+      type: ActivityType.Custom,
+    });
+  } catch (error) {
+    await client.errorHandler.handle(error, 'Aktualisierung der Aktivität fehlgeschlagen');
+  }
 
-process.on('unhandledRejection', (reason, promise) => {
-  errorHandler.handle(reason, 'Unhandled Rejection:');
+  return client;
+
+}
+
+// Run the main function and handle unhandled rejections and uncaught exceptions
+const clientPromise = main();
+
+process.on('unhandledRejection', async (reason) => {
+  const client = await clientPromise.catch(() => null);
+  if (client?.errorHandler) {
+    await client.errorHandler.handle(reason, 'Unhandled Rejection: ');
+  } else {
+    console.error('Unhandled Rejection (vor Main-Abschluss):', reason);
+  }
 });
 
-process.on('uncaughtException', (error) => {
-  errorHandler.handle(error, 'Uncaught Exception:');
+process.on('uncaughtException', async (error) => {
+  const client = await clientPromise.catch(() => null);
+  if (client?.errorHandler) {
+    await client.errorHandler.handle(error, 'Uncaught Exception: ');
+  } else {
+    console.error('Uncaught Exception (vor Main-Abschluss):', error);
+  }
   process.exit(1);
 });

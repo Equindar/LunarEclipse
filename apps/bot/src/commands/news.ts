@@ -13,7 +13,6 @@ import {
   TextDisplayBuilder,
   ThumbnailBuilder,
 } from 'discord.js';
-import { errorHandler } from '../index.js';
 import { Command } from '../types/Command.js';
 import { isServerOwner } from '../utils/isServerOwner.js';
 
@@ -93,7 +92,7 @@ Ich wünsche euch eine besinnliche Zeit, wenig Stress beim Einkaufen der Geschen
         content: 'Embbed konnte nicht versendet werden',
         flags: MessageFlags.Ephemeral,
       });
-      errorHandler.handle(error, this.data.name);
+      await interaction.client.errorHandler.handle(error, this.data.name);
     }
   },
 };
