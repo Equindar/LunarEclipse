@@ -1,5 +1,4 @@
 import { SlashCommandBuilder } from 'discord.js';
-import { errorHandler } from '../index.js';
 import { Command } from '../types/Command.js';
 
 const command: Command = {
@@ -9,7 +8,7 @@ const command: Command = {
     try {
       await interaction.reply('Pong!');
     } catch (error) {
-      errorHandler.handle(error, this.data.name);
+      await interaction.client.errorHandler.handle(error, this.data.name);
     }
   },
 };

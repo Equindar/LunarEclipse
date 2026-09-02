@@ -1,6 +1,5 @@
 import { InteractionContextType, MessageFlags, PermissionFlagsBits, SlashCommandBuilder } from 'discord.js';
 import { Command } from '../types/Command.js';
-import { errorHandler } from '../index.js';
 import logger from '../utils/logger.js';
 import { CommandExecutionError } from '../errors/CommandExecutionError.js';
 
@@ -16,7 +15,7 @@ const command: Command = {
     try {
       throw new CommandExecutionError(interaction.commandName, 'Dies ist ein simuliertes Fehlerereignis für Testzwecke.');
     } catch (error) {
-      errorHandler.handle(error, 'Simulierter Fehler durch /fail');
+      await interaction.client.errorHandler.handle(error, 'Simulierter Fehler durch /fail');
       if (interaction.isRepliable()) {
         await interaction.reply({ content: 'Ein simuliertes Fehlerereignis wurde ausgelöst und protokolliert.', flags: MessageFlags.Ephemeral });
       }

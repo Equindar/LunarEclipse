@@ -1,5 +1,4 @@
 import { Events, MessageReaction, PartialMessageReaction, PartialUser, User } from 'discord.js';
-import { errorHandler } from '../index.js';
 import logger from '../utils/logger.js';
 import { Event } from '../types/Event.js';
 
@@ -7,6 +6,7 @@ const event: Event<typeof Events.MessageReactionAdd> = {
   name: Events.MessageReactionAdd,
   once: false,
   async execute(
+    client,
     reaction: MessageReaction | PartialMessageReaction,
     user: User | PartialUser,
   ): Promise<void> {
@@ -22,7 +22,7 @@ const event: Event<typeof Events.MessageReactionAdd> = {
         logger.debug('💩 reaction detected');
       }
     } catch (error) {
-      await errorHandler.handle(error, 'Fehler in MessageReactionAdd');
+      await client.errorHandler.handle(error, 'Fehler in MessageReactionAdd');
     }
   },
 };

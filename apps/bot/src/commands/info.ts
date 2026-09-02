@@ -4,10 +4,8 @@ import {
   PermissionFlagsBits,
   SlashCommandBuilder,
 } from 'discord.js';
-import { errorHandler } from '../index.js';
 import { Command } from '../types/Command.js';
 import { isServerOwner } from '../utils/isServerOwner.js';
-import logger from '../utils/logger.js';
 
 let command: Command = {
   data: new SlashCommandBuilder()
@@ -32,7 +30,7 @@ let command: Command = {
       // });
     } catch (error) {
       await interaction.reply({ content: 'Embbed konnte nicht versendet werden' });
-      errorHandler.handle(error, this.data.name);
+      await interaction.client.errorHandler.handle(error, this.data.name);
     }
   },
 };

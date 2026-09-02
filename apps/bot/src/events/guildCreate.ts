@@ -5,7 +5,7 @@ import logger from '../utils/logger.js';
 const event: Event<typeof Events.GuildCreate> = {
   name: Events.GuildCreate,
   once: false,
-  execute(guild: Guild) {
+  execute(client, guild: Guild) {
     logger.info(`Server '${guild.name}' (ID: ${guild.id}) beigetreten.`);
   },
 };

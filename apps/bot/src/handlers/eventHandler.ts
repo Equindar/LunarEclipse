@@ -7,7 +7,6 @@ import logger from '../utils/logger.js';
 import { importModule } from '../utils/esm.js';
 import { EventLoadingError } from '../errors/EventLoadingError.js';
 import { EventExecutionError } from '../errors/EventExecutionError.js';
-import { errorHandler } from '../index.js';
 
 // Module-Logger
 const eventLogger = logger.child({ module: 'Events' });
@@ -74,14 +73,14 @@ export function registerEvents(client: Client, events: Event<any>[]): void {
   for (const event of events) {
     const wrapped = async (...args: unknown[]) => {
       try {
-        await event.execute(...args);
+        await event.execute(client, ...args);
       } catch (error) {
         const wrappedError =
           error instanceof EventExecutionError
             ? error
             : new EventExecutionError(event.name, `Ausführung von "${event.name}" fehlgeschlagen`, error);
 
-        await errorHandler.handle(wrappedError, `Event "${event.name}": `);
+        await client.errorHandler.handle(wrappedError, `Event "${event.name}": `);
       }
     };
 

@@ -9,7 +9,11 @@ const __dirname = dirnameFromMeta(import.meta.url);
 
 function isMessageAnalyzer(value: unknown): value is MessageAnalyzer {
   return (
+    typeof value === 'object' &&
+    value !== null &&
+    'name' in value &&
     typeof (value as MessageAnalyzer).name === 'string' &&
+    'analyze' in value &&
     typeof (value as MessageAnalyzer).analyze === 'function'
   );
 }
