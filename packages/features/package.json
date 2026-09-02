@@ -4,8 +4,10 @@
   "private": true,
   "type": "module",
   "exports": {
-    "types": "./**/*.ts",
-    "default": "./**/*.ts"
+    "./*": {
+      "types": "./*.ts",
+      "default": "./*.ts"
+    }
   },
   "scripts": {
     "lint": "eslint . --max-warnings 0",

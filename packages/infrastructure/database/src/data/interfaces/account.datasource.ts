@@ -1,4 +1,4 @@
-import Account from '@features/accounts/core/entities/Account';
+import Account from "@lunareclipse/features/src/accounts/core/entities/Account";
 
 export interface AccountDataSource {
   create(account: Account): void;

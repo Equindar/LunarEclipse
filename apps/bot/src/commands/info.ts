@@ -1,6 +1,7 @@
 import {
   BaseChannel,
   InteractionContextType,
+  MessageFlags,
   PermissionFlagsBits,
   SlashCommandBuilder,
 } from 'discord.js';
@@ -29,7 +30,7 @@ let command: Command = {
       //   ],
       // });
     } catch (error) {
-      await interaction.reply({ content: 'Embbed konnte nicht versendet werden' });
+      await interaction.reply({ content: 'Embbed konnte nicht versendet werden', flags: MessageFlags.Ephemeral });
       await interaction.client.errorHandler.handle(error, this.data.name);
     }
   },

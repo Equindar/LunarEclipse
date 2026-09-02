@@ -1,6 +1,6 @@
-import Character from '@features/characters/core/entities/Character';
-import { User } from '@features/users/core/entities/User';
 import { ULID, ulid } from 'ulid';
+import Character from '../../../characters/core/entities/Character';
+import { User } from '../../../users/core/entities/User';
 
 type AccountStatus = 'init' | 'active' | 'inactive' | 'locked';
 
