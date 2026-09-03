@@ -1,5 +1,5 @@
 {
-  "name": "@lunareclipse/api",
+  "name": "@lunareclipse/api-deprecated",
   "version": "1.0.0",
   "description": "LunarEclipse-API, written in typescript",
   "main": "server.ts",

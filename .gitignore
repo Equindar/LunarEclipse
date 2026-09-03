@@ -15,6 +15,9 @@
 
 # --- caching
 */**/cache
+# Ausnahme: Infrastructure Cache
+!packages/infrastructure/cache/
+!packages/infrastructure/cache/**
 
 # --- authentification / keys
 *.pem
