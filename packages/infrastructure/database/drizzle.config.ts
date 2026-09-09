@@ -10,8 +10,8 @@ if (!DATABASE_HOST || !DATABASE_USER || !DATABASE_PASSWORD || !DATABASE_NAME) {
 }
 
 export default defineConfig({
-  schema: './infrastructure/database/drizzle/migrations/schema.ts',
-  out: './infrastructure/database/drizzle/migrations',
+  schema: './drizzle/migrations/schema.ts',
+  out: './drizzle/migrations',
   dialect: 'mysql',
   dbCredentials: {
     host: DATABASE_HOST,

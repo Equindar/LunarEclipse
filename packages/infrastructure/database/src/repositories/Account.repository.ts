@@ -1,6 +1,7 @@
-import Account from '@features/accounts/core/entities/Account';
-import { AccountRepository } from '@features/accounts/core/interfaces/repositories/Account.repository';
-import { AccountDataSource } from '@features/accounts/data/interfaces/account.datasource';
+import Account from "@lunareclipse/features/src/accounts/core/entities/Account";
+import { AccountRepository } from "@lunareclipse/features/src/accounts/core/interfaces/repositories/Account.repository";
+import { AccountDataSource } from "../data/interfaces/Account.datasource";
+
 
 export default class AccountRepositoryImpl implements AccountRepository {
   dataSource: AccountDataSource;

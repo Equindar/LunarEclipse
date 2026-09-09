@@ -5,7 +5,7 @@ import * as schema from '../drizzle/migrations/schema.js';
 
 export type Database = MySql2Database<typeof schema>;
 
-const createDrizzleClient = (): Database => {
+export const createDatabaseConnection = (): Database => {
   const pool = mysql.createPool(configuration);
 
   return drizzle(pool, {
@@ -14,4 +14,6 @@ const createDrizzleClient = (): Database => {
   });
 };
 
-export default createDrizzleClient;
+export const checkDatabaseConnection = async (db: Database): Promise<void> => {
+  await db.execute('SELECT 1');
+}

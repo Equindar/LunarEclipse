@@ -1,19 +1,14 @@
 import Account from "@lunareclipse/features/src/accounts/core/entities/Account";
-import Character from "@lunareclipse/features/src/characters/core/entities/Character";
-import InitializedCharacterStatus from "@lunareclipse/features/src/characters/core/InitializedCharacterStatus";
-import { User } from "@lunareclipse/features/src/users/core/entities/User";
-import InitializedUserStatus from "@lunareclipse/features/src/users/core/InitializedUserStatus";
-import { asc, eq } from "drizzle-orm";
-import { accounts, characters, users } from "../../drizzle/migrations/schema";
+import { accounts } from "../../drizzle/migrations/schema";
 import createDrizzleClient from "../client";
-import { AccountDataSource } from "./interfaces/account.datasource";
+import { AccountDataSource } from "./interfaces/Account.datasource";
 
 
 export type Database = Awaited<ReturnType<typeof createDrizzleClient>>;
 
 type AccountDAO = typeof accounts.$inferInsert;
 
-export class CharacterDataSourceImpl implements AccountDataSource {
+export class AccountDataSourceImpl implements AccountDataSource {
   private database: Database;
 
   constructor(database: Database) {
@@ -29,26 +24,27 @@ export class CharacterDataSourceImpl implements AccountDataSource {
   }
 
   async get(id: number): Promise<Account | null> {
-    // --- Init
-    let owner = null;
+    throw new Error('Method not implemented.');
+    // // --- Init
+    // let owner = null;
 
-    const data = await this.database
-      .select()
-      .from(accounts)
-      .leftJoin(users, eq(accounts.owner, users.id))
-      .where(eq(accounts.id, id))
-      .limit(1);
+    // const data = await this.database
+    //   .select()
+    //   .from(accounts)
+    //   .leftJoin(users, eq(accounts.owner, users.id))
+    //   .where(eq(accounts.id, id))
+    //   .limit(1);
 
-    if (data[0].users) {
-      owner = new User(data[0].users.pId, 'Eq');
-    }
+    // if (data[0].users) {
+    //   owner = new User(data[0].users.pId, 'Eq');
+    // }
 
-    const account: Account = new Account(
-      'init',
-      new User(data[0].users?.pId),
-      data[0].accounts.owner,
-    );
-    return account;
+    // const account: Account = new Account(
+    //   'init',
+    //   new User(data[0].users?.pId),
+    //   data[0].accounts.owner,
+    // );
+    // return account;
   }
 
   async getAll(): Promise<Account[]> {

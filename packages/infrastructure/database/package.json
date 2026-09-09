@@ -4,25 +4,40 @@
   "private": true,
   "type": "module",
   "exports": {
-    "types": "./src/client.ts",
-    "default": "./src/client.ts"
+    ".": {
+      "types": "./src/index.ts",
+      "import": "./src/index.ts"
+    },
+    "./users": {
+      "types": "./src/users/index.ts",
+      "import": "./src/users/index.ts"
+    }
+  },
+  "typesVersions": {
+    "*": {
+      "users": [
+        "./src/users/index.ts"
+      ]
+    }
   },
   "scripts": {
-    "build": "tsc",
     "db:gen": "drizzle-kit generate",
-    "db:migrate": "tsc ./drizzle/migrate.ts",
+    "db:pull": "drizzle-kit pull && tsx scripts/fix-drizzle-schema.ts drizzle/migrations/schema.ts",
+    "db:migrate": "tsx ./scripts/migrate.ts",
+    "db:fix-schema": "tsx ./scripts/fix-drizzle-schema.ts",
     "check-types": "tsc --noEmit"
   },
   "devDependencies": {
+    "@lunareclipse/typescript": "workspace:*",
     "drizzle-kit": "0.30.4",
-    "@lunareclipse/typescript": "workspace:*"
+    "tsx": "^4.23.13"
   },
   "dependencies": {
+    "@lunareclipse/features": "workspace:*",
+    "@lunareclipse/logging": "workspace:*",
     "dotenv": "^17.2.3",
     "drizzle-orm": "0.39.0",
     "mysql2": "^3.14.4",
-    "ulid": "^3.0.1",
-    "@lunareclipse/features": "workspace:*",
-    "@lunareclipse/logging": "workspace:*"
+    "ulid": "^3.0.1"
   }
 }

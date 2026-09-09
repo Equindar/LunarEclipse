@@ -1,4 +1,4 @@
-import CharacterRepository from '../repositories/Character.repository';
+import CharacterRepository from '../../../../../infrastructure/database/src/repositories/Character.repository';
 import Character from '@features/characters/core/entities/Character';
 import updateCharacterUseCase from '@features/characters/core/interfaces/usecases/updateCharacter.usecase';
 

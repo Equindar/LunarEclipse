@@ -1,20 +1,21 @@
-import { User } from '@features/users/core/entities/User';
-import { UserRepository } from '@features/users/core/interfaces/repositories/User.repository';
-import createUserUseCase from '@features/users/core/interfaces/usecases/createUser.usecase';
+import { ulid } from 'ulid';
+import { User } from '../../core/entities/User.js';
 
-export interface CreateUserRequest {
-  nickname: string;
+export interface CreateUserInput {
+  name: string;
+  email: string;
 }
 
-export default class createUser implements createUserUseCase {
-  userRepository: UserRepository;
+export class CreateUser {
+  constructor(private readonly userRepository: UserRepository) { }
 
-  constructor(repository: UserRepository) {
-    this.userRepository = repository;
-  }
+  async execute(input: CreateUserInput): Promise<User> {
+    const user = User.create({ uuid: ulid(), name: input.name, email: input.email });
 
-  execute(req: CreateUserRequest): Promise<boolean> {
-    const user = User.register(req.nickname);
-    return this.userRepository.create(user);
+    const created = await this.userRepository.create(user);
+    if (!created) {
+      throw new Error('User could not be created');
+    }
+    return user;
   }
 }

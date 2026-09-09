@@ -1,6 +1,7 @@
-import Character from '@features/characters/core/entities/Character';
-import { CharacterRepository } from '@features/characters/core/interfaces/repositories/Character.repository';
-import { CharacterDataSource } from '@features/characters/data/interfaces/character.datasource';
+import Character from "@lunareclipse/features/src/characters/core/entities/Character";
+import { CharacterRepository } from "@lunareclipse/features/src/characters/core/interfaces/repositories/Character.repository";
+import { CharacterDataSource } from "../data/interfaces/Character.datasource";
+
 
 export default class CharacterRepositoryImpl implements CharacterRepository {
   dataSource: CharacterDataSource;

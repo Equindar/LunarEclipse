@@ -4,9 +4,16 @@
   "private": true,
   "type": "module",
   "exports": {
-    "./*": {
-      "types": "./*.ts",
-      "default": "./*.ts"
+    "./users": {
+      "types": "./src/users/index.ts",
+      "import": "./src/users/index.ts"
+    }
+  },
+  "typesVersions": {
+    "*": {
+      "users": [
+        "./src/users/index.ts"
+      ]
     }
   },
   "scripts": {

@@ -4,10 +4,10 @@ import { sql } from "drizzle-orm"
 export const accounts = mysqlTable("accounts", {
   id: int("ID").autoincrement().notNull(),
   pId: varchar({ length: 26 }).notNull(),
-  owner: int("Owner").default('NULL').references((): AnyMySqlColumn => users.id, { onDelete: "restrict", onUpdate: "restrict" }),
-  createdAt: timestamp("CreatedAt", { mode: 'string' }).default('current_timestamp()'),
-  updatedAt: timestamp("UpdatedAt", { mode: 'string' }).default('current_timestamp()'),
-  deletedAt: timestamp("DeletedAt", { mode: 'string' }).default('NULL'),
+  owner: int("Owner").references((): AnyMySqlColumn => users.id, { onDelete: "restrict", onUpdate: "restrict" }),
+  createdAt: timestamp("CreatedAt", { mode: 'string' }).default(sql`CURRENT_TIMESTAMP`),
+  updatedAt: timestamp("UpdatedAt", { mode: 'string' }).default(sql`CURRENT_TIMESTAMP`),
+  deletedAt: timestamp("DeletedAt", { mode: 'string' }),
 },
   (table) => [
     unique("accounts_uuid").on(table.pId),
@@ -20,9 +20,9 @@ export const characters = mysqlTable("characters", {
   name: varchar("Name", { length: 100 }).notNull(),
   experience: int("Experience").default(0).notNull(),
   userId: int("User_ID").notNull().references(() => users.id, { onDelete: "restrict", onUpdate: "restrict" }),
-  createdAt: timestamp("CreatedAt", { mode: 'string' }).default('current_timestamp()'),
-  updatedAt: timestamp("UpdatedAt", { mode: 'string' }).default('current_timestamp()'),
-  deletedAt: timestamp("DeletedAt", { mode: 'string' }).default('NULL'),
+  createdAt: timestamp("CreatedAt", { mode: 'string' }).default(sql`CURRENT_TIMESTAMP`),
+  updatedAt: timestamp("UpdatedAt", { mode: 'string' }).default(sql`CURRENT_TIMESTAMP`),
+  deletedAt: timestamp("DeletedAt", { mode: 'string' }),
 },
   (table) => [
     unique("characters_name_unique").on(table.name),
@@ -46,8 +46,8 @@ export const charactersWallet = mysqlTable("characters_wallet", {
   id: int("ID").autoincrement().notNull(),
   characterId: int("Character_ID").notNull().references(() => characters.id, { onDelete: "restrict", onUpdate: "restrict" }),
   amount: int("Amount").default(0).notNull(),
-  createdAt: timestamp("Created_At", { mode: 'string' }).default('current_timestamp()'),
-  updatedAt: timestamp("Updated_At", { mode: 'string' }).default('current_timestamp()'),
+  createdAt: timestamp("Created_At", { mode: 'string' }).default(sql`CURRENT_TIMESTAMP`),
+  updatedAt: timestamp("Updated_At", { mode: 'string' }).default(sql`CURRENT_TIMESTAMP`),
 },
   (table) => [
     index("Character_ID").on(table.characterId),
@@ -64,8 +64,8 @@ export const items = mysqlTable("items", {
   blueprintId: int("Blueprint_ID").notNull().references(() => itemsBlueprint.id, { onDelete: "restrict", onUpdate: "restrict" }),
   rarityId: int("Rarity_ID").notNull().references(() => itemsRarity.id, { onDelete: "restrict", onUpdate: "restrict" }),
   version: int("Version").notNull(),
-  attributes: longtext("Attributes").default('NULL'),
-  createdAt: timestamp("Created_At", { mode: 'string' }).default('current_timestamp()'),
+  attributes: longtext("Attributes"),
+  createdAt: timestamp("Created_At", { mode: 'string' }).default(sql`CURRENT_TIMESTAMP`),
 },
   (table) => [
     index("Blueprint_ID").on(table.blueprintId),
@@ -78,17 +78,17 @@ export const itemsBlueprint = mysqlTable("items_blueprint", {
   id: int("ID").notNull(),
   name: varchar("Name", { length: 100 }).notNull(),
   status: mysqlEnum("Status", ['Draft', 'In Review', 'Active']).default('\'Draft\'').notNull(),
-  createdAt: timestamp("Created_At", { mode: 'string' }).default('current_timestamp()'),
-  updatedAt: timestamp("Updated_At", { mode: 'string' }).default('current_timestamp()'),
+  createdAt: timestamp("Created_At", { mode: 'string' }).default(sql`CURRENT_TIMESTAMP`),
+  updatedAt: timestamp("Updated_At", { mode: 'string' }).default(sql`CURRENT_TIMESTAMP`),
 });
 
 export const itemsBlueprintVersion = mysqlTable("items_blueprint_version", {
   id: int("ID").notNull(),
   blueprintId: int("Blueprint_ID").notNull().references(() => itemsBlueprint.id, { onDelete: "restrict", onUpdate: "restrict" }),
   version: int("Version").notNull(),
-  attributes: longtext("Attributes").default('NULL'),
-  notes: text("Notes").default('NULL'),
-  createdAt: timestamp("Created_At", { mode: 'string' }).default('current_timestamp()'),
+  attributes: longtext("Attributes"),
+  notes: text("Notes"),
+  createdAt: timestamp("Created_At", { mode: 'string' }).default(sql`CURRENT_TIMESTAMP`),
 },
   (table) => [
     index("Blueprint_ID").on(table.blueprintId),
@@ -97,7 +97,7 @@ export const itemsBlueprintVersion = mysqlTable("items_blueprint_version", {
 
 export const itemsRarity = mysqlTable("items_rarity", {
   id: int("ID").autoincrement().notNull(),
-  name: varchar("Name", { length: 20 }).default('NULL'),
+  name: varchar("Name", { length: 20 }),
 },
   (table) => [
     unique("Name").on(table.name),
@@ -108,8 +108,8 @@ export const itemsVersion = mysqlTable("items_version", {
   itemId: int("Item_ID").notNull().references(() => items.id, { onDelete: "restrict", onUpdate: "restrict" }),
   blueprintVersionId: int("Blueprint_Version_ID").notNull().references(() => itemsBlueprintVersion.id, { onDelete: "restrict", onUpdate: "restrict" }),
   version: int("Version").notNull(),
-  attributes: longtext("Attributes").default('NULL'),
-  createdAt: timestamp("Created_At", { mode: 'string' }).default('current_timestamp()'),
+  attributes: longtext("Attributes"),
+  createdAt: timestamp("Created_At", { mode: 'string' }).default(sql`CURRENT_TIMESTAMP`),
 },
   (table) => [
     index("Item_ID").on(table.itemId),
@@ -122,8 +122,8 @@ export const monsters = mysqlTable("monsters", {
   pId: varchar({ length: 26 }).notNull(),
   blueprintId: int("Blueprint_ID").notNull().references(() => monstersBlueprint.id, { onDelete: "restrict", onUpdate: "restrict" }),
   version: int("Version").notNull(),
-  attributes: longtext("Attributes").default('NULL'),
-  createdAt: timestamp("Created_At", { mode: 'string' }).default('current_timestamp()'),
+  attributes: longtext("Attributes"),
+  createdAt: timestamp("Created_At", { mode: 'string' }).default(sql`CURRENT_TIMESTAMP`),
 },
   (table) => [
     index("Blueprint_ID").on(table.blueprintId),
@@ -135,17 +135,17 @@ export const monstersBlueprint = mysqlTable("monsters_blueprint", {
   id: int("ID").notNull(),
   name: varchar("Name", { length: 100 }).notNull(),
   status: mysqlEnum("Status", ['Draft', 'In Review', 'Active']).default('\'Draft\'').notNull(),
-  createdAt: timestamp("Created_At", { mode: 'string' }).default('current_timestamp()'),
-  updatedAt: timestamp("Updated_At", { mode: 'string' }).default('current_timestamp()'),
+  createdAt: timestamp("Created_At", { mode: 'string' }).default(sql`CURRENT_TIMESTAMP`),
+  updatedAt: timestamp("Updated_At", { mode: 'string' }).default(sql`CURRENT_TIMESTAMP`),
 });
 
 export const monstersBlueprintVersion = mysqlTable("monsters_blueprint_version", {
   id: int("ID").notNull(),
   blueprintId: int("Blueprint_ID").notNull().references(() => monstersBlueprint.id, { onDelete: "restrict", onUpdate: "restrict" }),
   version: int("Version").notNull(),
-  attributes: longtext("Attributes").default('NULL'),
-  notes: text("Notes").default('NULL'),
-  createdAt: timestamp("Created_At", { mode: 'string' }).default('current_timestamp()'),
+  attributes: longtext("Attributes"),
+  notes: text("Notes"),
+  createdAt: timestamp("Created_At", { mode: 'string' }).default(sql`CURRENT_TIMESTAMP`),
 },
   (table) => [
     index("Blueprint_ID").on(table.blueprintId),
@@ -157,8 +157,8 @@ export const monstersVersion = mysqlTable("monsters_version", {
   monsterId: int("Monster_ID").notNull().references(() => monsters.id, { onDelete: "restrict", onUpdate: "restrict" }),
   version: int("Version").notNull(),
   blueprintVersionId: int("Blueprint_Version_ID").notNull().references(() => monstersBlueprintVersion.id, { onDelete: "restrict", onUpdate: "restrict" }),
-  attributes: longtext("Attributes").default('NULL'),
-  createdAt: timestamp("Created_At", { mode: 'string' }).default('current_timestamp()'),
+  attributes: longtext("Attributes"),
+  createdAt: timestamp("Created_At", { mode: 'string' }).default(sql`CURRENT_TIMESTAMP`),
 },
   (table) => [
     index("Monster_ID").on(table.monsterId),
@@ -171,7 +171,7 @@ export const news = mysqlTable("news", {
   title: varchar("Title", { length: 500 }).notNull(),
   text: varchar("Text", { length: 10000 }).notNull(),
   userId: int("User_ID").notNull().references(() => users.id, { onDelete: "restrict", onUpdate: "restrict" }),
-  createdAt: timestamp("CreatedAt", { mode: 'string' }).default('current_timestamp()'),
+  createdAt: timestamp("CreatedAt", { mode: 'string' }).default(sql`CURRENT_TIMESTAMP`),
   modifiedAt: timestamp("ModifiedAt", { mode: 'string' }).default('0000-00-00 00:00:00'),
   deletedAt: timestamp("DeletedAt", { mode: 'string' }).default('0000-00-00 00:00:00'),
 });
@@ -186,9 +186,9 @@ export const users = mysqlTable("users", {
   pId: varchar({ length: 26 }).notNull(),
   nickname: varchar("Nickname", { length: 100 }).notNull(),
   accountId: int("Account_id").notNull().references((): AnyMySqlColumn => accounts.id, { onDelete: "restrict", onUpdate: "restrict" }),
-  deletedAt: timestamp("DeletedAt", { mode: 'string' }).default('NULL'),
-  createdAt: timestamp("CreatedAt", { mode: 'string' }).default('current_timestamp()'),
-  updatedAt: timestamp("UpdatedAt", { mode: 'string' }).default('current_timestamp()'),
+  deletedAt: timestamp("DeletedAt", { mode: 'string' }),
+  createdAt: timestamp("CreatedAt", { mode: 'string' }).default(sql`CURRENT_TIMESTAMP`),
+  updatedAt: timestamp("UpdatedAt", { mode: 'string' }).default(sql`CURRENT_TIMESTAMP`),
 },
   (table) => [
     unique("users_nickname_unique").on(table.nickname),
@@ -198,5 +198,5 @@ export const usersLogins = mysqlTable("users_logins", {
   id: int("ID").autoincrement().notNull(),
   userId: int("User_ID").notNull().references(() => users.id, { onDelete: "restrict", onUpdate: "restrict" }),
   timeStamp: datetime("TimeStamp", { mode: 'string' }).notNull(),
-  data: varchar("Data", { length: 1000 }).default('NULL'),
+  data: varchar("Data", { length: 1000 }),
 });
