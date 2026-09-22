@@ -25,7 +25,7 @@
     "@lunareclipse/eslint": "workspace:*",
     "@lunareclipse/typescript": "workspace:*",
     "@types/jest": "^30.0.0",
-    "@types/node": "^24.13.3",
+    "@types/node": "catalog:",
     "jest": "^30.5.0",
     "ts-jest": "^29.4.12",
     "tsx": "^4.23.13",

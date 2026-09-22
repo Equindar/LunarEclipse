@@ -15,6 +15,13 @@
       "when": 1757695497289,
       "tag": "0001_unknown_exodus",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1788439588172,
+      "tag": "0002_yielding_supreme_intelligence",
+      "breakpoints": true
     }
   ]
 }

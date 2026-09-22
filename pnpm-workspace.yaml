@@ -1,6 +1,10 @@
 packages:
   - "apps/*"
   - "apps/*/*"
+  - "!apps/deprecated"
   - "config/*"
   - "packages/*"
   - "packages/*/*"
+
+catalog:
+  "@types/node": 24.13.3

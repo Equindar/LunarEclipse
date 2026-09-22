@@ -18,7 +18,18 @@ function requireEnv(keys: RequiredEnvVar[]): void {
   }
 }
 
-requireEnv(['DISCORD_TOKEN', 'DISCORD_CLIENT_ID']);
+try {
+  requireEnv(['DISCORD_TOKEN', 'DISCORD_CLIENT_ID']);
+}
+catch (error) {
+  if (error instanceof MissingConfigurationError) {
+    console.error(error.message);
+  } else {
+    console.error('Unexpected error:', error);
+  }
+  process.exit(1);
+}
+
 
 const { SERVICE_NAME } = process.env;
 const { DISCORD_CLIENT_ID, DISCORD_TOKEN, DISCORD_SERVER_ID } = process.env;
