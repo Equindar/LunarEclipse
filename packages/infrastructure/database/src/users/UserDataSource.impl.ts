@@ -1,8 +1,7 @@
-// packages/infrastructure/database/src/users/UserDataSource.impl.ts
 import { and, eq, isNull } from 'drizzle-orm';
 import type { Database } from '../client.js';
 import { users } from '../../drizzle/migrations/schema.js';
-import type { UserDataSource, UserRow, NewUserRow } from './UserDataSource.interface.js';
+import type { UserDataSource, UserRow, NewUserRow } from './UserDataSource.js';
 
 export class UserDataSourceImpl implements UserDataSource {
   constructor(private readonly db: Database) { }

@@ -1,5 +1,5 @@
 import { User, UserRepository } from '@lunareclipse/features/users';
-import type { UserDataSource } from './UserDataSource.interface.js';
+import type { UserDataSource } from './UserDataSource.js';
 import { toDomain, toRow } from './UserMapper.js';
 
 export class UserRepositoryImpl implements UserRepository {
@@ -24,8 +24,8 @@ export class UserRepositoryImpl implements UserRepository {
   }
 
   async update(subject: User): Promise<User> {
-    if (subject.id === null) throw new Error('Cannot update user without id');
-    const row = await this.dataSource.updateById(subject.id, toRow(subject));
+    if (subject.uuid === null) throw new Error('Cannot update user without uuid');
+    const row = await this.dataSource.updateById(parseInt(subject.uuid.toString()), toRow(subject));
     return toDomain(row);
   }
 }

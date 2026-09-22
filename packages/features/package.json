@@ -21,6 +21,7 @@
     "check-types": "tsc --noEmit"
   },
   "devDependencies": {
-    "@lunareclipse/typescript": "workspace:*"
+    "@lunareclipse/typescript": "workspace:*",
+    "@lunareclipse/utilities": "workspace:*"
   }
 }

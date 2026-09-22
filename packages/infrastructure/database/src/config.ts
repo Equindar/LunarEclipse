@@ -14,6 +14,13 @@ const configuration = {
   user: DATABASE_USER,
   password: DATABASE_PASSWORD,
   database: DATABASE_NAME,
+  app: {
+    name: "Database ",
+  },
+  logging: {
+    level: "info",
+  },
+
 };
 
 export default configuration;

@@ -1,14 +1,20 @@
-import { ULID } from 'ulid';
+import { UserID } from '../value-objects/UserID';
+import { Email } from '../value-objects/Email';
 
 export class User {
-  constructor(
-    public readonly id: number | null,
-    public readonly uuid: ULID,
+  private constructor(
+    public readonly uuid: UserID,
     public readonly name: string,
-    public readonly email: string,
+    public readonly email: Email,
+    public readonly createdAt: Date,
   ) { }
 
-  static create(props: { uuid: ULID; name: string; email: string }): User {
-    return new User(null, props.uuid, props.name, props.email);
+  static create(props: { uuid: UserID; name: string; email: Email }): User {
+    return new User(
+      props.uuid,
+      props.name,
+      props.email,
+      new Date()
+    );
   }
 }

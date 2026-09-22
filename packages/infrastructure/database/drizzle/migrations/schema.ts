@@ -77,7 +77,7 @@ export const items = mysqlTable("items", {
 export const itemsBlueprint = mysqlTable("items_blueprint", {
   id: int("ID").notNull(),
   name: varchar("Name", { length: 100 }).notNull(),
-  status: mysqlEnum("Status", ['Draft', 'In Review', 'Active']).default('\'Draft\'').notNull(),
+  status: mysqlEnum("Status", ['Draft', 'In Review', 'Active']).default('Draft').notNull(),
   createdAt: timestamp("Created_At", { mode: 'string' }).default(sql`CURRENT_TIMESTAMP`),
   updatedAt: timestamp("Updated_At", { mode: 'string' }).default(sql`CURRENT_TIMESTAMP`),
 });
@@ -134,7 +134,7 @@ export const monsters = mysqlTable("monsters", {
 export const monstersBlueprint = mysqlTable("monsters_blueprint", {
   id: int("ID").notNull(),
   name: varchar("Name", { length: 100 }).notNull(),
-  status: mysqlEnum("Status", ['Draft', 'In Review', 'Active']).default('\'Draft\'').notNull(),
+  status: mysqlEnum("Status", ['Draft', 'In Review', 'Active']).default('Draft').notNull(),
   createdAt: timestamp("Created_At", { mode: 'string' }).default(sql`CURRENT_TIMESTAMP`),
   updatedAt: timestamp("Updated_At", { mode: 'string' }).default(sql`CURRENT_TIMESTAMP`),
 });

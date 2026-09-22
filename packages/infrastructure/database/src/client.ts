@@ -2,6 +2,7 @@ import { drizzle, type MySql2Database } from 'drizzle-orm/mysql2';
 import mysql from 'mysql2/promise';
 import configuration from './config.js';
 import * as schema from '../drizzle/migrations/schema.js';
+import logger from './utils/logger.js';
 
 export type Database = MySql2Database<typeof schema>;
 
@@ -11,6 +12,11 @@ export const createDatabaseConnection = (): Database => {
   return drizzle(pool, {
     schema,
     mode: 'default',
+    logger: {
+      logQuery(query, params) {
+        logger.log('SQL Query', { query, params });
+      },
+    },
   });
 };
 

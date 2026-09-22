@@ -1,11 +1,20 @@
-import { User } from '@lunareclipse/features/users';
-import type { UserRow } from './UserDataSource.interface.js';
+import { asEmail, User, asUserID } from '@lunareclipse/features/users';
+import { UserRow } from './UserDataSource.';
 
-export const toDomain = (row: UserRow): User =>
-  new User(row.id, row.uuid as User['uuid'], row.name, row.email);
 
-export const toRow = (user: User): Omit<UserRow, 'id'> => ({
-  uuid: user.uuid,
-  name: user.name,
-  email: user.email,
-});
+export const toDomain = (row: UserRow): User => {
+  return User.create({
+    uuid: asUserID(row.pId),
+    name: row.nickname,
+    email: asEmail("row.email"), // ToDo
+  })
+};
+
+
+export const toRow = (user: User): Omit<UserRow, 'id'> => (
+//   {
+//   pId: user.uuid.toString(),
+//   nickname: user.name,
+//   email: user.email.toString(),
+// }
+);
