@@ -1,4 +1,3 @@
-// src/i18next.d.ts
 import 'i18next';
 import common from '../locales/en/common';
 

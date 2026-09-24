@@ -42,6 +42,23 @@
       "skipFiles": [
         "<node_internals>/**"
       ]
+    },
+    {
+      "name": "Debug Api [tsx]",
+      "type": "node",
+      "request": "launch",
+      "runtimeExecutable": "pnpm",
+      "runtimeArgs": [
+        "exec",
+        "tsx",
+        "src/index.ts"
+      ],
+      "cwd": "${workspaceFolder}/apps/api",
+      "console": "integratedTerminal",
+      "sourceMaps": true,
+      "skipFiles": [
+        "<node_internals>/**"
+      ]
     }
   ]
 }

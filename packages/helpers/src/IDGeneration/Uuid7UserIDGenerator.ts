@@ -1,6 +1,6 @@
 import { randomUUID } from 'node:crypto';
 import { type UserID, asUserID } from "@lunareclipse/features/users";
-import { IdGenerator } from "./IdGenerator";
+import { type IdGenerator } from "@lunareclipse/features/users";
 
 export class Uuid7UserIDGenerator implements IdGenerator<UserID> {
   generate(): UserID {

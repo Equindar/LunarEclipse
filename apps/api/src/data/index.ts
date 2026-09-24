@@ -3,6 +3,7 @@ import { cors } from 'hono/cors'
 // import { todos } from './routes/todos'
 import health from './routes/health.route'
 import status from './routes/status.route'
+import user from './routes/user.route'
 import { NotFoundError } from './errors/NotFoundError';
 
 export const data = new Hono()
@@ -14,6 +15,7 @@ export const data = new Hono()
   // --- Registering Routes
   .route('/health', health)
   .route('/status', status)
+  .route('/users', user)
 
   .notFound((c) => c.json({ error: 'Not found' }, 404))
   .onError((err, c) => {

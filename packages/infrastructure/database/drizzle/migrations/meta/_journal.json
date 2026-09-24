@@ -5,22 +5,8 @@
     {
       "idx": 0,
       "version": "5",
-      "when": 1757083427845,
-      "tag": "0000_charming_lilith",
-      "breakpoints": true
-    },
-    {
-      "idx": 1,
-      "version": "5",
-      "when": 1757695497289,
-      "tag": "0001_unknown_exodus",
-      "breakpoints": true
-    },
-    {
-      "idx": 2,
-      "version": "5",
-      "when": 1788439588172,
-      "tag": "0002_yielding_supreme_intelligence",
+      "when": 1790173922425,
+      "tag": "0000_good_sunfire",
       "breakpoints": true
     }
   ]

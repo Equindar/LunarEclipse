@@ -1,15 +1,16 @@
 import { languageDetector, type DetectorOptions } from 'hono/language';
+import { supportedLanguages, fallbackLanguage } from '@lunareclipse/i18n';
 
 const detectorOptions: DetectorOptions = {
-  order: [],
+  order: ['cookie', 'header'],
+  lookupCookie: 'lang',
   lookupQueryString: '',
-  lookupCookie: '',
   lookupFromPathIndex: 0,
-  lookupFromHeaderKey: '',
+  lookupFromHeaderKey: 'accept-language',
   caches: false,
-  ignoreCase: false,
-  fallbackLanguage: 'en',
-  supportedLanguages: ['de', 'en'],
+  ignoreCase: true,
+  fallbackLanguage,
+  supportedLanguages: [...supportedLanguages],
 };
 
 export const languageMiddleware = languageDetector(detectorOptions);

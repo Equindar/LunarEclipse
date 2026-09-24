@@ -6,6 +6,8 @@ export class UserRepositoryImpl implements UserRepository {
   constructor(private readonly dataSource: UserDataSource) { }
 
   async create(subject: User): Promise<boolean> {
+    console.log('UserRepositoryImpl.create called with subject:', subject);
+    return false;
     return this.dataSource.insert(toRow(subject));
   }
 
