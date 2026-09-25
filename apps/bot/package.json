@@ -28,7 +28,7 @@
     "@types/node": "catalog:",
     "jest": "^30.5.0",
     "ts-jest": "^29.4.12",
-    "tsx": "^4.23.13",
+    "tsx": "catalog:",
     "typescript": "^5.9.3"
   }
 }

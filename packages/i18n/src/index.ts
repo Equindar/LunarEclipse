@@ -1,12 +1,15 @@
-import i18next, { i18n, InitOptions, Namespace } from 'i18next';
+// --- Imports
+import i18next, { i18n, InitOptions } from 'i18next';
 import { SupportedLanguage } from './languages';
 import { instanceCache, resourceCache } from './cache/cache';
+// Side-Effect-Import
+import './i18next.d.ts';
 
 // --- Exports
 export { supportedLanguages, fallbackLanguage, toSupportedLanguage } from './languages';
 export type { SupportedLanguage } from './languages';
 
-export type SupportedNamespaces = 'common' | 'account';
+export type SupportedNamespaces = 'common' | 'admin';
 
 async function loadNamespace(language: SupportedLanguage, namespace: SupportedNamespaces) {
   const key = `${language}:${namespace}`;

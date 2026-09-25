@@ -3,6 +3,7 @@ import { csrf } from 'hono/csrf'
 import { secureHeaders } from 'hono/secure-headers'
 import { pages } from './routes/hello.route'
 import { languageMiddleware } from './middleware/language.middleware';
+import languageRouter from './routes/language.route';
 
 export const web = new Hono();
 
@@ -14,6 +15,7 @@ web.use(languageMiddleware);
 
 // --- Registering Routes
 web.route('/hello', pages);         // GET /  → komplette HTML-Seite
+web.route('/language', languageRouter)
 //  .route('/ds/todos', todos); // Datastar-Endpoints → SSE
 
 

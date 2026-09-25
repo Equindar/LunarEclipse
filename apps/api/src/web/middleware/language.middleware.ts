@@ -3,7 +3,7 @@ import { supportedLanguages, fallbackLanguage } from '@lunareclipse/i18n';
 
 const detectorOptions: DetectorOptions = {
   order: ['cookie', 'header'],
-  lookupCookie: 'lang',
+  lookupCookie: 'language',
   lookupQueryString: '',
   lookupFromPathIndex: 0,
   lookupFromHeaderKey: 'accept-language',

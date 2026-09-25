@@ -9,10 +9,13 @@
   },
   "scripts": {
     "lint": "eslint . --max-warnings 0",
-    "check-types": "tsc --noEmit"
+    "check-types": "tsc --noEmit",
+    "check:translations": "tsx ./scripts/checkTranslations.ts"
   },
   "devDependencies": {
-    "@lunareclipse/typescript": "workspace:*"
+    "@lunareclipse/typescript": "workspace:*",
+    "@lunareclipse/utilities": "workspace:*",
+    "tsx": "catalog:"
   },
   "dependencies": {
     "i18next": "^25.4.1"

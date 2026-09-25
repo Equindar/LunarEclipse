@@ -32,7 +32,7 @@
   "devDependencies": {
     "@lunareclipse/typescript": "workspace:*",
     "drizzle-kit": "0.30.4",
-    "tsx": "^4.23.13"
+    "tsx": "catalog:"
   },
   "dependencies": {
     "@lunareclipse/features": "workspace:*",

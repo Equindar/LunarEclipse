@@ -8,3 +8,4 @@ packages:
 
 catalog:
   "@types/node": 24.13.3
+  "tsx": "^4.23.13"
