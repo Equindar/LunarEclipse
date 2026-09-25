@@ -24,6 +24,7 @@
   "scripts": {
     "db:gen": "drizzle-kit generate",
     "db:pull": "drizzle-kit pull && tsx scripts/fix-drizzle-schema.ts drizzle/migrations/schema.ts",
+    "db:push": "drizzle-kit push",
     "db:migrate": "tsx ./scripts/migrate.ts",
     "db:fix-schema": "tsx ./scripts/fix-drizzle-schema.ts",
     "check-types": "tsc --noEmit"
@@ -31,7 +32,7 @@
   "devDependencies": {
     "@lunareclipse/typescript": "workspace:*",
     "drizzle-kit": "0.30.4",
-    "tsx": "^4.23.13"
+    "tsx": "catalog:"
   },
   "dependencies": {
     "@lunareclipse/features": "workspace:*",

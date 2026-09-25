@@ -1,5 +1,6 @@
 import type { PropsWithChildren } from 'hono/jsx'
 import { raw } from 'hono/html'
+import { AppBar } from './AppBar';
 
 const DATASTAR_SRC =
   'https://cdn.jsdelivr.net/gh/starfederation/datastar@1.0.3/bundles/datastar.js'
@@ -19,7 +20,9 @@ export const Layout = ({ title = 'App', children }: LayoutProps) => (
         <script type="module" src={DATASTAR_SRC}></script>
       </head>
       <body>
-        <main id="app">{children}</main>
+        <main id="app">
+          {children}
+        </main>
       </body>
     </html>
   </>

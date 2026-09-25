@@ -18,6 +18,8 @@
 # Ausnahme: Infrastructure Cache
 !packages/infrastructure/cache/
 !packages/infrastructure/cache/**
+!packages/i18n/src/cache/
+!packages/i18n/src/cache/**
 
 # --- authentification / keys
 *.pem

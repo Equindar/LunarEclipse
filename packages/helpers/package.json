@@ -1,5 +1,5 @@
 {
-  "name": "@lunareclipse/utilities",
+  "name": "@lunareclipse/helpers",
   "version": "1.0.0",
   "private": true,
   "type": "module",
@@ -12,6 +12,7 @@
     "check-types": "tsc --noEmit"
   },
   "devDependencies": {
+    "@lunareclipse/features": "workspace:*",
     "@lunareclipse/typescript": "workspace:*",
     "@types/node": "catalog:"
   }

@@ -1,5 +1,5 @@
 import { asEmail, User, asUserID } from '@lunareclipse/features/users';
-import { UserRow } from './UserDataSource.';
+import { UserRow } from './UserDataSource.js';
 
 
 export const toDomain = (row: UserRow): User => {
@@ -11,10 +11,18 @@ export const toDomain = (row: UserRow): User => {
 };
 
 
-export const toRow = (user: User): Omit<UserRow, 'id'> => (
-//   {
-//   pId: user.uuid.toString(),
-//   nickname: user.name,
-//   email: user.email.toString(),
-// }
-);
+export const toRow = (user: User): Omit<UserRow, 'id'> => {
+  return {
+    accountId: 0, // ToDo
+    createdAt: "user.createdAt",
+    updatedAt: "user.updatedAt",
+    pId: " ",
+    nickname: user.name,
+    deletedAt: null,
+  };
+  // return {
+  //   pId: user.uuid.toString(),
+  //   nickname: user.name,
+  //   // email: user.email.toString(),
+  // };
+};

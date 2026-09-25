@@ -26,6 +26,7 @@ catch (error) {
 
 const { SERVICE_NAME, PORT } = process.env;
 const { LOG_LEVEL, LOG_DIRECTORY } = process.env;
+const { DATABASE_HOST, DATABASE_USER, DATABASE_PASSWORD, DATABASE_NAME } = process.env;
 
 const configuration = {
   app: {
@@ -36,6 +37,12 @@ const configuration = {
     level: LOG_LEVEL,
     directory: LOG_DIRECTORY,
   },
+  database: {
+    host: DATABASE_HOST,
+    user: DATABASE_USER,
+    password: DATABASE_PASSWORD,
+    database: DATABASE_NAME,
+  }
 };
 
 export default configuration;

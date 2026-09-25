@@ -6,8 +6,18 @@ import logger from './utils/logger.js';
 
 export type Database = MySql2Database<typeof schema>;
 
+const poolOptions: mysql.PoolOptions = {
+  host: configuration.database.host,
+  user: configuration.database.user,
+  password: configuration.database.password,
+  database: configuration.database.name,
+  waitForConnections: true,
+  connectionLimit: 10,
+  queueLimit: 0,
+};
+
 export const createDatabaseConnection = (): Database => {
-  const pool = mysql.createPool(configuration);
+  const pool = mysql.createPool(poolOptions);
 
   return drizzle(pool, {
     schema,

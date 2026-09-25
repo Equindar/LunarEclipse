@@ -1,4 +1,4 @@
-import { defineConfig } from 'drizzle-kit';
+import { type Config, defineConfig } from 'drizzle-kit';
 import dotenv from 'dotenv';
 
 // --- Init
@@ -9,7 +9,7 @@ if (!DATABASE_HOST || !DATABASE_USER || !DATABASE_PASSWORD || !DATABASE_NAME) {
   throw new Error('Missing enviroment variables');
 }
 
-export default defineConfig({
+const config: Config = {
   schema: './drizzle/migrations/schema.ts',
   out: './drizzle/migrations',
   dialect: 'mysql',
@@ -19,6 +19,11 @@ export default defineConfig({
     password: DATABASE_PASSWORD,
     database: DATABASE_NAME,
   },
+  migrations: {
+    table: 'drizzle_journal'
+  },
   verbose: true,
   strict: true,
-});
+}
+
+export default defineConfig(config);
