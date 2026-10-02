@@ -1,6 +1,6 @@
 import { Hono } from 'hono'
 import { data } from './data/index.js'
-import { web } from './web/index.js';
+import { web } from './www/index.js';
 import type { HonoOptions } from 'hono/hono-base';
 import { requestId, type RequestIdVariables } from 'hono/request-id';
 import responseTimeMiddleware from './shared/middleware/custom.middleware.js';

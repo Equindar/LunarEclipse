@@ -24,7 +24,7 @@ export const createDatabaseConnection = (): Database => {
     mode: 'default',
     logger: {
       logQuery(query, params) {
-        logger.log('SQL Query', { query, params });
+        logger.debug('SQL Query', { query, params });
       },
     },
   });

@@ -1,8 +1,8 @@
 import { User } from '../../core/entities/User.js';
 import type { UserID } from '../../core/value-objects/UserID.js';
 import type { CreateUserUseCase, CreateUserInput, CreateUserOutput } from '../../core/usecases/CreateUserUsecase.js';
-import { IdGenerator } from '../../core/ports/IdGenerator.js';
-import { UserRepository } from '../../core/repositories/UserRepository.js';
+import type { IdGenerator } from '../../core/ports/IdGenerator.js';
+import type { UserRepository } from '../../core/repositories/UserRepository.js';
 import { asEmail } from '../../core/value-objects/Email.js';
 
 
