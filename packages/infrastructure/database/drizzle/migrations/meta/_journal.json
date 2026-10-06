@@ -5,8 +5,29 @@
     {
       "idx": 0,
       "version": "5",
-      "when": 1790173922425,
-      "tag": "0000_good_sunfire",
+      "when": 1791190079417,
+      "tag": "0000_mighty_captain_cross",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "5",
+      "when": 1791190207648,
+      "tag": "0001_graceful_enchantress",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1791207458631,
+      "tag": "0002_abandoned_shadow_king",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "5",
+      "when": 1791273194393,
+      "tag": "0003_parched_vulture",
       "breakpoints": true
     }
   ]

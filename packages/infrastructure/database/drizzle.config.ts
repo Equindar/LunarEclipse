@@ -10,17 +10,18 @@ if (!DATABASE_HOST || !DATABASE_USER || !DATABASE_PASSWORD || !DATABASE_NAME) {
 }
 
 const config: Config = {
-  schema: './drizzle/migrations/schema.ts',
+  schema: './drizzle/schema',
   out: './drizzle/migrations',
   dialect: 'mysql',
   dbCredentials: {
     host: DATABASE_HOST,
+    port: 3306,
     user: DATABASE_USER,
     password: DATABASE_PASSWORD,
     database: DATABASE_NAME,
   },
   migrations: {
-    table: 'drizzle_journal'
+    table: '_drizzle_journal'
   },
   verbose: true,
   strict: true,
