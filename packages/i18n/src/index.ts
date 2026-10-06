@@ -54,6 +54,19 @@ async function createI18n(
     defaultNS: 'common',
     ns: namespaces,
     interpolation: { escapeValue: false },
+
+    // Aktiviert das Auslösen von missingKeyHandler bei fehlenden Keys
+    saveMissing: true,
+
+    // Wird aufgerufen, sobald ein Key in der aktiven Sprache fehlt
+    missingKeyHandler: (lngs, namespace, key) => {
+      console.warn(
+        `[i18n] Fehlende Übersetzung: Key "${key}" in Namespace "${namespace}" für Sprache(n) [${lngs.join(', ')}]`
+      );
+    },
+
+    // Formatiert den Rückgabewert von t(), wenn der Key fehlt
+    parseMissingKeyHandler: (key) => `{{MissingTranslation: ${key}}}`,
   };
 
   await instance.init(options);

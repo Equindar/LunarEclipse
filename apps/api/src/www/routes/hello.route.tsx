@@ -5,7 +5,7 @@ import { AppBar } from '../components/AppBar';
 
 export const pages = new Hono().get('/', async (c) => {
   const language = toSupportedLanguage(c.get('language'));
-  const i18n = await createI18n(language, ['common', 'admin']);
+  const i18n = await createI18n(language, ['common']);
   const t = i18n.t.bind(i18n);
 
   return c.html(

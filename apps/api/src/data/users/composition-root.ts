@@ -7,4 +7,4 @@ const db = await createDatabaseConnection();
 const idGenerator = new Uuid7UserIDGenerator();
 const userRepository = await createUserRepository(db);
 
-const createUserUseCase = new CreateUser(userRepository, idGenerator);
+export const createUserUseCase = new CreateUser(userRepository, idGenerator);

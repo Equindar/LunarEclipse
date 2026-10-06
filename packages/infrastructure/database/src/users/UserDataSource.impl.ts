@@ -23,12 +23,19 @@ export class UserDataSourceImpl implements UserDataSource {
     return row ?? null;
   }
 
-  async findByPId(pId: string): Promise<UserRow | null> {
-    const [row] = await this.db
-      .select()
-      .from(users)
-      .where(and(eq(users.pId, pId), isNull(users.deletedAt)));
-    return row ?? null;
+  async findByPId(uuid: string): Promise<UserRow | null> {
+    try {
+      const [row] = await this.db
+        .select()
+        .from(users)
+        .where(and(eq(users.pId, uuid), isNull(users.deletedAt)));
+
+      return row ?? null;
+    }
+    catch {
+      throw new Error("Error in UserDataSourceImpl.findByPId()")
+
+    }
   }
 
   async updateById(id: number, row: Partial<NewUserRow>): Promise<UserRow> {

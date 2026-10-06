@@ -22,7 +22,9 @@ export class UserRepositoryImpl implements UserRepository {
   }
 
   async getByUuid(uuid: User['uuid']): Promise<User | null> {
-    throw new Error('Method not implemented.');
+    console.log('UserRepositoryImpl.getByUuid called with uuid:', uuid);
+    const row = await this.dataSource.findByPId(uuid);
+    return row ? toDomain(row) : null;
   }
 
   async update(subject: User): Promise<User> {

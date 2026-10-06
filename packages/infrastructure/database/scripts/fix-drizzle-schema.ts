@@ -1,5 +1,5 @@
-import { readFile, writeFile } from 'fs/promises';
 import { existsSync } from 'fs';
+import { readFile, writeFile } from 'fs/promises';
 import { resolve } from 'path';
 
 /**
@@ -12,17 +12,17 @@ import { resolve } from 'path';
  *     Fügt bei Bedarf automatisch `import { sql } from 'drizzle-orm';` hinzu.
  *
  * Nutzung:
- *   ts-node fix-drizzle-schema.ts [pfad/zur/schema.ts]
+ *   npx tsx fix-drizzle-schema.ts [pfad/zur/schema.ts]
  *
- * Standardpfad, falls kein Argument übergeben wird: ./src/db/schema.ts
+ * Standardpfad, falls kein Argument übergeben wird: ./drizzle/migrations/schema.ts
  */
 
-const targetPath = resolve(process.argv[2] ?? './src/db/schema.ts');
+const targetPath = resolve(process.argv[2] ?? './drizzle/migrations/schema.ts');
 
 const main = async () => {
   if (!existsSync(targetPath)) {
     throw new Error(
-      `Datei nicht gefunden: ${targetPath}\nNutzung: ts-node fix-drizzle-schema.ts [pfad/zur/schema.ts]`,
+      `Datei nicht gefunden: ${targetPath}\nNutzung: npx tsx  fix-drizzle-schema.ts [pfad/zur/schema.ts]`,
     );
   }
 
@@ -88,12 +88,8 @@ const main = async () => {
 
   console.log(`${targetPath} bereinigt:`);
   console.log(`  - ${removedNullDefaults}x .default('NULL') entfernt`);
-  console.log(
-    `  - ${fixedTimestampDefaults}x .default('current_timestamp()') -> sql\`CURRENT_TIMESTAMP\` korrigiert`,
-  );
-  console.log(
-    `  - ${fixedQuotedDefaults}x doppelt-escapete Default-Strings (z. B. Enum-Defaults) bereinigt`,
-  );
+  console.log(`  - ${fixedTimestampDefaults}x .default('current_timestamp()') -> sql\`CURRENT_TIMESTAMP\` korrigiert`);
+  console.log(`  - ${fixedQuotedDefaults}x doppelt-escapete Default-Strings (z. B. Enum-Defaults) bereinigt`);
 };
 
 main().catch((error) => {
