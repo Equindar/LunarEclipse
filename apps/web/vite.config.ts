@@ -3,10 +3,18 @@ import { defineConfig } from 'vite';
 
 export default defineConfig({
   plugins: [tailwindcss()],
+  publicDir: false,
   build: {
-    manifest: true,
-    outDir: 'dist/client',
-    rollupOptions: { input: 'src/client/main.ts' },
+    outDir: 'build/client',
+    emptyOutDir: true,
+    manifest: true, // erzeugt build/client/.vite/manifest.json
+    rollupOptions: {
+      input: 'src/www/index.ts',
+    },
   },
-  server: { port: 5173, cors: true },
+  server: {
+    port: 5173,
+    strictPort: true,
+    cors: true,
+  },
 })

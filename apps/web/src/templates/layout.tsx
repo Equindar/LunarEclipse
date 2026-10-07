@@ -1,15 +1,29 @@
-import { assetTags } from '../assets';
+import type { PropsWithChildren } from 'hono/jsx';
+import { assetTags, DATASTAR_SRC } from '../utils/assetTags.js';
 
-export const Base = ({ children }: { children?: any }) => {
+type LayoutProps = PropsWithChildren<{
+  title?: string
+}>
+
+export const Layout = ({ title = 'Web', children }: LayoutProps) =>  {
   const { js, css } = assetTags()
   return (
     <html lang="de">
       <head>
         <meta charset="utf-8" />
+        <title>{title}</title>
+        <script type="module" src={DATASTAR_SRC}></script>
         {css.map(href => <link rel="stylesheet" href={href} />)}
-        {js.map(src => <script type="module" src={src} />)}
+        {js.map(src => <script type="module" src={src}></script>)}
       </head>
-      <body class="min-h-screen bg-slate-50 text-slate-900">{children}</body>
+      <body class="min-h-screen bg-slate-50 text-slate-900">
+        <main id="app">
+          <h1 class="text-3xl font-bold underline">
+            Hello world!
+          </h1>
+          {children}
+        </main>
+      </body>
     </html>
   )
 }
