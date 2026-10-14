@@ -1,5 +1,6 @@
 import { createLogger as createWinstonLogger, type Logger } from 'winston';
 import { baseFormat } from './format';
+import { customLevels, registerLevelColors } from './levels';
 import { createConsoleTransport, createRotateFileTransport } from './transports';
 
 export interface LoggerOptions {
@@ -14,9 +15,12 @@ export interface LoggerOptions {
 }
 
 export function createLogger(options: LoggerOptions): Logger {
+  registerLevelColors();
+
   const level = options.level ?? (process.env.NODE_ENV === 'production' ? 'info' : 'debug');
 
   const logger = createWinstonLogger({
+    levels: customLevels.levels,
     level,
     defaultMeta: { service: options.service },
     format: baseFormat(),
@@ -53,5 +57,6 @@ export function createLogger(options: LoggerOptions): Logger {
 
 // Re-Export für App-seitige Erweiterungen (eigene Transports, Tests, etc.)
 export { baseFormat, consoleFormat, fileJsonFormat } from './format';
+export { customLevels } from "./levels";
 export { createConsoleTransport, createRotateFileTransport } from './transports';
 export type { Logger } from 'winston';

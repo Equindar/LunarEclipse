@@ -4,32 +4,34 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev:client": "vite",
-    "dev:server": "tsx watch src/index.ts",
-    "build": "npm run build:client && npm run build:server",
+    "dev": "vite",
+    "build": "vite build && tsc -p tsconfig.build.json",
     "build:client": "vite build",
     "build:server": "tsc -p tsconfig.build.json",
     "start": "NODE_ENV=production node build/server/index.js",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "@lunareclipse/logging": "workspace:*",
     "@hono/node-server": "^1.13.0",
+    "dotenv": "^17.4.2",
     "hono": "^4.6.0",
     "zod": "^4.0.0"
   },
   "devDependencies": {
+    "@hono/vite-dev-server": "^0.26.1",
+    "@lunareclipse/database": "workspace:*",
     "@lunareclipse/design": "workspace:*",
     "@lunareclipse/eslint": "workspace:*",
-    "@lunareclipse/typescript": "workspace:*",
-    "@lunareclipse/helpers": "workspace:*",
     "@lunareclipse/features": "workspace:*",
-    "@lunareclipse/database": "workspace:*",
+    "@lunareclipse/helpers": "workspace:*",
     "@lunareclipse/i18n": "workspace:*",
-    "@tailwindcss/vite": "^4.0.0",
-    "tailwindcss": "^4.0.0",
+    "@lunareclipse/typescript": "workspace:*",
+    "@tailwindcss/vite": "^4.3.3",
     "@types/node": "catalog:",
+    "tailwindcss": "^4.3.3",
     "tsx": "catalog:",
     "typescript": "^5.6.0",
-    "vite": "^7.0.0"
+    "vite": "^7.3.7"
   }
 }

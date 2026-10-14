@@ -4,18 +4,30 @@
   "private": true,
   "type": "module",
   "exports": {
-    "types": "./src/index.ts",
-    "default": "./src/index.ts"
+    ".": {
+      "types": "./build/index.d.mts",
+      "import": "./build/index.mjs"
+    }
   },
+  "files": [
+    "build"
+  ],
   "scripts": {
+    "build": "tsdown",
+    "dev": "tsdown --watch",
     "lint": "eslint . --max-warnings 0",
     "check-types": "tsc --noEmit"
   },
   "devDependencies": {
-    "@lunareclipse/typescript": "workspace:*"
+    "@lunareclipse/typescript": "workspace:*",
+    "@types/node": "catalog:",
+    "tsdown": "^0.23.0"
   },
   "dependencies": {
     "winston": "^3.19.0",
     "winston-daily-rotate-file": "^5.0.0"
+  },
+  "engines": {
+    "node": ">=24.16.0"
   }
 }

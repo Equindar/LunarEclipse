@@ -1,10 +1,10 @@
 import { serve } from '@hono/node-server';
-import api from './app.js';
+import app from './app.js';
 import configuration from './config.js';
 
 serve(
   {
-    fetch: api.fetch,
+    fetch: app.fetch,
     port: configuration.app.port,
   },
   (info) => {

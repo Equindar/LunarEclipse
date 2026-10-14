@@ -3,6 +3,7 @@
   "ui": "tui",
   "tasks": {
     "build": {
+      "outputLogs": "new-only",
       "dependsOn": [
         "^build"
       ],
@@ -10,7 +11,7 @@
         "$TURBO_DEFAULT$",
         ".env*"
       ],
-      "outputs": []
+      "outputs": ["build/**"]
     },
     "lint": {
       "dependsOn": [
@@ -19,10 +20,13 @@
     },
     "check-types": {
       "dependsOn": [
-        "^check-types"
+        "^check-types",
+        "^build"
       ]
     },
     "dev": {
+      "outputLogs": "new-only",
+      "dependsOn": ["^build"],
       "cache": false,
       "persistent": true
     }

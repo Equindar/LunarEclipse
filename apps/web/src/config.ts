@@ -2,7 +2,9 @@ import dotenv from 'dotenv';
 import { MissingConfigurationError } from './errors/MissingConfigurationError.js';
 
 // --- Init
-dotenv.config();
+dotenv.config({
+  quiet: true
+});
 
 type RequiredEnvVar = 'PORT';
 

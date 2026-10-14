@@ -1,15 +1,16 @@
 // --- Imports
 import i18next, { i18n, InitOptions } from 'i18next';
-import { SupportedLanguage } from './languages';
 import { instanceCache, resourceCache } from './cache/cache';
+import { SupportedLanguage } from './languages';
 // Side-Effect-Import
 import './i18next.d.ts';
+import { MissingKeyInfo } from './types/MissingKeyInfo';
 
 // --- Exports
-export { supportedLanguages, fallbackLanguage, toSupportedLanguage } from './languages';
+export { fallbackLanguage, supportedLanguages, toSupportedLanguage } from './languages';
 export type { SupportedLanguage } from './languages';
-
 export type SupportedNamespaces = 'common' | 'admin';
+
 
 async function loadNamespace(language: SupportedLanguage, namespace: SupportedNamespaces) {
   const key = `${language}:${namespace}`;
@@ -28,8 +29,22 @@ async function loadNamespace(language: SupportedLanguage, namespace: SupportedNa
   return mod.default;
 }
 
+
+let onMissingKey: ((info: MissingKeyInfo) => void) | undefined;
+
+export function setMissingKeyHandler(handler: (info: MissingKeyInfo) => void) {
+  onMissingKey = handler;
+}
+
+
+/**
+ * Factory for creating i18n Instance
+ * @param preferredLanguage default: 'en'
+ * @param namespaces default: 'common'
+ * @returns Promise of i18n Instance
+ */
 async function createI18n(
-  preferredLanguage: SupportedLanguage,
+  preferredLanguage: SupportedLanguage = 'en',
   namespaces: SupportedNamespaces[] = ['common']
 ): Promise<i18n> {
   const cacheKey = `${preferredLanguage}:${namespaces.slice().sort().join(',')}`;
@@ -54,15 +69,12 @@ async function createI18n(
     defaultNS: 'common',
     ns: namespaces,
     interpolation: { escapeValue: false },
+    showSupportNotice: false,
 
     // Aktiviert das Auslösen von missingKeyHandler bei fehlenden Keys
     saveMissing: true,
-
-    // Wird aufgerufen, sobald ein Key in der aktiven Sprache fehlt
     missingKeyHandler: (lngs, namespace, key) => {
-      console.warn(
-        `[i18n] Fehlende Übersetzung: Key "${key}" in Namespace "${namespace}" für Sprache(n) [${lngs.join(', ')}]`
-      );
+      onMissingKey?.({ lngs, namespace, key });
     },
 
     // Formatiert den Rückgabewert von t(), wenn der Key fehlt

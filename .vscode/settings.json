@@ -1,0 +1,8 @@
+{
+  "files.associations": {
+    "*.css": "tailwindcss"
+  },
+  "json.schemaDownload.trustedDomains": {
+    "https://turborepo.dev/": true
+},
+}

@@ -13,7 +13,6 @@ interface ManifestEntry {
 type Manifest = Record<string, ManifestEntry>
 
 const ENTRY = 'src/www/index.ts'
-const VITE_ORIGIN = 'http://localhost:5173'
 
 const isDev = process.env.NODE_ENV !== 'production'
 
@@ -25,11 +24,8 @@ export const DATASTAR_SRC = '/datastar-v1.0.4.js'
 
 export function assetTags(): AssetTags {
   if (!manifest) {
-    return {
-      js: [`${VITE_ORIGIN}/@vite/client`, `${VITE_ORIGIN}/${ENTRY}`],
-      css: [],
-    }
-  }
+    return { js: [`/${ENTRY}`], css: [] }
+}
 
   const entry = manifest[ENTRY]
   if (!entry) {

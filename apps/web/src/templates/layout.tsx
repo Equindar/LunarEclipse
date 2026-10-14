@@ -16,11 +16,8 @@ export const Layout = ({ title = 'Web', children }: LayoutProps) =>  {
         {css.map(href => <link rel="stylesheet" href={href} />)}
         {js.map(src => <script type="module" src={src}></script>)}
       </head>
-      <body class="min-h-screen bg-slate-50 text-slate-900">
+      <body class="min-h-screen bg-slate-50 text-slate-900 dark:bg-slate-800 dark:text-amber-50">
         <main id="app">
-          <h1 class="text-3xl font-bold underline">
-            Hello world!
-          </h1>
           {children}
         </main>
       </body>
