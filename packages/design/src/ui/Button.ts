@@ -1,6 +1,9 @@
+import type { Children } from "../types/Children";
 import { cn } from "../utils/cn";
 import { escapeHtml } from "../utils/escapeHtml";
+import { renderChildren } from "../utils/renderChildren";
 import { type HtmlAttributes, renderAttributes } from "../utils/renderHtmlAttributes";
+import { tw } from "../utils/tw";
 
 // --- Types
 export type ButtonSize = "default" | "sm" | "lg" | "icon";
@@ -33,7 +36,7 @@ export interface ButtonArgs {
   /** Type: "button" | "submit" | "reset" */
   type?: "button" | "submit" | "reset" | "";
   /** Inhalt des Buttons (bereits fertiges HTML/Text) */
-  children?: string;
+  children?: Children;
 }
 
 
@@ -41,7 +44,7 @@ const baseClasses =
   "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive";
 
 const variantClasses: Record<ButtonVariant, string> = {
-  default: "bg-primary text-primary-foreground shadow-xs hover:bg-primary/90",
+  default: tw`bg-primary text-primary-foreground shadow-xs hover:bg-primary/90`,
   destructive:
     "bg-destructive text-white shadow-xs hover:bg-destructive/90 focus-visible:ring-destructive/20 dark:focus-visible:ring-destructive/40",
   outline:
@@ -81,7 +84,7 @@ export function Button(args: ButtonArgs): string {
 
   // Generate the CSS classes using our variant system
   const classes = buttonVariants(args.variant, args.size, args.class);
-  const children = args.children ?? "";
+  const children = renderChildren(args.children);
   const attrs = renderAttributes(args.attributes);
 
   if (args.asChild) {

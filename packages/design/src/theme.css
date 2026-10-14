@@ -2,6 +2,10 @@
 
 @theme {
   --font-sans: 'Noto Sans JP', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+
+  --color-card: #ffffff;
+--color-card-foreground: #0d0d0d;
+--color-muted-foreground: #595856;
 }
 
 @theme inline {

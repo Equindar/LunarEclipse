@@ -14,6 +14,7 @@ const meta: Meta<ButtonArgs> = {
     disabled: { control: "boolean" },
     children: { control: "text" },
   },
+  parameters: { layout: "centered"}
 };
 export default meta;
 
