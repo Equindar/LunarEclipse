@@ -59,6 +59,12 @@
       "skipFiles": [
         "<node_internals>/**"
       ]
+    },
+    {
+      "name": "Start Storybook",
+      "type": "node-terminal",
+      "request": "launch",
+      "command": "pnpm storybook",
     }
   ]
 }

@@ -8,8 +8,8 @@
     "./theme.css": "./src/theme.css"
   },
   "scripts": {
-    "storybook": "storybook dev -p 6006 --logfile ./logs/debug.log",
-    "build-storybook": "storybook build",
+    "storybook:dev": "storybook dev -p 6006 --logfile ./logs/debug.log",
+    "storybook:build": "storybook build",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
