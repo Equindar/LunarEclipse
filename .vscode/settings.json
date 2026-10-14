@@ -1,4 +1,24 @@
 {
+  "editor.formatOnSave": true,
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "explicit"
+  },
+  "js/ts.tsdk.path": "./node_modules/typescript/lib",
+
+  "files.exclude": {
+    "**/.turbo": true,
+    "**/coverage": true
+  },
+  "search.exclude": {
+    "**/.turbo": true,
+    "**/build": true,
+    "**/coverage": true
+  },
+  "files.watcherExclude": {
+    "**/.turbo/**": true,
+    "**/build/**": true,
+    "**/coverage/**": true
+  },
   "files.associations": {
     "*.css": "tailwindcss"
   },

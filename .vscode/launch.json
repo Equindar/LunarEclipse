@@ -5,7 +5,7 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "Debug API",
+      "name": "Start API",
       "type": "node",
       "request": "launch",
       "program": "${workspaceFolder}/apps/api/build/index.js",
@@ -16,7 +16,7 @@
       ]
     },
     {
-      "name": "Debug DiscordBot",
+      "name": "Start DiscordBot",
       "type": "node",
       "request": "launch",
       "program": "${workspaceFolder}/apps/bot/build/index.js",
