@@ -1,0 +1,36 @@
+{
+  "name": "@lunareclipse/design",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./theme.css": "./src/theme.css"
+  },
+  "scripts": {
+    "storybook": "storybook dev -p 6006 --logfile ./logs/debug.log",
+    "build-storybook": "storybook build",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "clsx": "^2.1.1",
+    "tailwind-merge": "^3.0.0"
+  },
+  "devDependencies": {
+    "@storybook/html-vite": "^10.6.1",
+    "@tailwindcss/vite": "^4.3.3",
+    "msw-storybook-addon": "^3.0.3",
+    "storybook": "^10.6.1",
+    "tailwindcss": "^4.3.3",
+    "typescript": "^5.9.3",
+    "vite": "^7.3.7"
+  },
+  "peerDependencies": {
+    "msw": "^2.2.1"
+  },
+  "msw": {
+    "workerDirectory": [
+      "public"
+    ]
+  }
+}

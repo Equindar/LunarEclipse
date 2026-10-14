@@ -1,0 +1,10 @@
+@import "tailwindcss";
+@import "@lunareclipse/design/theme.css";
+
+@source "../../../../packages/design/src";
+@source "../templates";
+
+h2 {
+  margin: 0;
+  padding: 0;
+}

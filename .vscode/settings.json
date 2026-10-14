@@ -18,5 +18,11 @@
     "**/.turbo/**": true,
     "**/build/**": true,
     "**/coverage/**": true
-  }
+  },
+  "files.associations": {
+    "*.css": "tailwindcss"
+  },
+  "json.schemaDownload.trustedDomains": {
+    "https://turborepo.dev/": true
+},
 }
