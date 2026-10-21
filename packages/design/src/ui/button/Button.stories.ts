@@ -1,9 +1,11 @@
 import type { Meta, StoryObj } from "@storybook/html-vite";
 import { delay, http, HttpResponse } from "msw";
-import { Button, type ButtonArgs } from "../ui/Button";
+import { Button } from "./Button";
+import type { ButtonArgs } from "./Button.types";
 
 const meta: Meta<ButtonArgs> = {
-  title: "UI/Button",
+  title: "UI-Library/Buttons/Button",
+  tags: ['autodocs'],
   render: (args) => Button(args),
   argTypes: {
     variant: {
@@ -13,19 +15,22 @@ const meta: Meta<ButtonArgs> = {
     size: { control: "select", options: ["default", "sm", "lg", "icon"] },
     disabled: { control: "boolean" },
     children: { control: "text" },
-  },
+  }
 };
 export default meta;
 
 type Story = StoryObj<ButtonArgs>;
 
-export const Default: Story = { args: { children: "Button" } };
+export const Default: Story = {
+  args: { children: "Button" },
+  // globals: { colorMode: "dark" }
+ };
 
 export const Destructive: Story = {
   args: {
     children: "Löschen",
     variant: "destructive",
-    attributes: { "data-on-click": "@post('/api/delete')" },
+    attributes: { "data-on:click": "@post('/api/delete')" },
   },
   parameters: {
     msw: {

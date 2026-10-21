@@ -1,5 +1,5 @@
-@import "tailwindcss";
-@import "@lunareclipse/design/theme.css";
+@import 'tailwindcss';
+@import '@lunareclipse/design/index.css';
 
 @source "../../../../packages/design/src";
 @source "../templates";

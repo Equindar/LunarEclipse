@@ -11,14 +11,12 @@ const db = await createDatabaseConnection();
 const userRepository = await createUserRepository(db);
 const getUserUseCase = new GetUser(userRepository)
 // const data = getUserUseCase.execute({uuid: ""})
-console.log(db);
-
 
 const router = new Hono().get('/', async (c) => {
   const language = toSupportedLanguage(c.get('language'));
 
   return c.html(
-    <Layout title="Database Connection">
+    <Layout title="Database Connection!">
       <AppBar currentLang={language} currentPath={c.req.path} />
       <h1 class="font-bold text-xl">Database Connection Test</h1>
       <p>{db}</p>

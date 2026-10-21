@@ -11,10 +11,10 @@ export const defaultRouter = new Hono().get('/', async (c) => {
   const t = i18n.t.bind(i18n);
 
   const button = Button({
-    variant: "default",
+    variant: "destructive",
     size: "lg",
     attributes: {
-      "data-on-click": "@post('/api/delete')",
+      "data-on:click": "@post('/api/delete')",
     },
     children: "Löschen",
   });
@@ -23,7 +23,7 @@ export const defaultRouter = new Hono().get('/', async (c) => {
     variant: "secondary",
     attributes: {
       "data-signals": "{count: 0}",
-      "data-on-click": "$count++",
+      "data-on:click": "$count++",
       "data-text": "$count",
     },
   });
