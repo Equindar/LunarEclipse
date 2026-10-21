@@ -307,6 +307,9 @@ importers:
 
   packages/logging:
     dependencies:
+      '@lunareclipse/typescript':
+        specifier: workspace:*
+        version: link:../../config/typescript
       winston:
         specifier: ^3.19.0
         version: 3.19.0
@@ -314,9 +317,6 @@ importers:
         specifier: ^5.0.0
         version: 5.0.0(winston@3.19.0)
     devDependencies:
-      '@lunareclipse/typescript':
-        specifier: workspace:*
-        version: link:../../config/typescript
       '@types/node':
         specifier: 'catalog:'
         version: 24.13.3
