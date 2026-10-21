@@ -4,7 +4,7 @@ import { mergeConfig } from "vite";
 
 const storybookConfig: StorybookConfig = {
   framework: "@storybook/html-vite",
-  stories: ["../src/**/*.stories.ts"],
+  stories: ["../src/**/*.mdx", "../src/**/*.stories.ts"],
   logLevel: 'debug',
   staticDirs: ["../../../apps/web/public"],
   viteFinal: (viteConfig, { configType }) =>
@@ -13,6 +13,13 @@ const storybookConfig: StorybookConfig = {
       // configType === "DEVELOPMENT" | "PRODUCTION"
     }
   ),
-  addons: ["msw-storybook-addon"],
+  addons: [
+    "msw-storybook-addon",
+    "@storybook/addon-docs"
+  ],
+  docs: {
+    defaultName: 'Docs',
+  },
 };
+
 export default storybookConfig;

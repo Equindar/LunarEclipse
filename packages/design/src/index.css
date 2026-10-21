@@ -1,0 +1,59 @@
+@import 'tailwindcss';
+
+@import './themes/base.css';
+@import './themes/fonts.css';
+
+@import './themes/classic.css';
+@import './themes/sunset.css';
+
+@theme {
+  /* --- Fonts --- */
+  --font-sans: 'Noto Sans JP', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  --font-averia: 'Averia Serif Libre Regular', serif;
+  --font-averia-bold: 'Averia Serif Libre Bold', serif;
+}
+
+@layer base {
+  html {
+    font-size: 16px;
+  }
+
+  html,
+  body {
+    min-height: 100dvh;
+  }
+
+  /* Firefox scrollbar styling */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: var(--border) transparent;
+  }
+
+  * {
+    border-color: var(--border);
+  }
+
+  body {
+    background-color: var(--background);
+    color: var(--foreground);
+    overscroll-behavior: none;
+    font-synthesis-weight: none;
+    text-rendering: optimizeLegibility;
+  }
+
+  a {
+    cursor: pointer;
+  }
+
+  /* Ensure form inputs have proper text colors */
+  input,
+  textarea,
+  select {
+    color: var(--foreground);
+  }
+
+  input::placeholder,
+  textarea::placeholder {
+    color: var(--muted-foreground);
+  }
+}

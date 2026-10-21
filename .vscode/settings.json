@@ -27,5 +27,5 @@
     "https://turborepo.dev/": true
   },
   "tailwindCSS.classFunctions": ["tw", "cn"],
-  "tailwindCSS.experimental.configFile": "packages/design/src/theme.css",
+  "tailwindCSS.experimental.configFile": "packages/design/src/index.css",
 }

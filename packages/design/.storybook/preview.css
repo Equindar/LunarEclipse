@@ -1,3 +1,8 @@
-@import "tailwindcss";
-@import "../src/theme.css";
+@import 'tailwindcss';
+@import '../src/index.css';
 @source "../src";
+
+.docs-story[data-theme] {
+  background-color: var(--color-background) !important;
+  color: var(--color-foreground) !important;
+}
