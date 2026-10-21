@@ -1,11 +1,10 @@
 import type { Meta, StoryObj } from "@storybook/html-vite";
-import { Button } from "../Button";
+import { Button } from "../button/Button";
 import { Card, CardAction, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "./Card";
 
 
 const meta: Meta = {
-  title: "UI/Card",
-  parameters: { layout: "centered" },
+  title: "UI-Library/Card"
 };
 export default meta;
 
@@ -82,12 +81,7 @@ export const WithFooterButtons: Story = {
     }),
 };
 
-/**
- * Interaktiv mit Datastar (lokale Signale, kein Backend nötig).
- * Eigenes Beispiel, nicht 1:1 aus dem Original.
- * Hinweis: Attribut-Syntax (data-on-click vs. data-on:click) muss zur
- * eingebundenen Datastar-Version passen.
- */
+
 export const Interactive: Story = {
   render: () =>
     Card({
@@ -111,13 +105,13 @@ export const Interactive: Story = {
           children: [
             Button({
               variant: "outline",
-              attributes: { "data-on-click": "$likes++" },
+              attributes: { "data-on:click": "$likes++" },
               children: '<span data-text="$likes"></span> Likes',
             }),
             Button({
               variant: "secondary",
               attributes: {
-                "data-on-click": "$saved = !$saved",
+                "data-on:click": "$saved = !$saved",
                 "data-text": "$saved ? 'Saved' : 'Save'",
               },
               children: "Save",

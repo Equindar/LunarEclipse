@@ -17,9 +17,12 @@
     "tailwind-merge": "^3.0.0"
   },
   "devDependencies": {
+    "@storybook/addon-docs": "^10.6.2",
     "@storybook/html-vite": "^10.6.1",
     "@tailwindcss/vite": "^4.3.3",
     "msw-storybook-addon": "^3.0.3",
+    "react": "19.3.0",
+    "react-dom": "19.3.0",
     "storybook": "^10.6.1",
     "tailwindcss": "^4.3.3",
     "typescript": "^5.9.3",
