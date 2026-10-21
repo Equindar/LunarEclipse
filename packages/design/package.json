@@ -5,7 +5,7 @@
   "type": "module",
   "exports": {
     ".": "./src/index.ts",
-    "./theme.css": "./src/theme.css"
+    "./index.css": "./src/index.css"
   },
   "scripts": {
     "storybook:dev": "storybook dev -p 6006 --logfile ./logs/debug.log",

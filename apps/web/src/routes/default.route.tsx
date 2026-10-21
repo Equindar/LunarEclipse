@@ -1,4 +1,3 @@
-
 import { Button } from '@lunareclipse/design';
 import createI18n, { toSupportedLanguage } from '@lunareclipse/i18n';
 import { Hono } from 'hono';
@@ -12,7 +11,7 @@ export const defaultRouter = new Hono().get('/', async (c) => {
   const t = i18n.t.bind(i18n);
 
   const button = Button({
-    variant: "default",
+    variant: "destructive",
     size: "lg",
     attributes: {
       "data-on:click": "@post('/api/delete')",

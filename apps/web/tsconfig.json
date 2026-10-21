@@ -1,6 +1,8 @@
 {
   "extends": "@lunareclipse/typescript/base.json",
   "compilerOptions": {
+    "module": "ESNext",
+    "moduleResolution": "bundler",
     "jsx": "react-jsx", // Use the new JSX transform (no React under the hood)
     "jsxImportSource": "hono/jsx",
     "types": ["node", "vite/client"],

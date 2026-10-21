@@ -8,7 +8,7 @@ type LayoutProps = PropsWithChildren<{
 export const Layout = ({ title = 'Web', children }: LayoutProps) =>  {
   const { js, css } = assetTags()
   return (
-    <html lang="de">
+    <html lang="de" data-theme='sunset'>
       <head>
         <meta charset="utf-8" />
         <title>{title}</title>
@@ -16,7 +16,7 @@ export const Layout = ({ title = 'Web', children }: LayoutProps) =>  {
         {css.map(href => <link rel="stylesheet" href={href} />)}
         {js.map(src => <script type="module" src={src}></script>)}
       </head>
-      <body class="min-h-screen bg-slate-50 text-slate-900 dark:bg-slate-800 dark:text-amber-50">
+      <body class="min-h-screen">
         <main id="app">
           {children}
         </main>
