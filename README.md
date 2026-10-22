@@ -1,17 +1,67 @@
 # LunarEclipse
 
 [![GitHub contributors][contributors-badge]][contributors-url]
-[![Discord][discord-badge]][discord-url]
-
 [![GitHub repo size][repo-size-badge]][repo-size-url]
+[![Discord][discord-badge]][discord-url]
 
 ## Allgemein
 
 Tauchen Sie ein in eine fesselnde mittelalterliche Fantasiewelt, in der Sie als Spieler ein abwechslungsreiches RPG-Browsergame mit Wirtschaftssimulation erleben. Reisen Sie, treiben Sie Handel, bauen Sie Städte und kämpfen Sie in dieser epischen Saga, die Ihnen die Freiheit gibt, die Spielwelt auf eigene Faust zu erleben.
 
-## Erste Schritte
+## Architektur und Projektstruktur
 
-Ich denke, dem Discord beizutreten und sich zu informieren ist ein guter Anfang. Ansonsten kann man sich hier natürlich auch die ToDos anschauen und sich einzubringen. Die Kommunikation erfolgt direkt über den Discord. Wer will, kann sich dort auch entsprechend seiner Interessen die Rollen zuweisen und das Projekt mitverfolgen.
+LunarEclipse ist als Monorepo auf Basis von [Turborepo](https://turbo.build/repo) organisiert. Die Projektstruktur kombiniert Clean Architecture und Vertical Slice Architecture. Eigenständige Anwendungen, gemeinsame technische Bibliotheken und fachliche Features werden in separaten Bereichen verwaltet.
+
+### Projektübersicht
+
+```text
+LunarEclipse/
+├── apps/
+│   ├── bot/           # Discord-Bot (discord.js)
+│   ├── web/           # Browsergame (Hono + Datastar)
+│   ├── api/           # Daten-API (Hono)
+│   └── knowledge/     # Internes Wiki (im Aufbau)
+├── packages/
+│   ├── design/        # UI-Bibliothek (Tailwind CSS + Storybook)
+│   ├── logging/       # Zentrales Logging (Winston)
+│   ├── database/      # DataSources und Drizzle-Implementierung
+│   ├── features/      # Fachliche Logik und Domain-Features
+│   └── i18n/          # Internationalisierung (i18next)
+├── config/            # Gemeinsame Konfigurationen
+└── docs/
+    └── decisions/     # Architectural Decision Records (ADRs)
+```
+
+### Anwendungen (`apps/`)
+
+| Anwendung | Beschreibung |
+|---|---|
+| `apps/bot` | Discord-Bot auf Basis von discord.js. |
+| `apps/web` | Browsergame mit Hono als Webframework und Datastar für die Benutzeroberfläche. |
+| `apps/api` | Eigenständige Daten-API auf Basis von Hono. |
+| `apps/knowledge` | Internes Wiki, das sich noch im Aufbau befindet. |
+
+### Gemeinsame Packages (`packages/`)
+
+| Package | Beschreibung |
+|---|---|
+| `packages/design` | Gemeinsame UI-Bibliothek und Design-System mit Tailwind CSS. Storybook unterstützt die Entwicklung und Dokumentation der Komponenten. |
+| `packages/logging` | Zentrale Logging-Bibliothek auf Basis von Winston. |
+| `packages/database` | Kapselt den Datenzugriff über DataSources und Implementierungen mit Drizzle ORM. |
+| `packages/features` | Enthält die fachliche Logik und Domain-Features, organisiert nach fachlichen Verantwortlichkeiten. |
+| `packages/i18n` | Gemeinsame Internationalisierung und Übersetzungen mit i18next. |
+
+### Zentrale Konfiguration (`config/`)
+
+Das Verzeichnis enthält gemeinsame Konfigurationen für mehrere Anwendungen und Packages. Dazu gehören aktuell die TypeScript-Compiler-Konfigurationen und die ESLint-Regeln.
+
+### Architekturentscheidungen
+
+Grundlegende Architekturentscheidungen werden als **Architectural Decision Records (ADRs)** dokumentiert. Sie beschreiben den jeweiligen Kontext, die getroffene Entscheidung und deren Konsequenzen.
+
+Die Dokumente befinden sich unter [`docs/decisions/`](docs/decisions/).
+
+Eine Übersicht aller Entscheidungen findet sich in [`docs/decisions/README.md`](docs/decisions/README.md).
 
 ## Mitmachen und seinen Teil beitragen
 
@@ -20,10 +70,9 @@ Ich denke, dem Discord beizutreten und sich zu informieren ist ein guter Anfang.
 
 :+1::tada: **Erst einmal danke für dein Interesse und den Willen, sich einzubringen!** :tada::+1:
 
-Wenn du nicht so recht weisst, wo Du bei LunarEclipse anfangen sollen? Schau Dir doch zunächst die „Good-First-Issue”- und „Help-Wanted”-Issues an.
+Die Kommunikation erfolgt direkt über [Discord][discord-url]. Wer will, kann sich dort auch entsprechend seiner Interessen die Rollen zuweisen und das Projekt mitverfolgen.
 
-
-Ansonsten komm vorbei auf dem [Discord][discord-url] oder erstelle ein [issue](https://github.com/Equindar/LunarEclipse/issues/new/choose), wenn du bereits sicher weisst, was benötigt wird.
+Schau Dir doch zunächst die „Good-First-Issue”- und „Help-Wanted”-Issues an oder erstelle ein [Issue](https://github.com/Equindar/LunarEclipse/issues/new/choose), wenn du bereits sicher weisst, was benötigt wird.
 
 [contributors-badge]: https://img.shields.io/github/contributors/Equindar/LunarEclipse.svg
 [contributors-url]: https://GitHub.com/dotnet/docs/graphs/contributors/
