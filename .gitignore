@@ -11,7 +11,9 @@
 *.log
 *storybook.log
 
+
 # --- documentation
+
 
 # --- caching
 */**/cache
@@ -21,16 +23,20 @@
 !packages/i18n/src/cache/
 !packages/i18n/src/cache/**
 
+
 # --- authentification / keys
 *.pem
 keys/*
 !keys/*.md
 
+
 # --- production artifacts
 */**/build
 
+
 # --- testing / coverage
 */**/coverage
+
 
 # --- temporary files
 temp
@@ -39,6 +45,8 @@ temp
 *.save.*
 /backend
 /frontend
+.turbo/preferences
+
 
 # --- enviroment files (*.local)
 */**/.env

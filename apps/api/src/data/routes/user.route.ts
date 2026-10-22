@@ -1,7 +1,8 @@
-import { Hono } from 'hono';
+import { createDatabaseConnection } from '@lunareclipse/database';
+import { createUserRepository } from '@lunareclipse/database/users';
 import { asUserID, CreateUser, GetUser } from '@lunareclipse/features/users';
-import { createDatabaseConnection, createUserRepository } from '@lunareclipse/database';
 import { Uuid7UserIDGenerator } from '@lunareclipse/helpers';
+import { Hono } from 'hono';
 
 const db = await createDatabaseConnection();
 
@@ -28,6 +29,9 @@ app.get('/:uuid', async (c) => {
   return c.json({ data: user });
 });
 
+app.get('/', async (c) => {
+  return c.json({ data: "test2" });
+});
 
 
 export default app;
