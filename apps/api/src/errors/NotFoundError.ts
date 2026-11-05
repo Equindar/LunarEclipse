@@ -1,4 +1,4 @@
-import { ApiError } from "../../shared/errors/ApiError.js";
+import { ApiError } from "./ApiError.js";
 
 export class NotFoundError extends ApiError {
   constructor(public readonly resource: string) {
