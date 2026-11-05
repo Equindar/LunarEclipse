@@ -1,4 +1,4 @@
-import { Button } from '@lunareclipse/design';
+import { Button, Checkbox, Label, type CheckboxArgs } from '@lunareclipse/design';
 import createI18n, { toSupportedLanguage } from '@lunareclipse/i18n';
 import { Hono } from 'hono';
 import { raw } from 'hono/html';
@@ -28,6 +28,17 @@ export const defaultRouter = new Hono().get('/', async (c) => {
     },
   });
 
+  const label = Label({
+    for: "myCheckbox",
+    children: "Check me",
+  });
+  const checkboxArgs: CheckboxArgs = {
+    id: "myCheckbox",
+    checked: false,
+    disabled: false,
+    class: "my-custom-class"
+  };
+  const checkbox = Checkbox(checkboxArgs);
 
   return c.html(
     <Layout title="Default Page">
@@ -35,6 +46,7 @@ export const defaultRouter = new Hono().get('/', async (c) => {
       <h1>Default Page</h1>
       {raw(button)}<br />
       {raw(counterButton)}
+      {raw(label)} {raw(checkbox)}
     </Layout>
   );
 })
