@@ -1,48 +1,43 @@
 import dotenv from 'dotenv';
-import { MissingConfigurationError } from './shared/errors/MissingConfigurationError';
+import { envSchema } from './validations/env.schema';
 
-// --- Init
 dotenv.config();
 
-type RequiredEnvVar = 'PORT';
+const result = envSchema.safeParse(process.env);
 
-function requireEnv(keys: RequiredEnvVar[]): void {
-  const missing = keys.filter((key) => !process.env[key]);
-  if (missing.length > 0) {
-    throw new MissingConfigurationError(`missing env-variables: ${missing.join(', ')}`);
+if (!result.success) {
+  console.error('Invalid environment configuration:');
+
+  for (const issue of result.error.issues) {
+    console.error(
+      `- ${issue.path.join('.')}: ${issue.message}`
+    );
   }
-}
-try {
-  requireEnv(['PORT']);
-}
-catch (error) {
-  if (error instanceof MissingConfigurationError) {
-    console.error(error.message);
-  } else {
-    console.error('Unexpected error:', error);
-  }
+
   process.exit(1);
 }
 
-const { SERVICE_NAME, PORT } = process.env;
-const { LOG_LEVEL, LOG_DIRECTORY } = process.env;
-const { DATABASE_HOST, DATABASE_USER, DATABASE_PASSWORD, DATABASE_NAME } = process.env;
+const env = result.data;
 
 const configuration = {
   app: {
-    name: SERVICE_NAME,
-    port: parseInt(PORT!, 10) || 3003,
+    name: env.SERVICE_NAME,
+    port: env.PORT,
   },
   logging: {
-    level: LOG_LEVEL,
-    directory: LOG_DIRECTORY,
+    level: env.LOG_LEVEL,
+    directory: env.LOG_DIRECTORY,
   },
   database: {
-    host: DATABASE_HOST,
-    user: DATABASE_USER,
-    password: DATABASE_PASSWORD,
-    database: DATABASE_NAME,
-  }
+    host: env.DATABASE_HOST,
+    user: env.DATABASE_USER,
+    password: env.DATABASE_PASSWORD,
+    database: env.DATABASE_NAME,
+  },
+  auth: {
+    secret: env.AUTH_SECRET,
+    algorithm: env.AUTH_ALGORITHM,
+  },
 };
 
 export default configuration;

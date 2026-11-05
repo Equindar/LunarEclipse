@@ -14,6 +14,10 @@ const getUserUseCase = new GetUser(userRepository)
 
 const app = new Hono();
 
+app.get('/', async (c) => {
+  return c.json({ data: "test2" });
+});
+
 app.post('/', async (c) => {
   const user = await createUserUseCase.execute({
     displayName: 'John Doe',
@@ -27,10 +31,6 @@ app.get('/:uuid', async (c) => {
     uuid: asUserID(c.req.param('uuid')),
   });
   return c.json({ data: user });
-});
-
-app.get('/', async (c) => {
-  return c.json({ data: "test2" });
 });
 
 
