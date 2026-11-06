@@ -11,8 +11,6 @@
     "@lunareclipse/logging": "workspace:*",
     "@hono/node-server": "^1.19.17",
     "@hono/zod-validator": "^0.9.1",
-    "@starfederation/datastar-sdk": "^1.0.0",
-    "dotenv": "^17.4.2",
     "hono": "^4.13.8",
     "zod": "^4.6.5"
   },

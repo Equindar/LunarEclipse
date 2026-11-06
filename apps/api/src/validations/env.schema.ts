@@ -2,7 +2,7 @@ import { z } from 'zod';
 
 export const envSchema = z.object({
   // Application
-  SERVICE_NAME: z.string().default('MyService'),
+  SERVICE_NAME: z.string().default('Api Service'),
   PORT: z.coerce.number().int().min(1).max(65535).default(3003),
 
   // Logging

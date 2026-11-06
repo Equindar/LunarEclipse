@@ -1,6 +1,6 @@
-import OpenAI from 'openai';
 import fs from 'fs';
-import configuration from '../../config.js';
+import OpenAI from 'openai';
+import configuration from '../../config/index.js';
 
 const openai = new OpenAI({
   apiKey: configuration.integrations.openai.key,

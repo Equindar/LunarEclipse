@@ -51,4 +51,6 @@ temp
 # --- enviroment files (*.local)
 */**/.env
 .env*.local
+.env.development
 .env.production
+

@@ -2,7 +2,6 @@ import { Hono } from 'hono';
 import type { HonoOptions } from 'hono/hono-base';
 import type { JwtVariables } from 'hono/jwt';
 import { requestId, type RequestIdVariables } from 'hono/request-id';
-import { NotFoundError } from './errors/NotFoundError.js';
 import authMiddleware from './middleware/auth.middleware.js';
 import responseTimeMiddleware from './middleware/custom.middleware.js';
 import router from './routes/index.route.js';
@@ -32,10 +31,17 @@ api.route('/api', router);
 // Fallback-Routes for the API
 api.notFound((c) => c.json({ error: 'Not found' }, 404));
 api.onError((err, c) => {
-    c.json({ error: 'Internal error' }, 500)
-    logger.error("Oupsi, an error occured!");
-    throw new NotFoundError('Resource not found: ' + err.message);
-  })
+  logger.error({
+    err,
+    message: 'Unhandled API error',
+    requestId: c.get('requestId'),
+  });
+
+  return c.json(
+    { error: 'Internal server error' },
+    500
+  );
+});
 
 
 // Export für den typsicheren RPC-Client (hc<ApiType>)

@@ -18,8 +18,8 @@
   "dependencies": {
     "@lunareclipse/logging": "workspace:*",
     "discord.js": "^14.27.0",
-    "dotenv": "^17.4.2",
-    "openai": "^6.49.0"
+    "openai": "^6.49.0",
+    "zod": "^4.6.5"
   },
   "devDependencies": {
     "@lunareclipse/eslint": "workspace:*",
