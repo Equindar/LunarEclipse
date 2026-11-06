@@ -34,6 +34,12 @@
       "base": "seeders",
       "color": "green-800",
       "folderNames": ["lifecycle"]
+    },
+        {
+      "name": "graphics",
+      "base": "graphql",
+      "color": "red-500",
+      "folderNames": ["graphics"],
     }
   ]
 }
