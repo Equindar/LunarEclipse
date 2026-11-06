@@ -28,4 +28,18 @@
   },
   "tailwindCSS.classFunctions": ["tw", "cn"],
   "tailwindCSS.experimental.configFile": "packages/design/src/index.css",
+  "material-icon-theme.folders.customClones": [
+    {
+      "name": "lifecycle",
+      "base": "seeders",
+      "color": "green-800",
+      "folderNames": ["lifecycle"]
+    },
+        {
+      "name": "graphics",
+      "base": "graphql",
+      "color": "red-500",
+      "folderNames": ["graphics"],
+    }
+  ]
 }

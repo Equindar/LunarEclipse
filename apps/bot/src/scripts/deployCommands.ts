@@ -1,13 +1,13 @@
 import { REST, Routes } from "discord.js";
-import configuration from "../config.js";
+import configuration from "../config/index.js";
 import { CommandDeploymentError } from "../errors/CommandDeploymentError.js";
+import { CommandLoadingError } from "../errors/CommandLoadingError.js";
 import { loadCommands } from "../handlers/commandHandler.js";
 import logger from "../utils/logger.js";
-import { CommandLoadingError } from "../errors/CommandLoadingError.js";
-import { errorHandler } from "../index.js";
 
 // Module-Logger
 const commandLogger = logger.child({ module: "Commands" });
+const scriptLogger = logger.child({ module: "Scripts" });
 
 async function deployCommands(): Promise<void> {
   logger.info("Deploy-Script gestartet...");
@@ -39,9 +39,9 @@ async function deployCommands(): Promise<void> {
 deployCommands().catch(async (error) => {
   // Läuft als eigenständiges Script (nicht als Teil vom laufenden Bot) → eigener Top-Level-Catch
   if (error instanceof CommandLoadingError || error instanceof CommandDeploymentError) {
-    await errorHandler.handle(error, 'Deploy-Script: ');
+    scriptLogger.error('Deploy-Script: ' + error.message);
   } else {
-    await errorHandler.handle(error, 'Deploy-Script (unerwartet): ');
+    scriptLogger.error('Deploy-Script (unerwartet): ' + error.message);
   }
   process.exit(1);
 });

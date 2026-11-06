@@ -1,8 +1,8 @@
 import { Client, RESTJSONErrorCodes, TextChannel } from 'discord.js';
-import { Notifier, NotifierFactory } from '../../types/Notifier.js';
+import configuration from '../../config/index.js';
 import { AddonConfigurationError } from '../../errors/AddonConfigurationError.js';
+import { Notifier, NotifierFactory } from '../../types/Notifier.js';
 import logger from '../../utils/logger.js';
-import configuration from '../../config.js';
 
 const addonLogger = logger.child({ addon: 'Notifier' });
 

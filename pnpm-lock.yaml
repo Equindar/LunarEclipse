@@ -32,12 +32,9 @@ importers:
       '@hono/zod-validator':
         specifier: ^0.9.1
         version: 0.9.1(hono@4.13.13)(zod@4.6.7)
-      '@starfederation/datastar-sdk':
-        specifier: ^1.0.0
-        version: 1.0.0
-      dotenv:
-        specifier: ^17.4.2
-        version: 17.4.2
+      '@lunareclipse/logging':
+        specifier: workspace:*
+        version: link:../../packages/logging
       hono:
         specifier: ^4.13.8
         version: 4.13.13
@@ -87,6 +84,9 @@ importers:
       openai:
         specifier: ^6.49.0
         version: 6.49.0(ws@8.22.0)(zod@4.6.7)
+      zod:
+        specifier: ^4.6.5
+        version: 4.6.7
     devDependencies:
       '@lunareclipse/eslint':
         specifier: workspace:*
@@ -1861,9 +1861,6 @@ packages:
 
   '@so-ric/colorspace@1.1.6':
     resolution: {integrity: sha512-/KiKkpHNOBgkFJwu9sh48LkHSMYGyuTcSFK/qMBdnOAlrRJzRSXAOFB5qwzaVQuDl8wAvHVMkaASQDReTahxuw==}
-
-  '@starfederation/datastar-sdk@1.0.0':
-    resolution: {integrity: sha512-VT1co9LeRLJ3wynffvkxXLJaCh4PHt1YUhH3zCQYhjTuaeWjozNjQQrg+BUbkDMO58mSgeQp9pgOXRWciy0y6g==}
 
   '@storybook/addon-docs@10.6.2':
     resolution: {integrity: sha512-f7Rv/rzX1sk4lUDTeoIRkXWcWvNwLv7vBnfpFGb3f88MliB+M4ZekGKNiKtrmi44uLFt52gzwwPzj2eGDu0DQQ==}
@@ -5590,8 +5587,6 @@ snapshots:
     dependencies:
       color: 5.0.3
       text-hex: 1.0.0
-
-  '@starfederation/datastar-sdk@1.0.0': {}
 
   '@storybook/addon-docs@10.6.2(@types/react@19.3.0)(storybook@10.6.2(@types/react@19.3.0)(prettier@3.4.2)(react@19.3.0))':
     dependencies:
