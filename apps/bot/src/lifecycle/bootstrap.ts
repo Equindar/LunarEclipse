@@ -1,5 +1,6 @@
 import type { Client } from 'discord.js';
-import { BotError } from './errors/BotError.js';
+import { BotError } from '../errors/BotError.js';
+import { registerProcessHandlers } from '../handlers/processHandlers.js';
 
 
 async function main() {
@@ -7,7 +8,7 @@ async function main() {
 
   try {
     // --- Configuration
-    const { default: configuration } = await import('./config/index.js');
+    const { default: configuration } = await import('../config/index.js');
 
     // --- Dependencies
     const [
@@ -17,18 +18,18 @@ async function main() {
       { loadEvents, registerEvents },
       { loadAnalyzers },
     ] = await Promise.all([
-      import('./client.js'),
-      import('./handlers/commandHandler.js'),
-      import('./handlers/createErrorHandler.js'),
-      import('./handlers/eventHandler.js'),
-      import('./utils/analyzerLoader.js'),
+      import('../client.js'),
+      import('../handlers/commandHandler.js'),
+      import('../handlers/createErrorHandler.js'),
+      import('../handlers/eventHandler.js'),
+      import('../utils/analyzerLoader.js'),
     ]);
 
     const { ActivityType } = await import('discord.js');
 
     // --- Init
     client = createClient();
-
+    registerProcessHandlers(client);
     client.errorHandler = await createErrorHandler(client);
 
     // --- Loading

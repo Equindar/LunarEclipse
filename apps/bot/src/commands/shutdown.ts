@@ -1,7 +1,13 @@
-import { InteractionContextType, MessageFlags, PermissionFlagsBits, SlashCommandBuilder } from 'discord.js';
+import {
+    InteractionContextType,
+    MessageFlags,
+    PermissionFlagsBits,
+    SlashCommandBuilder,
+} from 'discord.js';
+
+import { shutdown } from '../lifecycle/shutdown.js';
 import { Command } from '../types/Command.js';
 import { isServerOwner } from '../utils/isServerOwner.js';
-import logger from '../utils/logger.js';
 
 let shutdownCommand: Command = {
   data: new SlashCommandBuilder()
@@ -12,17 +18,25 @@ let shutdownCommand: Command = {
 
   async execute(interaction) {
     try {
-      await interaction.reply('Bot wird heruntergefahren...');
-      logger.info('Shutdown wird durchgeführt.');
-      process.exit(0);
+      await interaction.reply({
+        content: 'Bot wird heruntergefahren...',
+        flags: MessageFlags.Ephemeral,
+      });
+
+      await shutdown(
+        interaction.client,
+        'Shutdown durch Discord-Command',
+      );
+
     } catch (error) {
-      await interaction.reply({ content: 'Herunterfahren fehlgeschlagen', flags: MessageFlags.Ephemeral });
-      await interaction.client.errorHandler.handle(error, this.data.name);
+      await interaction.client.errorHandler.handle(
+        error,
+        this.data.name,
+      );
     }
   },
 };
 
-// Mit Decorator wrappen
 shutdownCommand = isServerOwner(shutdownCommand);
 
 export default shutdownCommand;

@@ -1,1 +1,1 @@
-import './bootstrap.js';
+import './lifecycle/bootstrap.js';
