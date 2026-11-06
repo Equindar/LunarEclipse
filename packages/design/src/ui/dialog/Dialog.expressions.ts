@@ -1,5 +1,4 @@
 import { buildConditional } from "../../utils/buildConditional";
-import type { HtmlAttributes } from "../../utils/renderHtmlAttributes";
 import { createSignals } from "../../utils/SignalManager";
 import type { DialogSignals } from "./Dialog.types";
 
@@ -21,11 +20,6 @@ export const dialogTitleId = (dialogId: string): string => `${dialogId}-title`;
 
 /** ID der Beschreibung (Ziel von aria-describedby am Content) */
 export const dialogDescriptionId = (dialogId: string): string => `${dialogId}-description`;
-
-/** Setzt data-slot, lässt aber einen Wert aus attributes den Standard ersetzen (kein doppeltes Attribut) */
-export function withSlot(attributes: HtmlAttributes | undefined, slot: string): HtmlAttributes {
-  return { ...attributes, "data-slot": attributes?.["data-slot"] ?? slot };
-}
 
 /** Trigger: Dialog über das Signal öffnen */
 export function buildOpenHandler(dialogId: string): string {
