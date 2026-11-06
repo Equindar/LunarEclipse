@@ -1,11 +1,11 @@
 import {
-  Client,
-  GatewayIntentBits,
-  Partials,
-  ActivitiesOptions,
+    ActivitiesOptions,
+    Client,
+    GatewayIntentBits,
+    Partials,
 } from 'discord.js';
 
-export default function createClient(): Client | undefined {
+export default function createClient(): Client {
   return new Client({
     intents: [
       GatewayIntentBits.Guilds,
@@ -16,7 +16,6 @@ export default function createClient(): Client | undefined {
     ],
     partials: [Partials.Message, Partials.Channel, Partials.Reaction],
   });
-
 }
 
 export function updateActivity(client: Client, message: string, activity: ActivitiesOptions): void {

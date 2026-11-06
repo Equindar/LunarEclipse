@@ -1,9 +1,9 @@
-import { ErrorHandler } from './ErrorHandler.js';
-import { loadAddons } from './addonHandler.js';
+import { Client } from 'discord.js';
+import path from 'node:path';
 import type { NotifierFactory } from '../types/Notifier.js';
 import { dirnameFromMeta } from '../utils/esm.js';
-import path from 'node:path';
-import { Client } from 'discord.js';
+import { loadAddons } from './addonHandler.js';
+import { ErrorHandler } from './errorHandler.js';
 
 const __dirname = dirnameFromMeta(import.meta.url);
 

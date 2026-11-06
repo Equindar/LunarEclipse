@@ -1,6 +1,6 @@
-import path from 'node:path';
 import { createLogger, type Logger } from '@lunareclipse/logging';
-import configuration from '../config.js';
+import path from 'node:path';
+import configuration from '../config/index.js';
 
 const logger: Logger = createLogger({
   service: configuration.app.name ?? '',
