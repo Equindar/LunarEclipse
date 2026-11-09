@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/html-vite";
-
+import { Icon } from "../icon";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "./Tabs";
 import type { TabsListVariant, TabsOrientation } from "./Tabs.types";
 
@@ -10,9 +10,6 @@ type TabsStoryArgs = {
   orientation?: TabsOrientation;
   variant?: TabsListVariant;
 };
-
-const appWindowIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M10 4v4"/><path d="M2 8h20"/><path d="M6 4v4"/></svg>`;
-const codeIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m16 18 6-6-6-6"/><path d="m8 6-6 6 6 6"/></svg>`;
 
 /** Einfacher Inhaltsblock für die Panels (Platzhalter für die Karten der Docs) */
 const panel = (title: string, text: string): string =>
@@ -166,7 +163,7 @@ export const Disabled: Story = {
     }),
 };
 
-/** Icons im Trigger: SVGs als Kind-Markup, die Größe setzt der Trigger (size-4) */
+/** Icons im Trigger: Icons per Icon(), die Größe setzt der Trigger (size-4) */
 export const Icons: Story = {
   args: { id: "tabs-icons" },
   render: (args) =>
@@ -176,8 +173,8 @@ export const Icons: Story = {
       children: [
         TabsList({
           children: [
-            TabsTrigger({ tabsId: args.id, value: "preview", children: `${appWindowIcon}Preview` }),
-            TabsTrigger({ tabsId: args.id, value: "code", children: `${codeIcon}Code` }),
+            TabsTrigger({ tabsId: args.id, value: "preview", children: `${Icon({ name: "app-window" })}Preview` }),
+            TabsTrigger({ tabsId: args.id, value: "code", children: `${Icon({ name: "code" })}Code` }),
           ],
         }),
         TabsContent({ tabsId: args.id, value: "preview", class: "pt-3", children: "Preview" }),

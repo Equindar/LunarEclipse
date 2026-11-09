@@ -5,6 +5,7 @@ import { renderAttributes } from "../../utils/renderHtmlAttributes";
 import { tw } from "../../utils/tw";
 import { withSlot } from "../../utils/withSlot";
 import { Button } from "../button";
+import { Icon } from "../icon";
 import {
     buildBackdropClickHandler,
     buildCloseHandler,
@@ -47,9 +48,6 @@ const dialogDescriptionTw = tw`text-sm text-muted-foreground *:[a]:underline *:[
 export function dialogContentVariants(args: Pick<DialogContentArgs, "class"> = {}): string {
   return cn(dialogContentTw, args.class);
 }
-
-/** X-Icon (lucide), fest in den Schließen-Button der Quelle eingebaut */
-const closeIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>`;
 
 /** Wurzel: hält das Signal "open" (display: contents, erzeugt keine eigene Box) */
 export function Dialog(args: DialogArgs): string {
@@ -95,7 +93,7 @@ export function DialogContent(args: DialogContentArgs): string {
   attrs["data-on:click"] = buildBackdropClickHandler();
 
   const closeButton = showCloseButton
-    ? `<button type="button" data-slot="dialog-close" class="${dialogCloseButtonTw}" data-on:click="${escapeHtml(buildCloseHandler())}">${closeIcon}<span class="sr-only">${escapeHtml(args.closeLabel ?? DEFAULT_CLOSE_LABEL)}</span></button>`
+    ? `<button type="button" data-slot="dialog-close" class="${dialogCloseButtonTw}" data-on:click="${escapeHtml(buildCloseHandler())}">${Icon({ name: "close" })}<span class="sr-only">${escapeHtml(args.closeLabel ?? DEFAULT_CLOSE_LABEL)}</span></button>`
     : "";
 
   return `<dialog${renderAttributes(attrs)}>${renderChildren(args.children)}${closeButton}</dialog>`;

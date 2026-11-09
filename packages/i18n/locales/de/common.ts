@@ -1,5 +1,9 @@
 export default {
   hello: 'Hallo Welt',
   welcome: 'Willkommen {{name}}',
-  insult: 'Arschloch!'
+  insult: 'Arschloch!',
+  buttons: {
+    submit: 'Absenden',
+    cancel: 'Abbrechen',
+  },
 } as const;

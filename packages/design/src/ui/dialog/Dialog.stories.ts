@@ -1,5 +1,4 @@
 import type { Meta, StoryObj } from "@storybook/html-vite";
-
 import { Button } from "../button";
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "./Dialog";
 

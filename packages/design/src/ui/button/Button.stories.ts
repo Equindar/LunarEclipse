@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/html-vite";
 import { delay, http, HttpResponse } from "msw";
+import { Icon } from "../icon";
 import { Button } from "./Button";
 import type { ButtonArgs } from "./Button.types";
 
@@ -50,3 +51,10 @@ export const Destructive: Story = {
 };
 
 export const Outline: Story = { args: { variant: "outline", children: "Outline" } };
+
+export const withIcon: Story = {
+  args: {
+    children: `${Icon({ name: "app-window" })} Button mit Icon`,
+    attributes: { "data-on:click": "@post('/api/delete')" },
+  },
+};
