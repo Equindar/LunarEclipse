@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/html-vite";
+import { Label } from "../label/Label";
 import { Checkbox } from "./Checkbox";
 import type { CheckboxArgs } from "./Checkbox.types";
 
@@ -38,7 +39,7 @@ export const WithLabel: Story = {
   render: (args) =>
     `<div class="flex items-center gap-2">
       ${Checkbox(args)}
-      <label for="${args.id}" class="text-sm font-medium">Nutzungsbedingungen akzeptieren</label>
+      ${Label({ for: args.id, children: "Nutzungsbedingungen akzeptieren" })}
     </div>`,
 };
 
