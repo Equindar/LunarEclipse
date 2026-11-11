@@ -27,6 +27,7 @@
     "db:push": "drizzle-kit push",
     "db:migrate": "tsx ./scripts/migrate.ts",
     "db:fix-schema": "tsx ./scripts/fix-drizzle-schema.ts",
+    "db:studio": "drizzle-kit studio",
     "check-types": "tsc --noEmit"
   },
   "devDependencies": {
@@ -37,7 +38,6 @@
   "dependencies": {
     "@lunareclipse/features": "workspace:*",
     "@lunareclipse/logging": "workspace:*",
-    "dotenv": "^18.0.5",
     "drizzle-orm": "^0.45.3",
     "mysql2": "^3.24.5",
     "ulid": "^3.0.2"

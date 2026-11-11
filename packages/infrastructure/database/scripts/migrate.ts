@@ -1,8 +1,8 @@
+import { MigrationConfig } from 'drizzle-orm/migrator';
 import { drizzle } from 'drizzle-orm/mysql2';
 import { migrate } from 'drizzle-orm/mysql2/migrator';
 import mysql, { ConnectionOptions } from 'mysql2/promise';
-import configuration from '../src/config';
-import { MigrationConfig } from 'drizzle-orm/migrator';
+import configuration from '../src/config/config.js';
 
 const connectionOptions: ConnectionOptions = {
   user: configuration.database.user,

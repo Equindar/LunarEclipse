@@ -1,3 +1,2 @@
-export { createDatabaseConnection, checkDatabaseConnection } from './client.js';
+export { checkDatabaseConnection, createDatabaseConnection } from './client.js';
 export type { Database } from './client.js';
-// export { createUserRepository } from './users/index.js';
