@@ -6,7 +6,7 @@ import { tw } from "../../utils/tw";
 import type { LabelArgs } from "./Label.types";
 
 /** Tailwind-Klassen für das Label (shadcn/ui New York v4) */
-export const baseClasses = tw`flex items-center gap-2 text-sm leading-none font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50`;
+const baseClasses = tw`flex items-center gap-2 text-sm leading-none font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50`;
 
 export function labelVariants(args: Pick<LabelArgs, "class"> = {}): string {
   return cn(baseClasses, args.class);

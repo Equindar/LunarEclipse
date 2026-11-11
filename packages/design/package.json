@@ -8,6 +8,8 @@
     "./index.css": "./src/index.css"
   },
   "scripts": {
+    "icons": "tsx scripts/generateIcons.ts",
+    "icons:check": "tsx scripts/generateIcons.ts --check",
     "storybook:dev": "storybook dev -p 6006 --logfile ./logs/debug.log",
     "storybook:build": "storybook build",
     "typecheck": "tsc --noEmit"
@@ -25,6 +27,7 @@
     "react-dom": "19.3.0",
     "storybook": "^10.6.1",
     "tailwindcss": "^4.3.3",
+    "tsx": "catalog:",
     "typescript": "^5.9.3",
     "vite": "^7.3.7"
   },
