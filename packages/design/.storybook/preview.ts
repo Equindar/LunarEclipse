@@ -62,37 +62,37 @@ const preview: Preview = {
 
   decorators: [
     (story, context) => {
-    const { theme, colorMode } = context.globals;
-    const dark = colorMode === "dark";
-    const root = document.documentElement;
+      const { theme, colorMode } = context.globals;
+      const dark = colorMode === "dark";
+      const root = document.documentElement;
 
-    if (context.viewMode !== "docs") {
-      root.dataset.theme = theme;
-      root.classList.toggle("dark", dark);
-      return story();
-    }
+      if (context.viewMode !== "docs") {
+        root.dataset.theme = theme;
+        root.classList.toggle("dark", dark);
+        return `<div style="margin: 3rem; width: '100%', maxWidth: '1200px', margin: '0 auto', padding: '1rem' }">${story()}</div>`;
+      }
 
-    // Docs: Seite neutral, Reste aus der Canvas-Ansicht entfernen
-    delete root.dataset.theme;
-    root.classList.remove("dark");
+      // Docs: Seite neutral, Reste aus der Canvas-Ansicht entfernen
+      delete root.dataset.theme;
+      root.classList.remove("dark");
 
-    const marker = document.createElement("div");
-    marker.style.display = "contents";
-    const result = story();
-    if (typeof result === "string") marker.innerHTML = result;
-    else marker.append(result);
+      const marker = document.createElement("div");
+      marker.style.display = "contents";
+      const result = story();
+      if (typeof result === "string") marker.innerHTML = result;
+      else marker.append(result);
 
-    // nach dem Einhängen den Docs-Canvas einfärben
-    requestAnimationFrame(() => {
-      const canvas = marker.closest<HTMLElement>(".docs-story");
-      if (!canvas) return;
-      canvas.dataset.theme = theme;
-      canvas.classList.toggle("dark", dark);
-      canvas.style.cssText = "bg-color: var(--color-background) !important; color: var(--color-foreground)";
-    });
+      // nach dem Einhängen den Docs-Canvas einfärben
+      requestAnimationFrame(() => {
+        const canvas = marker.closest<HTMLElement>(".docs-story");
+        if (!canvas) return;
+        canvas.dataset.theme = theme;
+        canvas.classList.toggle("dark", dark);
+        canvas.style.cssText = "background-color: var(--background) !important; color: var(--foreground)";
+      });
 
-    return marker;
-  },
+      return marker;
+    },
   ],
 };
 

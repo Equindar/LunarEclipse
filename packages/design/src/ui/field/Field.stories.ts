@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/html-vite";
 
+import { Checkbox } from "../..";
 import { renderAttributes, type HtmlAttributes } from "../../utils/renderHtmlAttributes";
 import { Button } from "../button";
 import { Input } from "../input";
@@ -101,7 +102,6 @@ export const Default: Story = {};
 /** Mehrere Felder in einer FieldGroup (Input) */
 export const InputFields: Story = {
   render: () =>
-    frame(
       FieldSet({
         children: FieldGroup({
           children: [
@@ -122,7 +122,6 @@ export const InputFields: Story = {
           ],
         }),
       }),
-    ),
 };
 
 /** Textarea mit Beschreibung */
@@ -200,7 +199,7 @@ export const Checkboxes: Story = {
                   Field({
                     orientation: "horizontal",
                     children: [
-                      checkbox(`field-checkboxes-item-${index}`, index === 0 ? { checked: true } : {}),
+                      Checkbox({ id: `field-checkboxes-item-${index}`, checked: index === 0 }),
                       FieldLabel({
                         for: `field-checkboxes-item-${index}`,
                         class: "font-normal",
@@ -216,7 +215,7 @@ export const Checkboxes: Story = {
           Field({
             orientation: "horizontal",
             children: [
-              checkbox("field-checkboxes-sync", { checked: true }),
+              Checkbox({ id: "field-checkboxes-sync", checked: false }),
               FieldContent({
                 children: [
                   FieldLabel({ for: "field-checkboxes-sync", children: "Ordner synchronisieren" }),

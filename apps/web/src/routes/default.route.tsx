@@ -1,9 +1,9 @@
-import { Button, Card, CardContent, CardDescription, CardFooter, CardHeader, CardPartArgs, CardTitle, Checkbox, Label, type CheckboxArgs } from '@lunareclipse/design';
+import { Avatar, Button, Card, CardContent, CardDescription, CardFooter, CardHeader, CardPartArgs, CardTitle, Checkbox, Field, Item, Label, type AvatarArgs, type CheckboxArgs } from '@lunareclipse/design';
 import createI18n, { toSupportedLanguage } from '@lunareclipse/i18n';
 import { Hono } from 'hono';
 import { raw } from 'hono/html';
-import { AppBar } from '../templates/appBar.js';
-import { Layout } from '../templates/layout.js';
+import { AppBar } from '../templates/appBar';
+import { Layout } from '../templates/layout';
 
 export const defaultRouter = new Hono().get('/', async (c) => {
   const language = toSupportedLanguage(c.get('language'));
@@ -60,6 +60,33 @@ export const defaultRouter = new Hono().get('/', async (c) => {
       ]
   });
 
+  const avatarArgs: AvatarArgs = {
+    size: "lg",
+    backgroundColor: "#3b82f6",
+    textColor: "#ffffff",
+    children: "Eq",
+  };
+  const avatar = Avatar(avatarArgs);
+
+  const field = Field({
+    id: "myField",
+    orientation: "horizontal",
+    disabled: true,
+    children: [
+      Item({
+        children: [
+          Label({ for: "myCheckbox", children: "Check me",  }),
+          Checkbox({
+            id: "myCheckbox",
+            checked: false,
+            disabled: false,
+            class: "my-custom-class"
+          }),
+        ],
+      }),
+    ],
+  });
+
   return c.html(
     <Layout title="Default Page">
       <AppBar currentLang={language} currentPath={c.req.path} />
@@ -68,6 +95,8 @@ export const defaultRouter = new Hono().get('/', async (c) => {
       {raw(counterButton)}
       {raw(label)} {raw(checkbox)}
       {raw(card)}
+      {raw(avatar)}
+      {raw(field)}
     </Layout>
   );
-})
+});
