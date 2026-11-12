@@ -22,7 +22,7 @@ const DEFAULT_SIDE_OFFSET = 4;
  * Tailwind-Klassen für das Tooltip-Panel (wie Popover, aber kompakter).
  * pointer-events-none verhindert, dass der Tooltip das Hover des Triggers stört.
  */
-export const tooltipContentTw = tw`rounded-md border bg-popover text-popover-foreground shadow-md outline-none px-3 py-1.5 text-sm pointer-events-none`;
+const tooltipContentTw = tw`rounded-md border bg-popover text-popover-foreground shadow-md outline-none px-3 py-1.5 text-sm pointer-events-none`;
 
 export function tooltipContentVariants(args: Pick<TooltipContentArgs, "class"> = {}): string {
   return cn(tooltipContentTw, args.class);
