@@ -51,7 +51,12 @@ type Story = StoryObj<AvatarStoryArgs>;
 export const Default: Story = {};
 
 export const CustomTextColor: Story = {
-  args: { text: "AB", backgroundColor: "#fde047", textColor: "#1f2937" },
+  args: {
+    text: "AB",
+    backgroundColor: "#fde047",
+    textColor: "#1f2937"
+  },
+  render: (args) => Avatar({ ...args, children: args.text })
 };
 
 export const BackgroundColors: Story = {

@@ -56,6 +56,17 @@ type Story = StoryObj<ToastStoryArgs>;
 
 export const Default: Story = {};
 
+/** Vorschau ohne Toaster und ohne Auto-Dismiss, um das Aussehen aller Typen zu prüfen */
+export const Variants: Story = {
+  parameters: { docs: { story: { inline: true } } },
+  render: () =>
+    `<div class="flex w-96 flex-col gap-3">${[
+      Toast({ title: "Event created", description: "Sunday, December 3 at 9:00 AM", timeout: 0 }),
+      ...types.map((type) => Toast({ type, title: `${type} toast`, description: "Beschreibung", timeout: 0 })),
+      Toast({ title: "Event created", action: { children: "Undo" }, timeout: 0 }),
+    ].join("")}</div>`,
+};
+
 /** Mit `type` erscheint ein Status-Icon; "loading" bleibt ohne `timeout` stehen, hier auf 3 Sekunden gesetzt */
 export const Types: Story = {
   render: () =>
@@ -107,15 +118,4 @@ export const WithPromise: Story = {
       button("Save (error)", "new Promise((resolve, reject) => setTimeout(reject, 2000))"),
     ]);
   },
-};
-
-/** Vorschau ohne Toaster und ohne Auto-Dismiss, um das Aussehen aller Typen zu prüfen */
-export const Static: Story = {
-  parameters: { docs: { story: { inline: true } } },
-  render: () =>
-    `<div class="flex w-96 flex-col gap-3">${[
-      Toast({ title: "Event created", description: "Sunday, December 3 at 9:00 AM", timeout: 0 }),
-      ...types.map((type) => Toast({ type, title: `${type} toast`, description: "Beschreibung", timeout: 0 })),
-      Toast({ title: "Event created", action: { children: "Undo" }, timeout: 0 }),
-    ].join("")}</div>`,
 };

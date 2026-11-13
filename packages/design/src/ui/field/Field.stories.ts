@@ -29,7 +29,8 @@ type FieldStoryArgs = FieldArgs & {
 const orientations: FieldOrientation[] = ["vertical", "horizontal", "responsive"];
 
 /** Schmaler Container wie in den Docs (wichtig für Container-Queries bei `responsive`) */
-const frame = (inner: string, widthClass = "max-w-md"): string => `<div class="w-full ${widthClass}">${inner}</div>`;
+const frame = (inner: string): string => `<div class="w-64">${inner}</div>`;
+//const frame = (inner: string, widthClass = "max-w-md"): string => `<div class="w-full ${widthClass}">${inner}</div>`;
 
 /** Natives Kontrollkästchen (Checkbox-Komponente liegt noch nicht im Design-System) */
 const checkbox = (id: string, attributes: HtmlAttributes = {}): string =>
@@ -102,6 +103,7 @@ export const Default: Story = {};
 /** Mehrere Felder in einer FieldGroup (Input) */
 export const InputFields: Story = {
   render: () =>
+    frame(
       FieldSet({
         children: FieldGroup({
           children: [
@@ -122,6 +124,7 @@ export const InputFields: Story = {
           ],
         }),
       }),
+    )
 };
 
 /** Textarea mit Beschreibung */
@@ -423,8 +426,7 @@ export const ResponsiveLayout: Story = {
             ],
           }),
         ],
-      })}</form>`,
-      "max-w-4xl",
+      })}</form>`
     ),
 };
 

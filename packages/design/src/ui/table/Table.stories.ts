@@ -59,7 +59,7 @@ function invoiceTable(options: {
       TableHeader({
         children: TableRow({
           children: [
-            TableHead({ class: cn("w-[100px]", options.headClass), children: labels[0] }),
+            TableHead({ class: cn("w-25", options.headClass), children: labels[0] }),
             TableHead({ class: options.headClass, children: labels[1] }),
             TableHead({ class: options.headClass, children: labels[2] }),
             TableHead({ class: cn(options.headClass, amountClass), children: labels[3] }),

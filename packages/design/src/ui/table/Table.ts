@@ -26,8 +26,8 @@ const tableHeaderTw = tw`[&_tr]:border-b`;
 const tableBodyTw = tw`[&_tr:last-child]:border-0`;
 const tableFooterTw = tw`bg-muted/50 border-t font-medium [&>tr]:last:border-b-0`;
 const tableRowTw = tw`hover:bg-muted/50 data-[state=selected]:bg-muted border-b transition-colors has-aria-expanded:bg-muted/50`;
-const tableHeadTw = tw`text-foreground h-10 px-2 text-left align-middle font-medium whitespace-nowrap [&:has([role=checkbox])]:pr-0`;
-const tableCellTw = tw`p-2 align-middle whitespace-nowrap [&:has([role=checkbox])]:pr-0`;
+const tableHeadTw = tw`text-foreground h-10 px-2 text-left align-middle font-medium whitespace-nowrap has-[[role=checkbox]]:pr-0`;
+const tableCellTw = tw`p-2 align-middle whitespace-nowrap has-[[role=checkbox]]:pr-0`;
 const tableCaptionTw = tw`text-muted-foreground mt-4 text-sm`;
 
 /**
