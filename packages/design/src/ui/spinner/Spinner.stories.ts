@@ -61,7 +61,7 @@ export const InButton: Story = {
       Button({
         variant: "default",
         attributes: { disabled: true },
-        children: [Spinner({ attributes: { "data-icon": "inline-start" } }), "Generating"],
+        children: [Spinner({ attributes: { "data-icon": "inline-start", }, label: "Generating" }), "Generating"],
       }),
       Button({
         variant: "outline",
@@ -92,11 +92,6 @@ export const InBadge: Story = {
         children: [Spinner({ attributes: { "data-icon": "inline-start" } }), "Processing"],
       }),
     ].join("")}</div>`,
-};
-
-/** Eigener Screenreader-Text über `label`, z. B. für lokalisierte Oberflächen */
-export const CustomLabel: Story = {
-  args: { label: "Wird geladen", class: "size-6" },
 };
 
 export const InItem: Story = {

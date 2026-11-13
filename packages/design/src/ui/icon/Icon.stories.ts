@@ -9,6 +9,8 @@ type IconStoryArgs = {
   label?: string;
 };
 
+const frame = (inner: string): string => `<div style="width: 90vw;">${inner}</div>`;
+
 const meta: Meta<IconStoryArgs> = {
   title: "UI-Library/Icon",
   tags: ["autodocs"],
@@ -37,12 +39,14 @@ export const Default: Story = {};
 /** Alle Icons im Überblick (neue Dateien in src/svg erscheinen nach dem Generieren automatisch) */
 export const Alle: Story = {
   render: () =>
-    `<div class="grid grid-cols-[repeat(auto-fill,minmax(7rem,1fr))] gap-3">${iconNames
-      .map(
-        (name) =>
-          `<div class="flex flex-col items-center gap-2 rounded-lg border p-3 text-xs text-muted-foreground">${Icon({ name, class: "size-6 text-foreground" })}<span>${name}</span></div>`
-      )
-      .join("")}</div>`,
+    frame(
+      `<div class="grid grid-cols-[repeat(auto-fill,minmax(7rem,0.25fr))] gap-3">${iconNames
+        .map(
+          (name) =>
+            `<div class="flex flex-col items-center gap-2 rounded-lg border p-3 text-xs text-muted-foreground">${Icon({ name, class: "size-6 text-foreground" })}<span>${name}</span></div>`
+        )
+        .join("")}</div>`,
+    )
 };
 
 /** Größe, Linienstärke, Füllung und Farbe über Klassen. Eigene Attribute ersetzen die Standardwerte. */

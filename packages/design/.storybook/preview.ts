@@ -69,7 +69,7 @@ const preview: Preview = {
       if (context.viewMode !== "docs") {
         root.dataset.theme = theme;
         root.classList.toggle("dark", dark);
-        return `<div style="margin: 3rem; width: '100%', maxWidth: '1200px', margin: '0 auto', padding: '1rem' }">${story()}</div>`;
+        return story();
       }
 
       // Docs: Seite neutral, Reste aus der Canvas-Ansicht entfernen
