@@ -65,7 +65,7 @@ export const Description: Story = {
 export const ChoiceCard: Story = {
   render: () => {
     const card = (id: string, title: string, text: string, checked = false): string =>
-      `<label for="${id}" class="flex w-full items-center justify-between gap-4 rounded-lg border p-4 has-[[data-checked]]:border-primary/50 has-[[data-checked]]:bg-primary/5">
+      `<label for="${id}" class="flex w-full items-center justify-between gap-4 rounded-lg border p-4 has-data-checked:border-primary/50 has-data-checked:bg-primary/5">
         <span class="flex flex-col gap-1">
           <span class="${labelTw}">${title}</span>
           <span class="${descriptionTw}">${text}</span>

@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/html-vite";
 
-import { renderIcon } from "../../utils/renderIcon";
+import { Icon } from "../../ui/icon";
 import { LoginForm, LoginPage } from "./Login";
 import type {
     LoginFormArgs,
@@ -26,7 +26,7 @@ const brand = "Acme Inc.";
 const provider = (id: "apple" | "google" | "github" | "meta", label: string): LoginProvider => ({
   id,
   label,
-  icon: renderIcon(id),
+  icon: Icon({ name: id, }),
 });
 
 const exampleErrors = {
@@ -37,7 +37,6 @@ const exampleErrors = {
 
 const meta: Meta<LoginStoryArgs> = {
   title: "Components/Login",
-  tags: ["autodocs"],
   parameters: {
     layout: "fullscreen",
     docs: {
@@ -83,10 +82,10 @@ const meta: Meta<LoginStoryArgs> = {
     LoginPage({
       layout: pageLayout,
       brand,
-      logo: renderIcon("gallery-vertical-end"),
+      logo: Icon({ name: "gallery-vertical-end", }),
       children: LoginForm({
         ...args,
-        logo: renderIcon("gallery-vertical-end"),
+        logo: Icon({ name: "gallery-vertical-end", }),
         providers: [provider("google", "Mit Google anmelden"), provider("github", "Mit GitHub anmelden")],
         errors: showErrors ? exampleErrors : undefined,
       }),
@@ -101,6 +100,7 @@ export const Playground: Story = {};
 
 /** login-01: einfache Karte, Google-Button direkt unter "Anmelden" */
 export const Simple: Story = {
+  tags: ['readonly'],
   render: () =>
     LoginPage({
       layout: "centered",
@@ -118,7 +118,7 @@ export const TwoColumn: Story = {
     LoginPage({
       layout: "split",
       brand,
-      logo: renderIcon("gallery-vertical-end"),
+      logo: Icon({ name: "gallery-vertical-end", }),
       children: LoginForm({
         variant: "plain",
         title: "Bei deinem Konto anmelden",
@@ -135,7 +135,7 @@ export const MutedBackground: Story = {
     LoginPage({
       layout: "muted",
       brand,
-      logo: renderIcon("gallery-vertical-end"),
+      logo: Icon({ name: "gallery-vertical-end", }),
       children: LoginForm({
         title: "Willkommen zurück",
         description: "Melde dich mit deinem Apple- oder Google-Konto an.",
@@ -176,7 +176,7 @@ export const EmailOnly: Story = {
       layout: "centered",
       children: LoginForm({
         variant: "plain",
-        logo: renderIcon("gallery-vertical-end"),
+        logo: Icon({ name: "gallery-vertical-end", }),
         brand,
         title: "Willkommen bei Acme Inc.",
         showPassword: false,

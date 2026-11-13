@@ -2,7 +2,9 @@ import type { Meta, StoryObj } from "@storybook/html-vite";
 import { delay, http, HttpResponse } from "msw";
 import { Icon } from "../icon";
 import { Button } from "./Button";
-import type { ButtonArgs } from "./Button.types";
+import type { ButtonArgs, ButtonVariant } from "./Button.types";
+
+const variants: ButtonVariant[] = ["default", "secondary", "destructive", "outline", "ghost", "link"];
 
 const meta: Meta<ButtonArgs> = {
   title: "UI-Library/Buttons/Button",
@@ -27,6 +29,14 @@ export const Default: Story = {
   // globals: { colorMode: "dark" }
  };
 
+ /** Die Variante wird über `variant` gewählt */
+export const Variants: Story = {
+  render: (args) =>
+    `<div class="flex flex-wrap items-center gap-2">${variants
+      .map((variant) => Button({ variant, children: variant.charAt(0).toUpperCase() + variant.slice(1), size: args.size, disabled: args.disabled }))
+      .join("")}</div>`,
+};
+
 export const Destructive: Story = {
   args: {
     children: "Löschen",
@@ -49,8 +59,6 @@ export const Destructive: Story = {
     },
   },
 };
-
-export const Outline: Story = { args: { variant: "outline", children: "Outline" } };
 
 export const withIcon: Story = {
   args: {
