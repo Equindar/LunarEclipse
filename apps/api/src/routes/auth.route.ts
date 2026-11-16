@@ -6,7 +6,7 @@ const app = new Hono();
 
 app.get('/register', zValidator("json", registerAuthSchema), async (c) => {
   const { username, password } = c.req.valid("json");
-}
+});
 
 app.get('/login', (c) => c.text('OK', 200));
 
