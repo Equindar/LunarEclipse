@@ -35,11 +35,17 @@
       "color": "green-800",
       "folderNames": ["lifecycle"]
     },
-        {
+    {
       "name": "graphics",
       "base": "graphql",
       "color": "red-500",
       "folderNames": ["graphics"],
-    }
+    },
+    {
+      "name": "crypto",
+      "base": "keys",
+      "color": "blue-600",
+      "folderNames": ["crypto"],
+    },
   ]
 }

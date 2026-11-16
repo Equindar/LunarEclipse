@@ -7,12 +7,19 @@
     "./users": {
       "types": "./src/users/index.ts",
       "import": "./src/users/index.ts"
+    },
+    "./auth": {
+      "types": "./src/auth/index.ts",
+      "import": "./src/auth/index.ts"
     }
   },
   "typesVersions": {
     "*": {
       "users": [
         "./src/users/index.ts"
+      ],
+      "auth": [
+        "./src/auth/index.ts"
       ]
     }
   },

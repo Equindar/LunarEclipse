@@ -17,6 +17,7 @@
   "devDependencies": {
     "@lunareclipse/eslint": "workspace:*",
     "@lunareclipse/typescript": "workspace:*",
+    "@lunareclipse/crypto": "workspace:*",
     "@lunareclipse/helpers": "workspace:*",
     "@lunareclipse/features": "workspace:*",
     "@lunareclipse/database": "workspace:*",

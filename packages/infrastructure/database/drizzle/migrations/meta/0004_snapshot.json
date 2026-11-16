@@ -1,0 +1,1386 @@
+{
+  "version": "5",
+  "dialect": "mysql",
+  "id": "9cdfe1ee-36ce-4ce3-9cd7-ceac3590b400",
+  "prevId": "5fa81d36-e29d-43c1-b12b-a90797427066",
+  "tables": {
+    "accounts": {
+      "name": "accounts",
+      "columns": {
+        "ID": {
+          "name": "ID",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": true
+        },
+        "uuid": {
+          "name": "uuid",
+          "type": "binary(16)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "Owner": {
+          "name": "Owner",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": "NULL"
+        },
+        "CreatedAt": {
+          "name": "CreatedAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": "CURRENT_TIMESTAMP"
+        },
+        "UpdatedAt": {
+          "name": "UpdatedAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "onUpdate": true,
+          "default": "NULL"
+        },
+        "DeletedAt": {
+          "name": "DeletedAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": "NULL"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "accounts_Owner_users_ID_fk": {
+          "name": "accounts_Owner_users_ID_fk",
+          "tableFrom": "accounts",
+          "tableTo": "users",
+          "columnsFrom": [
+            "Owner"
+          ],
+          "columnsTo": [
+            "ID"
+          ],
+          "onDelete": "restrict",
+          "onUpdate": "restrict"
+        }
+      },
+      "compositePrimaryKeys": {
+        "accounts_ID": {
+          "name": "accounts_ID",
+          "columns": [
+            "ID"
+          ]
+        }
+      },
+      "uniqueConstraints": {
+        "accounts_uuid": {
+          "name": "accounts_uuid",
+          "columns": [
+            "uuid"
+          ]
+        },
+        "accounts_owner_unique": {
+          "name": "accounts_owner_unique",
+          "columns": [
+            "Owner"
+          ]
+        }
+      },
+      "checkConstraint": {}
+    },
+    "characters": {
+      "name": "characters",
+      "columns": {
+        "ID": {
+          "name": "ID",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": true
+        },
+        "uuid": {
+          "name": "uuid",
+          "type": "binary(16)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "name": {
+          "name": "name",
+          "type": "varchar(100)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "experience": {
+          "name": "experience",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": 0
+        },
+        "user_ID": {
+          "name": "user_ID",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "CreatedAt": {
+          "name": "CreatedAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": "CURRENT_TIMESTAMP"
+        },
+        "UpdatedAt": {
+          "name": "UpdatedAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "onUpdate": true,
+          "default": "NULL"
+        },
+        "DeletedAt": {
+          "name": "DeletedAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": "NULL"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "characters_user_ID_users_ID_fk": {
+          "name": "characters_user_ID_users_ID_fk",
+          "tableFrom": "characters",
+          "tableTo": "users",
+          "columnsFrom": [
+            "user_ID"
+          ],
+          "columnsTo": [
+            "ID"
+          ],
+          "onDelete": "restrict",
+          "onUpdate": "restrict"
+        }
+      },
+      "compositePrimaryKeys": {
+        "characters_ID": {
+          "name": "characters_ID",
+          "columns": [
+            "ID"
+          ]
+        }
+      },
+      "uniqueConstraints": {
+        "characters_name_unique": {
+          "name": "characters_name_unique",
+          "columns": [
+            "name"
+          ]
+        },
+        "characters_uuid": {
+          "name": "characters_uuid",
+          "columns": [
+            "uuid"
+          ]
+        }
+      },
+      "checkConstraint": {}
+    },
+    "characters_inventory": {
+      "name": "characters_inventory",
+      "columns": {
+        "ID": {
+          "name": "ID",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": true
+        },
+        "Item_Version_ID": {
+          "name": "Item_Version_ID",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "Character_ID": {
+          "name": "Character_ID",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "Inventory_ID": {
+          "name": "Inventory_ID",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "Amount": {
+          "name": "Amount",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": 1
+        }
+      },
+      "indexes": {
+        "Item_ID": {
+          "name": "Item_ID",
+          "columns": [
+            "Item_Version_ID"
+          ],
+          "isUnique": false
+        },
+        "Character_ID": {
+          "name": "Character_ID",
+          "columns": [
+            "Character_ID"
+          ],
+          "isUnique": false
+        },
+        "characters_inventory_Inventory_ID_IDX": {
+          "name": "characters_inventory_Inventory_ID_IDX",
+          "columns": [
+            "Inventory_ID"
+          ],
+          "isUnique": false
+        }
+      },
+      "foreignKeys": {
+        "characters_inventory_Item_Version_ID_items_version_ID_fk": {
+          "name": "characters_inventory_Item_Version_ID_items_version_ID_fk",
+          "tableFrom": "characters_inventory",
+          "tableTo": "items_version",
+          "columnsFrom": [
+            "Item_Version_ID"
+          ],
+          "columnsTo": [
+            "ID"
+          ],
+          "onDelete": "restrict",
+          "onUpdate": "restrict"
+        },
+        "characters_inventory_Character_ID_characters_ID_fk": {
+          "name": "characters_inventory_Character_ID_characters_ID_fk",
+          "tableFrom": "characters_inventory",
+          "tableTo": "characters",
+          "columnsFrom": [
+            "Character_ID"
+          ],
+          "columnsTo": [
+            "ID"
+          ],
+          "onDelete": "restrict",
+          "onUpdate": "restrict"
+        },
+        "characters_inventory_Inventory_ID_inventories_ID_fk": {
+          "name": "characters_inventory_Inventory_ID_inventories_ID_fk",
+          "tableFrom": "characters_inventory",
+          "tableTo": "inventories",
+          "columnsFrom": [
+            "Inventory_ID"
+          ],
+          "columnsTo": [
+            "ID"
+          ],
+          "onDelete": "restrict",
+          "onUpdate": "restrict"
+        }
+      },
+      "compositePrimaryKeys": {
+        "characters_inventory_ID": {
+          "name": "characters_inventory_ID",
+          "columns": [
+            "ID"
+          ]
+        }
+      },
+      "uniqueConstraints": {},
+      "checkConstraint": {}
+    },
+    "characters_wallet": {
+      "name": "characters_wallet",
+      "columns": {
+        "ID": {
+          "name": "ID",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": true
+        },
+        "Character_ID": {
+          "name": "Character_ID",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "Amount": {
+          "name": "Amount",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": 0
+        },
+        "CreatedAt": {
+          "name": "CreatedAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": "CURRENT_TIMESTAMP"
+        },
+        "UpdatedAt": {
+          "name": "UpdatedAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "onUpdate": true,
+          "default": "NULL"
+        }
+      },
+      "indexes": {
+        "Character_ID": {
+          "name": "Character_ID",
+          "columns": [
+            "Character_ID"
+          ],
+          "isUnique": false
+        }
+      },
+      "foreignKeys": {
+        "characters_wallet_Character_ID_characters_ID_fk": {
+          "name": "characters_wallet_Character_ID_characters_ID_fk",
+          "tableFrom": "characters_wallet",
+          "tableTo": "characters",
+          "columnsFrom": [
+            "Character_ID"
+          ],
+          "columnsTo": [
+            "ID"
+          ],
+          "onDelete": "restrict",
+          "onUpdate": "restrict"
+        }
+      },
+      "compositePrimaryKeys": {
+        "characters_wallet_ID": {
+          "name": "characters_wallet_ID",
+          "columns": [
+            "ID"
+          ]
+        }
+      },
+      "uniqueConstraints": {},
+      "checkConstraint": {}
+    },
+    "inventories": {
+      "name": "inventories",
+      "columns": {
+        "ID": {
+          "name": "ID",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": true
+        },
+        "Name": {
+          "name": "Name",
+          "type": "varchar(100)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {
+        "inventories_ID": {
+          "name": "inventories_ID",
+          "columns": [
+            "ID"
+          ]
+        }
+      },
+      "uniqueConstraints": {},
+      "checkConstraint": {}
+    },
+    "items": {
+      "name": "items",
+      "columns": {
+        "ID": {
+          "name": "ID",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": true
+        },
+        "uuid": {
+          "name": "uuid",
+          "type": "binary(16)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "Blueprint_ID": {
+          "name": "Blueprint_ID",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "Rarity_ID": {
+          "name": "Rarity_ID",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "Version": {
+          "name": "Version",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "Attributes": {
+          "name": "Attributes",
+          "type": "longtext",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": "NULL"
+        },
+        "CreatedAt": {
+          "name": "CreatedAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": "CURRENT_TIMESTAMP"
+        }
+      },
+      "indexes": {
+        "Blueprint_ID": {
+          "name": "Blueprint_ID",
+          "columns": [
+            "Blueprint_ID"
+          ],
+          "isUnique": false
+        },
+        "Rarity_ID": {
+          "name": "Rarity_ID",
+          "columns": [
+            "Rarity_ID"
+          ],
+          "isUnique": false
+        }
+      },
+      "foreignKeys": {
+        "items_Blueprint_ID_items_blueprint_ID_fk": {
+          "name": "items_Blueprint_ID_items_blueprint_ID_fk",
+          "tableFrom": "items",
+          "tableTo": "items_blueprint",
+          "columnsFrom": [
+            "Blueprint_ID"
+          ],
+          "columnsTo": [
+            "ID"
+          ],
+          "onDelete": "restrict",
+          "onUpdate": "restrict"
+        },
+        "items_Rarity_ID_items_rarity_ID_fk": {
+          "name": "items_Rarity_ID_items_rarity_ID_fk",
+          "tableFrom": "items",
+          "tableTo": "items_rarity",
+          "columnsFrom": [
+            "Rarity_ID"
+          ],
+          "columnsTo": [
+            "ID"
+          ],
+          "onDelete": "restrict",
+          "onUpdate": "restrict"
+        }
+      },
+      "compositePrimaryKeys": {
+        "items_ID": {
+          "name": "items_ID",
+          "columns": [
+            "ID"
+          ]
+        }
+      },
+      "uniqueConstraints": {
+        "items_uuid": {
+          "name": "items_uuid",
+          "columns": [
+            "uuid"
+          ]
+        }
+      },
+      "checkConstraint": {}
+    },
+    "items_blueprint": {
+      "name": "items_blueprint",
+      "columns": {
+        "ID": {
+          "name": "ID",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": true
+        },
+        "Name": {
+          "name": "Name",
+          "type": "varchar(100)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "Status": {
+          "name": "Status",
+          "type": "enum('Draft','In Review','Active')",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "'Draft'"
+        },
+        "CreatedAt": {
+          "name": "CreatedAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": "CURRENT_TIMESTAMP"
+        },
+        "UpdatedAt": {
+          "name": "UpdatedAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "onUpdate": true,
+          "default": "NULL"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {
+        "items_blueprint_ID": {
+          "name": "items_blueprint_ID",
+          "columns": [
+            "ID"
+          ]
+        }
+      },
+      "uniqueConstraints": {},
+      "checkConstraint": {}
+    },
+    "items_blueprint_version": {
+      "name": "items_blueprint_version",
+      "columns": {
+        "ID": {
+          "name": "ID",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": true
+        },
+        "Blueprint_ID": {
+          "name": "Blueprint_ID",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "Version": {
+          "name": "Version",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "Attributes": {
+          "name": "Attributes",
+          "type": "longtext",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": "'NULL'"
+        },
+        "Notes": {
+          "name": "Notes",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": "('NULL')"
+        },
+        "CreatedAt": {
+          "name": "CreatedAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": "CURRENT_TIMESTAMP"
+        }
+      },
+      "indexes": {
+        "Blueprint_ID": {
+          "name": "Blueprint_ID",
+          "columns": [
+            "Blueprint_ID"
+          ],
+          "isUnique": false
+        }
+      },
+      "foreignKeys": {
+        "items_blueprint_version_Blueprint_ID_items_blueprint_ID_fk": {
+          "name": "items_blueprint_version_Blueprint_ID_items_blueprint_ID_fk",
+          "tableFrom": "items_blueprint_version",
+          "tableTo": "items_blueprint",
+          "columnsFrom": [
+            "Blueprint_ID"
+          ],
+          "columnsTo": [
+            "ID"
+          ],
+          "onDelete": "restrict",
+          "onUpdate": "restrict"
+        }
+      },
+      "compositePrimaryKeys": {
+        "items_blueprint_version_ID": {
+          "name": "items_blueprint_version_ID",
+          "columns": [
+            "ID"
+          ]
+        }
+      },
+      "uniqueConstraints": {},
+      "checkConstraint": {}
+    },
+    "items_rarity": {
+      "name": "items_rarity",
+      "columns": {
+        "ID": {
+          "name": "ID",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": true
+        },
+        "Name": {
+          "name": "Name",
+          "type": "varchar(20)",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": "NULL"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {
+        "items_rarity_ID": {
+          "name": "items_rarity_ID",
+          "columns": [
+            "ID"
+          ]
+        }
+      },
+      "uniqueConstraints": {
+        "Name": {
+          "name": "Name",
+          "columns": [
+            "Name"
+          ]
+        }
+      },
+      "checkConstraint": {}
+    },
+    "items_version": {
+      "name": "items_version",
+      "columns": {
+        "ID": {
+          "name": "ID",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": true
+        },
+        "Item_ID": {
+          "name": "Item_ID",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "Blueprint_Version_ID": {
+          "name": "Blueprint_Version_ID",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "Version": {
+          "name": "Version",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "Attributes": {
+          "name": "Attributes",
+          "type": "longtext",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": "'NULL'"
+        },
+        "CreatedAt": {
+          "name": "CreatedAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": "CURRENT_TIMESTAMP"
+        }
+      },
+      "indexes": {
+        "Item_ID": {
+          "name": "Item_ID",
+          "columns": [
+            "Item_ID"
+          ],
+          "isUnique": false
+        },
+        "Blueprint_Version_ID": {
+          "name": "Blueprint_Version_ID",
+          "columns": [
+            "Blueprint_Version_ID"
+          ],
+          "isUnique": false
+        }
+      },
+      "foreignKeys": {
+        "items_version_Item_ID_items_ID_fk": {
+          "name": "items_version_Item_ID_items_ID_fk",
+          "tableFrom": "items_version",
+          "tableTo": "items",
+          "columnsFrom": [
+            "Item_ID"
+          ],
+          "columnsTo": [
+            "ID"
+          ],
+          "onDelete": "restrict",
+          "onUpdate": "restrict"
+        },
+        "items_version_Blueprint_Version_ID_items_blueprint_version_ID_fk": {
+          "name": "items_version_Blueprint_Version_ID_items_blueprint_version_ID_fk",
+          "tableFrom": "items_version",
+          "tableTo": "items_blueprint_version",
+          "columnsFrom": [
+            "Blueprint_Version_ID"
+          ],
+          "columnsTo": [
+            "ID"
+          ],
+          "onDelete": "restrict",
+          "onUpdate": "restrict"
+        }
+      },
+      "compositePrimaryKeys": {
+        "items_version_ID": {
+          "name": "items_version_ID",
+          "columns": [
+            "ID"
+          ]
+        }
+      },
+      "uniqueConstraints": {},
+      "checkConstraint": {}
+    },
+    "monsters": {
+      "name": "monsters",
+      "columns": {
+        "ID": {
+          "name": "ID",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": true
+        },
+        "uuid": {
+          "name": "uuid",
+          "type": "binary(16)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "Blueprint_ID": {
+          "name": "Blueprint_ID",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "Version": {
+          "name": "Version",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "Attributes": {
+          "name": "Attributes",
+          "type": "longtext",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": "'NULL'"
+        },
+        "CreatedAt": {
+          "name": "CreatedAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": "CURRENT_TIMESTAMP"
+        }
+      },
+      "indexes": {
+        "Blueprint_ID": {
+          "name": "Blueprint_ID",
+          "columns": [
+            "Blueprint_ID"
+          ],
+          "isUnique": false
+        }
+      },
+      "foreignKeys": {
+        "monsters_Blueprint_ID_monsters_blueprint_ID_fk": {
+          "name": "monsters_Blueprint_ID_monsters_blueprint_ID_fk",
+          "tableFrom": "monsters",
+          "tableTo": "monsters_blueprint",
+          "columnsFrom": [
+            "Blueprint_ID"
+          ],
+          "columnsTo": [
+            "ID"
+          ],
+          "onDelete": "restrict",
+          "onUpdate": "restrict"
+        }
+      },
+      "compositePrimaryKeys": {
+        "monsters_ID": {
+          "name": "monsters_ID",
+          "columns": [
+            "ID"
+          ]
+        }
+      },
+      "uniqueConstraints": {
+        "monsters_uuid": {
+          "name": "monsters_uuid",
+          "columns": [
+            "uuid"
+          ]
+        }
+      },
+      "checkConstraint": {}
+    },
+    "monsters_blueprint": {
+      "name": "monsters_blueprint",
+      "columns": {
+        "ID": {
+          "name": "ID",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": true
+        },
+        "Name": {
+          "name": "Name",
+          "type": "varchar(100)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "Status": {
+          "name": "Status",
+          "type": "enum('Draft','In Review','Active')",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "'Draft'"
+        },
+        "CreatedAt": {
+          "name": "CreatedAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": "CURRENT_TIMESTAMP"
+        },
+        "UpdatedAt": {
+          "name": "UpdatedAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "onUpdate": true,
+          "default": "NULL"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {
+        "monsters_blueprint_ID": {
+          "name": "monsters_blueprint_ID",
+          "columns": [
+            "ID"
+          ]
+        }
+      },
+      "uniqueConstraints": {},
+      "checkConstraint": {}
+    },
+    "monsters_blueprint_version": {
+      "name": "monsters_blueprint_version",
+      "columns": {
+        "ID": {
+          "name": "ID",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": true
+        },
+        "Blueprint_ID": {
+          "name": "Blueprint_ID",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "Version": {
+          "name": "Version",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "Attributes": {
+          "name": "Attributes",
+          "type": "longtext",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": "'NULL'"
+        },
+        "Notes": {
+          "name": "Notes",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": "('NULL')"
+        },
+        "CreatedAt": {
+          "name": "CreatedAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": "CURRENT_TIMESTAMP"
+        }
+      },
+      "indexes": {
+        "Blueprint_ID": {
+          "name": "Blueprint_ID",
+          "columns": [
+            "Blueprint_ID"
+          ],
+          "isUnique": false
+        }
+      },
+      "foreignKeys": {
+        "monsters_blueprint_version_Blueprint_ID_monsters_blueprint_ID_fk": {
+          "name": "monsters_blueprint_version_Blueprint_ID_monsters_blueprint_ID_fk",
+          "tableFrom": "monsters_blueprint_version",
+          "tableTo": "monsters_blueprint",
+          "columnsFrom": [
+            "Blueprint_ID"
+          ],
+          "columnsTo": [
+            "ID"
+          ],
+          "onDelete": "restrict",
+          "onUpdate": "restrict"
+        }
+      },
+      "compositePrimaryKeys": {
+        "monsters_blueprint_version_ID": {
+          "name": "monsters_blueprint_version_ID",
+          "columns": [
+            "ID"
+          ]
+        }
+      },
+      "uniqueConstraints": {},
+      "checkConstraint": {}
+    },
+    "monsters_version": {
+      "name": "monsters_version",
+      "columns": {
+        "ID": {
+          "name": "ID",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": true
+        },
+        "Monster_ID": {
+          "name": "Monster_ID",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "Version": {
+          "name": "Version",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "Blueprint_Version_ID": {
+          "name": "Blueprint_Version_ID",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "Attributes": {
+          "name": "Attributes",
+          "type": "longtext",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": "'NULL'"
+        },
+        "CreatedAt": {
+          "name": "CreatedAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": "CURRENT_TIMESTAMP"
+        }
+      },
+      "indexes": {
+        "Monster_ID": {
+          "name": "Monster_ID",
+          "columns": [
+            "Monster_ID"
+          ],
+          "isUnique": false
+        },
+        "Blueprint_Version_ID": {
+          "name": "Blueprint_Version_ID",
+          "columns": [
+            "Blueprint_Version_ID"
+          ],
+          "isUnique": false
+        }
+      },
+      "foreignKeys": {
+        "fk_monsters_version_monsters_BP_version": {
+          "name": "fk_monsters_version_monsters_BP_version",
+          "tableFrom": "monsters_version",
+          "tableTo": "monsters_blueprint_version",
+          "columnsFrom": [
+            "Blueprint_Version_ID"
+          ],
+          "columnsTo": [
+            "ID"
+          ],
+          "onDelete": "restrict",
+          "onUpdate": "restrict"
+        },
+        "fk_monsters_version_monsters": {
+          "name": "fk_monsters_version_monsters",
+          "tableFrom": "monsters_version",
+          "tableTo": "monsters",
+          "columnsFrom": [
+            "Monster_ID"
+          ],
+          "columnsTo": [
+            "ID"
+          ],
+          "onDelete": "restrict",
+          "onUpdate": "restrict"
+        }
+      },
+      "compositePrimaryKeys": {
+        "monsters_version_ID": {
+          "name": "monsters_version_ID",
+          "columns": [
+            "ID"
+          ]
+        }
+      },
+      "uniqueConstraints": {},
+      "checkConstraint": {}
+    },
+    "news": {
+      "name": "news",
+      "columns": {
+        "ID": {
+          "name": "ID",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": true
+        },
+        "uuid": {
+          "name": "uuid",
+          "type": "binary(16)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "Title": {
+          "name": "Title",
+          "type": "varchar(500)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "Text": {
+          "name": "Text",
+          "type": "varchar(10000)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "User_ID": {
+          "name": "User_ID",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "CreatedAt": {
+          "name": "CreatedAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": "CURRENT_TIMESTAMP"
+        },
+        "UpdatedAt": {
+          "name": "UpdatedAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "onUpdate": true,
+          "default": "NULL"
+        },
+        "DeletedAt": {
+          "name": "DeletedAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": "NULL"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "news_User_ID_users_ID_fk": {
+          "name": "news_User_ID_users_ID_fk",
+          "tableFrom": "news",
+          "tableTo": "users",
+          "columnsFrom": [
+            "User_ID"
+          ],
+          "columnsTo": [
+            "ID"
+          ],
+          "onDelete": "restrict",
+          "onUpdate": "restrict"
+        }
+      },
+      "compositePrimaryKeys": {
+        "news_ID": {
+          "name": "news_ID",
+          "columns": [
+            "ID"
+          ]
+        }
+      },
+      "uniqueConstraints": {},
+      "checkConstraint": {}
+    },
+    "users": {
+      "name": "users",
+      "columns": {
+        "ID": {
+          "name": "ID",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": true
+        },
+        "uuid": {
+          "name": "uuid",
+          "type": "binary(16)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "Account_id": {
+          "name": "Account_id",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "Email": {
+          "name": "Email",
+          "type": "varchar(254)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "Email_verified": {
+          "name": "Email_verified",
+          "type": "tinyint",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "DisplayName": {
+          "name": "DisplayName",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "isActive": {
+          "name": "isActive",
+          "type": "tinyint",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": 0
+        },
+        "CreatedAt": {
+          "name": "CreatedAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": "CURRENT_TIMESTAMP"
+        },
+        "UpdatedAt": {
+          "name": "UpdatedAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "onUpdate": true,
+          "default": "NULL"
+        },
+        "DeletedAt": {
+          "name": "DeletedAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": "NULL"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "users_Account_id_accounts_ID_fk": {
+          "name": "users_Account_id_accounts_ID_fk",
+          "tableFrom": "users",
+          "tableTo": "accounts",
+          "columnsFrom": [
+            "Account_id"
+          ],
+          "columnsTo": [
+            "ID"
+          ],
+          "onDelete": "restrict",
+          "onUpdate": "restrict"
+        }
+      },
+      "compositePrimaryKeys": {
+        "users_ID": {
+          "name": "users_ID",
+          "columns": [
+            "ID"
+          ]
+        }
+      },
+      "uniqueConstraints": {
+        "uq_users_email": {
+          "name": "uq_users_email",
+          "columns": [
+            "Email"
+          ]
+        },
+        "uq_users_uuid": {
+          "name": "uq_users_uuid",
+          "columns": [
+            "uuid"
+          ]
+        },
+        "uq_users_displayname": {
+          "name": "uq_users_displayname",
+          "columns": [
+            "DisplayName"
+          ]
+        }
+      },
+      "checkConstraint": {}
+    }
+  },
+  "views": {},
+  "_meta": {
+    "schemas": {},
+    "tables": {},
+    "columns": {}
+  },
+  "internal": {
+    "tables": {},
+    "indexes": {}
+  }
+}

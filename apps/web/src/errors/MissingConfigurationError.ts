@@ -1,6 +1,6 @@
-import { ApiError } from "./ApiError.js";
+import { AppError } from "./AppError.js";
 
-export class MissingConfigurationError extends ApiError {
+export class MissingConfigurationError extends AppError {
   constructor(public readonly requiredConfiguration: string) {
     super(`Fehlende Konfiguration: ${requiredConfiguration}`);
   }

@@ -29,6 +29,13 @@
       "when": 1791273194393,
       "tag": "0003_parched_vulture",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "5",
+      "when": 1794320522956,
+      "tag": "0004_classy_the_renegades",
+      "breakpoints": true
     }
   ]
 }

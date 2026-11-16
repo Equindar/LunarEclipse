@@ -1,6 +1,6 @@
 import { stripVTControlCharacters } from 'node:util';
 import { createLogger, LogErrorOptions, type Logger, LoggerOptions, type LogOptions, LogType } from 'vite';
-import configuration from '../config.js';
+import configuration from '../config/index.js';
 import appLogger from './logger.js';
 
 // Addon-Logger

@@ -2,9 +2,17 @@
 export * from './news.js';
 // Accounts
 export * from './accounts.js';
+export * from './accountsMembership.js';
 // Users
 export * from './users.js';
-
+export * from './usersExternalIdentities.js';
+export * from './usersLocalCredentials.js';
+// Authq
+export * from './authLoginActivities.js';
+export * from './authPasswordResetTokens.js';
+export * from './authSessions.js';
+export * from './authSessionTokens.js';
+export * from './authTrustedDevices.js';
 // Monsters
 export * from './monsters.js';
 export * from './monstersBlueprint.js';

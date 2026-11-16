@@ -1,4 +1,4 @@
-export abstract class ApiError extends Error {
+export abstract class AppError extends Error {
   /** true = erwarteter/"handled" Fehler, false = Programmierfehler/Bug */
   public readonly isOperational: boolean;
 
