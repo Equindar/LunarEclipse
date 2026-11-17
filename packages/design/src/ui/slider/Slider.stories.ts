@@ -11,7 +11,12 @@ import type { SliderArgs } from "./Slider.types";
 const wrap = (inner: string): string => `<div class="mx-auto w-full max-w-xs">${inner}</div>`;
 const frame = (inner: string): string => `<div class="w-64">${inner}</div>`;
 
-const meta: Meta<SliderArgs> = {
+type SliderStoryArgs = Omit<SliderArgs, "children"> & {
+  /** Anzahl der Avatare in der Gruppe */
+  range?: number;
+};
+
+const meta: Meta<SliderStoryArgs> = {
   title: "UI-Library/Slider",
   tags: ["autodocs"],
   parameters: {
@@ -26,6 +31,7 @@ const meta: Meta<SliderArgs> = {
     min: { control: "number" },
     max: { control: "number" },
     step: { control: "number" },
+    range: { control: { type: "range", min: 1, max: 100, step: 1 }, description: "Range" },
     orientation: { control: "select", options: ["horizontal", "vertical"] },
     disabled: { control: "boolean" },
     dir: { control: "select", options: [undefined, "ltr", "rtl"] },

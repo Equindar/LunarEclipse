@@ -11,7 +11,12 @@ interface ProgressStorySignals {
 
 const frame = (inner: string): string => `<div class="w-64">${inner}</div>`;
 
-const meta: Meta<ProgressArgs> = {
+type ProgressStoryArgs = Omit<ProgressArgs, "children"> & {
+  /** Anzahl der Avatare in der Gruppe */
+  value: number;
+};
+
+const meta: Meta<ProgressStoryArgs> = {
   title: 'UI-Library/Progress',
   tags: ['autodocs'],
   parameters: {
@@ -23,7 +28,7 @@ const meta: Meta<ProgressArgs> = {
     },
   },
   argTypes: {
-    value: { control: 'number' },
+    value: { control: { type: "range", min: 1, max: 100, step: 1 }, description: "Wert" },
     min: { control: 'number' },
     max: { control: 'number' },
     class: { control: 'text' },
@@ -137,16 +142,16 @@ export const CustomRange: Story = {
 
 /** Die Höhe wird am Track gesetzt (data-slot="progress-track") */
 export const Sizes: Story = {
-  render: () => frame(
+  render: (args) => frame(
     `<div class="flex w-full max-w-sm flex-col gap-6">${[
       Progress({
-        value: 50,
+        value: args.value,
         class: '[&_[data-slot=progress-track]]:h-1',
         attributes: { 'aria-label': 'Klein' },
       }),
-      Progress({ value: 50, attributes: { 'aria-label': 'Standard' } }),
+      Progress({ value: args.value, attributes: { 'aria-label': 'Standard' } }),
       Progress({
-        value: 50,
+        value: args.value,
         class: '[&_[data-slot=progress-track]]:h-3',
         attributes: { 'aria-label': 'Groß' },
       }),
@@ -156,16 +161,16 @@ export const Sizes: Story = {
 
 /** Rechts-nach-links mit arabischer Locale für die Wertanzeige */
 export const Rtl: Story = {
-  render: () =>
+  render: (args) =>
     `<div dir="rtl" class="w-full max-w-sm">${Progress({
       id: 'progress-rtl',
       hasLabel: true,
-      value: 56,
+      value: args.value,
       locale: 'ar-EG',
       class: 'w-full',
       children: [
-        ProgressLabel({ id: 'progress-rtl', value: 56, children: 'تقدم الرفع' }),
-        ProgressValue({ value: 56, locale: 'ar-EG' }),
+        ProgressLabel({ id: 'progress-rtl', value: args.value, children: 'تقدم الرفع' }),
+        ProgressValue({ value: args.value, locale: 'ar-EG' }),
       ],
     })}</div>`,
 };
