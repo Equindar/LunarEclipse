@@ -57,7 +57,7 @@ export const defaultRouter = new Hono().get('/', async (c) => {
             FieldDescription({
               children: "Beschreibung hier."
             }),
-            FieldLabel({ for: "input", children: "Check mea sd ",  }),
+            FieldLabel({ for: "input", children: "Check me!",  }),
             Input({
               id: "input",
               placeholder: "placeholder!",
@@ -97,7 +97,7 @@ export const defaultRouter = new Hono().get('/', async (c) => {
       <AppBar currentLang={language} currentPath={c.req.path} />
       <h1>Default Page</h1>
       {}<br />
-      <div class="w-64">
+      <div class="w-full">
 
       {raw(card)}
       </div>

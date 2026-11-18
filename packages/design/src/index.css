@@ -13,6 +13,7 @@
   --font-averia-bold: 'Averia Serif Libre Bold', serif;
 }
 
+/* Theme transitions */
 @layer base {
   html {
     font-size: 16px;
@@ -23,16 +24,6 @@
     min-height: 100dvh;
   }
 
-  /* Firefox scrollbar styling */
-  * {
-    scrollbar-width: thin;
-    scrollbar-color: var(--border) transparent;
-  }
-
-  * {
-    border-color: var(--border);
-  }
-
   body {
     background-color: var(--background);
     color: var(--foreground);
@@ -41,11 +32,17 @@
     text-rendering: optimizeLegibility;
   }
 
+  /* Firefox scrollbar styling */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: var(--border) transparent;
+    border-color: var(--border);
+  }
+
   a {
     cursor: pointer;
   }
 
-  /* Ensure form inputs have proper text colors */
   input,
   textarea,
   select {
@@ -55,5 +52,24 @@
   input::placeholder,
   textarea::placeholder {
     color: var(--muted-foreground);
+  }
+}
+
+/* Transitions only when explicitly enabled */
+html.theme-transition,
+html.theme-transition body,
+html.theme-transition body * {
+  transition:
+    background-color 200ms ease,
+    color 200ms ease,
+    border-color 200ms ease;
+}
+
+/* Respect accessibility preferences */
+@media (prefers-reduced-motion: reduce) {
+  html.theme-transition,
+  html.theme-transition body,
+  html.theme-transition body * {
+    transition: none !important;
   }
 }
