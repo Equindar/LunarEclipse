@@ -1,3 +1,8 @@
 import './styles.css';
 
-console.log('Hello from WebApp!');
+// --- issue: #268
+requestAnimationFrame(() => {
+  requestAnimationFrame(() => {
+    document.documentElement.classList.add('theme-transition');
+  });
+});

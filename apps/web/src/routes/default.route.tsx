@@ -1,4 +1,4 @@
-import { Avatar, Button, Card, CardContent, CardDescription, CardFooter, CardHeader, CardPartArgs, CardTitle, Checkbox, Field, Item, Label, type AvatarArgs, type CheckboxArgs } from '@lunareclipse/design';
+import { Button, Card, CardContent, CardDescription, CardFooter, CardHeader, CardPartArgs, CardTitle, Checkbox, Field, FieldContent, FieldDescription, FieldError, FieldGroup, FieldLabel, FieldLegend, FieldSeparator, FieldSet, Input, type CheckboxArgs } from '@lunareclipse/design';
 import createI18n, { toSupportedLanguage } from '@lunareclipse/i18n';
 import { Hono } from 'hono';
 import { raw } from 'hono/html';
@@ -10,28 +10,6 @@ export const defaultRouter = new Hono().get('/', async (c) => {
   const i18n = await createI18n(language, ['common']);
   const t = i18n.t.bind(i18n);
 
-  const button = Button({
-    variant: "default",
-    size: "lg",
-    attributes: {
-      "data-on:click": "@post('/api/delete')",
-    },
-    children: t('common:buttons.submit'),
-  });
-
-  const counterButton = Button({
-    variant: "secondary",
-    attributes: {
-      "data-signals": "{count: 0}",
-      "data-on:click": "$count++",
-      "data-text": "$count",
-    },
-  });
-
-  const label = Label({
-    for: "myCheckbox",
-    children: "Check me",
-  });
   const checkboxArgs: CheckboxArgs = {
     id: "myCheckbox",
     checked: false,
@@ -44,8 +22,55 @@ export const defaultRouter = new Hono().get('/', async (c) => {
   const args: CardPartArgs = {
     children: "<p>Card Content</p>",
   };
-  const card = Card({
 
+  const fieldset = FieldSet({
+    children: FieldGroup({
+      children: [
+        FieldLegend({ children: "Profil" }),
+        FieldDescription({ children: "Trage deine Profildaten ein." }),
+        Field({
+          orientation: "responsive",
+          disabled: false,
+          invalid: false,
+          children: [
+            FieldContent({
+              children: [
+                FieldDescription({
+                  children: "Beschreibung hier."
+                }),
+                FieldLabel({ for: "myCheckbox", children: "Check me",  }),
+              ]
+            }),
+            Checkbox({
+              id: "myCheckbox",
+              checked: false,
+              class: "my-custom-class",
+            }),
+            FieldError({children: "Muss angeklickt sein"})
+          ],
+        }),
+        FieldSeparator(),
+        Field({
+          orientation: "responsive",
+          disabled: true,
+          children: [
+            FieldDescription({
+              children: "Beschreibung hier."
+            }),
+            FieldLabel({ for: "input", children: "Check me!",  }),
+            Input({
+              id: "input",
+              placeholder: "placeholder!",
+              class: "my-custom-class",
+            }),
+            FieldError({children: "Muss angeklickt sein"})
+          ],
+        })
+      ]
+    })
+  });
+
+  const card = Card({
       children: [
         CardHeader({
           children: [
@@ -53,50 +78,29 @@ export const defaultRouter = new Hono().get('/', async (c) => {
             CardDescription({ children: "Card Description" }),
           ],
         }),
-        CardContent({ children: "<p>Card Content</p>" }),
+        CardContent({ children: fieldset }),
         CardFooter({
-          class: "flex-col gap-2",
-          children:  [button, counterButton ]}),
+          // class: "flex-col gap-2",
+          children:  [
+            Button({
+                children: "Button",
+              type: "button",
+              variant: "default"
+            })]
+          })
       ]
   });
 
-  const avatarArgs: AvatarArgs = {
-    size: "lg",
-    backgroundColor: "#3b82f6",
-    textColor: "#ffffff",
-    children: "Eq",
-  };
-  const avatar = Avatar(avatarArgs);
-
-  const field = Field({
-    id: "myField",
-    orientation: "horizontal",
-    disabled: true,
-    children: [
-      Item({
-        children: [
-          Label({ for: "myCheckbox", children: "Check me",  }),
-          Checkbox({
-            id: "myCheckbox",
-            checked: false,
-            disabled: false,
-            class: "my-custom-class"
-          }),
-        ],
-      }),
-    ],
-  });
 
   return c.html(
     <Layout title="Default Page">
       <AppBar currentLang={language} currentPath={c.req.path} />
       <h1>Default Page</h1>
       {}<br />
-      {raw(counterButton)}
-      {raw(label)} {raw(checkbox)}
+      <div class="w-full">
+
       {raw(card)}
-      {raw(avatar)}
-      {raw(field)}
+      </div>
     </Layout>
   );
 });
