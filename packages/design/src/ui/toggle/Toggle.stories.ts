@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/html-vite";
 
 import { renderIcon } from "../../utils/renderIcon";
+import { Icon } from "../icon";
 import { Toggle } from "./Toggle";
 import type { ToggleArgs, ToggleSize, ToggleVariant } from "./Toggle.types";
 
@@ -10,7 +11,6 @@ const variants: ToggleVariant[] = ["default", "outline"];
 const sizes: ToggleSize[] = ["sm", "default", "lg"];
 
 /** Icon-Inhalte (Lucide), als Inneres eines 24x24-SVGs */
-const bookmarkPaths = `<path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z"></path>`;
 const boldPaths = `<path d="M6 12h9a4 4 0 0 1 0 8H7a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1h7a4 4 0 0 1 0 8"></path>`;
 const italicPaths = `<line x1="19" x2="10" y1="4" y2="4"></line><line x1="14" x2="5" y1="20" y2="20"></line><line x1="15" x2="9" y1="4" y2="20"></line>`;
 
@@ -61,7 +61,8 @@ export const Default: Story = {
       size: "sm",
       class: "aria-pressed:bg-transparent aria-pressed:*:[svg]:fill-blue-500 aria-pressed:*:[svg]:stroke-blue-500",
       attributes: { "aria-label": "Toggle bookmark" },
-      children: [renderIcon(bookmarkPaths), "Bookmark"],
+      children: [
+        Icon({ name: "bookmark"}), "Bookmark"],
     }),
 };
 
@@ -144,6 +145,7 @@ export const Rtl: Story = {
       id: "toggle-rtl",
       variant: "outline",
       attributes: { "aria-label": "إشارة مرجعية" },
-      children: [renderIcon(bookmarkPaths), "إشارة مرجعية"],
+      children: [
+        Icon({ name: "bookmark"}), "إشارة مرجعية"],
     })}</div>`,
 };

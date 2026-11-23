@@ -37,9 +37,3 @@ export const Playground: Story = {};
 export const Outline: Story = {
   render: () => DarkModeToggle({ variant: "outline" }),
 };
-
-/** Einbindung rechts in einer AppBar (Titel links, Toggle oben rechts) */
-export const InAppBar: Story = {
-  render: () =>
-    `<header class="flex h-14 items-center justify-between border-b bg-background px-4 text-foreground"><span class="text-sm font-medium">LunarEclipse</span><div class="flex items-center gap-2">${DarkModeToggle({ id: "dark-mode-toggle-appbar" })}</div></header>`,
-};
