@@ -13,3 +13,27 @@
   font-style: normal;
   font-display: swap;
 }
+
+@font-face {
+  font-family: 'Averia Serif Libre Regular';
+  src: url('../fonts/Averia_Serif_Libre/AveriaSerifLibre-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Nunito Bold';
+  src: url('../fonts/Nunito/Nunito-Bold.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Nunito Regular';
+  src: url('../fonts/Nunito/Nunito-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}

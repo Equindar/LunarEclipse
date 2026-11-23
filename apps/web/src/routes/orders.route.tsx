@@ -39,7 +39,7 @@ export const ordersRouter = new Hono().get('/', async (c) => {
               Item({
                 variant: "default",
                 children: [
-                  ItemMedia({ variant: "icon", children: Icon({ name: item.icon, class: "size-10 text-muted/80"}) }),
+                  ItemMedia({ variant: "icon", children: Icon({ name: item.icon, class: "size-10 text-muted"}) }),
                   ItemContent({ children: [ItemTitle({ children: item.title }), ItemDescription({ children: item.desc })] }),
                   ItemActions({ children: Button({ variant: "outline", size: "sm", children: "Starten" }) }),
                 ]
@@ -124,7 +124,6 @@ export const ordersRouter = new Hono().get('/', async (c) => {
   return c.html(
     <Layout title="Default Page">
       <AppBar currentLang={language} currentPath={c.req.path} />
-      <h1>Default Page</h1>
       <div class="flex justify-center items-center">
         {raw(card)}
       </div>
