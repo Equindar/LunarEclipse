@@ -10,6 +10,7 @@
   "scripts": {
     "icons": "tsx scripts/generateIcons.ts",
     "icons:check": "tsx scripts/generateIcons.ts --check",
+    "icons:download": "tsx scripts/downloadIcons.ts",
     "storybook:dev": "storybook dev -p 6006 --logfile ./logs/debug.log",
     "storybook:build": "storybook build",
     "typecheck": "tsc --noEmit"

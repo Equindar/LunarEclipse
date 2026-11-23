@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/html-vite";
 
 import { Button } from "../button";
+import { Icon } from "../icon";
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -19,14 +20,10 @@ import type { DropdownMenuArgs, DropdownMenuContentArgs } from "./Dropdown.types
 const icon = (inner: string): string =>
   `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${inner}</svg>`;
 
-const userIcon = icon(`<path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle>`);
-const creditCardIcon = icon(`<rect width="20" height="14" x="2" y="5" rx="2"></rect><line x1="2" x2="22" y1="10" y2="10"></line>`);
-const settingsIcon = icon(
-  `<circle cx="12" cy="12" r="3"></circle><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"></path>`
-);
-const logOutIcon = icon(
-  `<path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" x2="9" y1="12" y2="12"></line>`
-);
+const userIcon = Icon({ name: "user" });
+const creditCardIcon = Icon({ name: "credit-card"});
+const settingsIcon = Icon({ name: "settings-2"});
+const logOutIcon = Icon({ name: "log-out"});
 
 /**
  * Dropdown mit Button als Trigger (asChild) und Content.

@@ -10,6 +10,7 @@ import databaseRouter from './routes/database.route.js';
 import { defaultRouter } from './routes/default.route.js';
 import { helloRouter } from './routes/hello.route.js';
 import languageRouter from './routes/language.route.js';
+import { ordersRouter } from './routes/orders.route.js';
 import logger from './utils/logger.js';
 
 const i18nLogger = logger.child({ module: 'i18n' });
@@ -42,6 +43,8 @@ app.use('*', async (c, next) => {
 app.route('/hello', helloRouter);
 app.route('/language', languageRouter);
 app.route('/database', databaseRouter);
+app.route('/orders', ordersRouter);
+
 app.route('/', defaultRouter);
 
 if (process.env.NODE_ENV === 'production') {
