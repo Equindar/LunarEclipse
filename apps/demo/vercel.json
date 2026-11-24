@@ -1,5 +1,5 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "framework": null,
-  "buildCommand": "cd ../.. && pnpm exec turbo run build --filter=@lunareclipse/demo..."
+  "buildCommand": "cd ../.. && pnpm exec turbo run build --filter=@lunareclipse/demo"
 }

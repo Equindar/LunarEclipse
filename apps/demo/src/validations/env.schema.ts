@@ -19,10 +19,10 @@ export const envSchema = z.object({
   LOG_DIRECTORY: z.string().default('./logs'),
 
   // Database
-  DATABASE_HOST: z.string().min(1),
-  DATABASE_USER: z.string().min(1),
-  DATABASE_PASSWORD: z.string().min(1),
-  DATABASE_NAME: z.string().min(1),
+  // DATABASE_HOST: z.string().min(1),
+  // DATABASE_USER: z.string().min(1),
+  // DATABASE_PASSWORD: z.string().min(1),
+  // DATABASE_NAME: z.string().min(1),
 
   // Authentication
   // AUTH_SECRET: z.string().min(32),
