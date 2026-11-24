@@ -1,4 +1,3 @@
-
 import buildVercel from '@hono/vite-build/vercel';
 import devServer, { defaultOptions } from '@hono/vite-dev-server';
 import nodeAdapter from '@hono/vite-dev-server/node';

@@ -1,4 +1,4 @@
-import { initialize } from "./lifecycle/initialize";
+import { initialize } from "./lifecycle/initialize.js";
 
 const { app } = await initialize();
 
