@@ -5,7 +5,6 @@ import { requestId, type RequestIdVariables } from 'hono/request-id';
 import { secureHeaders } from 'hono/secure-headers';
 import type { ApplicationDependencies } from './lifecycle/initialize.js';
 import { languageMiddleware } from './middleware/language.middleware.js';
-import databaseRouter from './routes/database.route.js';
 import { defaultRouter } from './routes/default.route.js';
 import { helloRouter } from './routes/hello.route.js';
 import languageRouter from './routes/language.route.js';
@@ -45,7 +44,6 @@ export function createApp({
   // --- Registering Routes
   app.route('/hello', helloRouter);
   app.route('/language', languageRouter);
-  app.route('/database', databaseRouter);
   app.route('/orders', ordersRouter);
   app.route('/', defaultRouter);
 
