@@ -5,10 +5,11 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "start": "tsx src/bootstrap.ts",
-    "build": "vite build --mode client && vite build",
+    "predev": "node scripts/generateAssetManifest.mjs --stub",
+    "build": "vite build --mode client && node scripts/generateAssetManifest.mjs && vite build",
     "build:client": "vite build --mode client",
     "build:server": "vite build",
+    "start": "tsx src/bootstrap.ts",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {

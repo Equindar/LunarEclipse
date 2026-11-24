@@ -1,10 +1,21 @@
-import { readFileSync, writeFileSync } from 'node:fs';
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { dirname } from 'node:path';
 
-const manifest = JSON.parse(
-  readFileSync('public/static/.vite/manifest.json', 'utf8'),
-);
+const manifestPath = 'public/static/.vite/manifest.json';
+const outPath = 'src/generated/asset-manifest.ts';
+const stub = process.argv.includes('--stub');
 
-writeFileSync(
-  'src/generated/asset-manifest.ts',
-  `export default ${JSON.stringify(manifest, null, 2)} as const;\n`,
-);
+mkdirSync(dirname(outPath), { recursive: true });
+
+if (stub) {
+  // Nur anlegen, wenn noch nichts da ist, damit ein echter Stand nicht überschrieben wird
+  if (!existsSync(outPath)) {
+    writeFileSync(outPath, 'export default {} as const;\n');
+  }
+} else {
+  const manifest = JSON.parse(readFileSync(manifestPath, 'utf8'));
+  writeFileSync(
+    outPath,
+    `export default ${JSON.stringify(manifest, null, 2)} as const;\n`,
+  );
+}
