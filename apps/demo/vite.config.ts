@@ -9,15 +9,13 @@ const serverEntry = './src/index.ts';
 const clientEntry = './src/www/index.ts';
 
 export default defineConfig(({ command, mode }) => {
-  const plugins: PluginOption[] = [
-    tailwindcss(),
-  ];
+  const plugins: PluginOption[] = [tailwindcss()];
 
   // Client-Build
   if (mode === 'client') {
     return {
       customLogger: logger,
-      plugins: [tailwindcss()],
+      plugins,
       build: {
         outDir: 'public/static',
         emptyOutDir: true,
@@ -30,7 +28,7 @@ export default defineConfig(({ command, mode }) => {
     };
   }
 
-  // Lokale Entwicklung (Plugin: Vite-DevServer)
+  // Lokale Entwicklung
   if (command === 'serve') {
     plugins.push(
       devServer({
@@ -39,9 +37,8 @@ export default defineConfig(({ command, mode }) => {
         exclude: [...defaultOptions.exclude],
       }),
     );
-  }
-  // Produktions-Build für Vercel (Plugin: buildVercel)
-  else {
+  } else {
+    // Vercel-Produktions-Build
     plugins.push(
       buildVercel({
         entry: serverEntry,
@@ -54,6 +51,10 @@ export default defineConfig(({ command, mode }) => {
     plugins,
     server: {
       port: 3001,
+    },
+    build: {
+      // Server-Chunks innerhalb der Vercel Function ablegen
+      assetsDir: 'functions/__hono.func/assets',
     },
   };
 });
