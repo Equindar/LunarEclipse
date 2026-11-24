@@ -11,6 +11,8 @@
   --font-sans: 'Noto Sans JP', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   --font-averia: 'Averia Serif Libre Regular', serif;
   --font-averia-bold: 'Averia Serif Libre Bold', serif;
+  --font-nunito: 'Nunito Regular', sans-serif;
+  --font-nunito-bold: 'Nunito Bold', sans-serif;
 }
 
 /* Theme transitions */

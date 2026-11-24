@@ -1,44 +1,15 @@
 import type { Children } from "../../types/Children";
 import type { HtmlAttributes } from "../../utils/renderHtmlAttributes";
 
-/** Zustand des Fortschritts (entspricht den data-Attributen von Base UI) */
-export type ProgressStatus = "indeterminate" | "progressing" | "complete";
+import type { ProgressFormatArgs, ProgressMeasureArgs } from "../../utils/progressValue";
 
-/** Aufgelöster Wertebereich (siehe resolveProgressRange) */
-export interface ProgressRange {
-  min: number;
-  max: number;
-}
-
-/**
- * Wert und Wertebereich. Die Teile (Track, Indicator, Label, Value) kennen den Root nicht
- * (kein React-Context), deshalb bekommen sie dieselben Angaben wie der Root.
- */
-export interface ProgressMeasureArgs {
-  /** Aktueller Wert. `null` oder nicht gesetzt: unbestimmter Fortschritt (indeterminate) */
-  value?: number | null;
-  /** Untergrenze (Standard: 0) */
-  min?: number;
-  /** Obergrenze (Standard: 100) */
-  max?: number;
-  /**
-   * Datastar-Ausdruck, der den Wert liefert, z. B. `$upload.value`.
-   * Damit folgen Breite, ARIA-Werte und Anzeige dem Signal. `value` dient dann als Startwert
-   * für das Rendering vor dem Laden von Datastar.
-   */
-  valueSignal?: string;
-}
-
-/** Formatierung der Wertanzeige und von aria-valuetext */
-export interface ProgressFormatArgs {
-  /** Locale für Intl.NumberFormat (Standard: "en-US") */
-  locale?: string;
-  /**
-   * Eigene Formatierung des Rohwerts. Ohne Angabe wird der Anteil am Wertebereich
-   * als Prozent ausgegeben.
-   */
-  format?: Intl.NumberFormatOptions;
-}
+/** Gemeinsame Typen liegen in utils/progressValue.ts und bleiben über dieses Modul verfügbar */
+export type {
+    ProgressFormatArgs,
+    ProgressMeasureArgs,
+    ProgressRange,
+    ProgressStatus
+} from "../../utils/progressValue";
 
 export interface ProgressArgs extends ProgressMeasureArgs, ProgressFormatArgs {
   /** ID des Elements. Mit `hasLabel` wird aria-labelledby auf `<id>-label` gesetzt */

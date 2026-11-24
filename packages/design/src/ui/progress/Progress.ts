@@ -1,17 +1,16 @@
 import { cn } from "../../utils/cn";
 import { escapeHtml } from "../../utils/escapeHtml";
-import { renderChildren } from "../../utils/renderChildren";
-import { renderAttributes, type HtmlAttributes } from "../../utils/renderHtmlAttributes";
-import { tw } from "../../utils/tw";
 import {
-    buildProgressIndicatorStyle,
     buildProgressPartAttributes,
-    buildProgressPercentExpression,
     buildProgressRootAttributes,
     buildProgressTextExpression,
     formatProgressValue,
     resolveProgressRange,
-} from "./Progress.expressions";
+} from "../../utils/progressValue";
+import { renderChildren } from "../../utils/renderChildren";
+import { renderAttributes, type HtmlAttributes } from "../../utils/renderHtmlAttributes";
+import { tw } from "../../utils/tw";
+import { buildProgressIndicatorStyle, buildProgressPercentExpression } from "./Progress.expressions";
 import type {
     ProgressArgs,
     ProgressIndicatorArgs,
@@ -39,7 +38,7 @@ const progressValueTw = tw`text-muted-foreground ml-auto text-sm tabular-nums`;
 export function Progress(args: ProgressArgs = {}): string {
   const attrs: HtmlAttributes = {
     ...args.attributes,
-    ...buildProgressRootAttributes(args),
+    ...buildProgressRootAttributes(args, "progress"),
     class: cn(progressTw, args.class),
   };
 
