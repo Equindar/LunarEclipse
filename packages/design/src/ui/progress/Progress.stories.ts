@@ -17,7 +17,7 @@ type ProgressStoryArgs = Omit<ProgressArgs, "children"> & {
 };
 
 const meta: Meta<ProgressStoryArgs> = {
-  title: 'UI-Library/Progress',
+  title: 'UI-Library/Progress/Progress',
   tags: ['autodocs'],
   parameters: {
     docs: {

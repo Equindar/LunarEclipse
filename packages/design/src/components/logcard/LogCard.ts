@@ -64,7 +64,7 @@ const logEntryToneTw: Record<LogEntryTone, string> = {
 function renderEntry(entry: LogEntryArgs): string {
   const tone = entry.tone ?? DEFAULT_TONE;
 
-  return `<li class="${escapeHtml(cn(logCardEntryTw, logEntryToneTw[tone]))}" data-slot="log-card-entry" data-tone="${escapeHtml(tone)}"><span class="${escapeHtml(logCardTimeTw)}">[${escapeHtml(entry.time)}]</span><span>${escapeHtml(entry.message)}</span></li>`;
+  return `<li class="${escapeHtml(cn(logCardEntryTw, logEntryToneTw[tone]))}" data-slot="log-card-entry" data-tone="${escapeHtml(tone)}"><span class="${escapeHtml(logCardTimeTw)} font-nunito">[${escapeHtml(entry.time)}]</span><span>${escapeHtml(entry.message)}</span></li>`;
 }
 
 /**
