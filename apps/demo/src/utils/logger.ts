@@ -6,7 +6,7 @@ const logger: Logger = createLogger({
   service: configuration.app.name ?? '',
   level: configuration.logging.level,
   logDir: configuration.logging.directory ?? path.join(process.cwd(), 'logs'),
-  enableFile: process.env.NODE_ENV === 'production',
+  enableFile: false,
   errorRetention: '30d',
 });
 
