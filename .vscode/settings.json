@@ -24,7 +24,8 @@
     "*.css": "tailwindcss"
   },
   "json.schemaDownload.trustedDomains": {
-    "https://turborepo.dev/": true
+    "https://turborepo.dev/": true,
+    "https://openapi.vercel.sh": true
   },
   "tailwindCSS.classFunctions": ["tw", "cn"],
   "tailwindCSS.experimental.configFile": "packages/design/src/index.css",

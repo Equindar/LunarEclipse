@@ -1,39 +1,38 @@
-import { readFileSync } from 'node:fs';
+import manifest from '../generated/asset-manifest.js';
 
 export interface AssetTags {
-  js: string[]
-  css: string[]
+  js: string[];
+  css: string[];
 }
 
 interface ManifestEntry {
-  file: string
-  css?: string[]
+  file: string;
+  css?: string[];
 }
 
-type Manifest = Record<string, ManifestEntry>
+type Manifest = Record<string, ManifestEntry>;
 
-const ENTRY = 'src/www/index.ts'
+const ENTRY = 'src/www/index.ts';
+const isDev = !import.meta.env.PROD;
 
-const isDev = process.env.NODE_ENV !== 'production'
-
-const manifest: Manifest | null = isDev
-  ? null
-  : JSON.parse(readFileSync('build/client/.vite/manifest.json', 'utf8'))
-
-export const DATASTAR_SRC = '/datastar-v1.0.4.js'
+export const DATASTAR_SRC = '/datastar-v1.0.4.js';
 
 export function assetTags(): AssetTags {
-  if (!manifest) {
-    return { js: [`/${ENTRY}`], css: [] }
-}
+  if (isDev) {
+    return {
+      js: [`/${ENTRY}`],
+      css: [],
+    };
+  }
 
-  const entry = manifest[ENTRY]
+  const entry = (manifest as Manifest)[ENTRY];
+
   if (!entry) {
-    throw new Error(`Manifest enthält keinen Eintrag für ${ENTRY}`)
+    throw new Error(`Manifest enthält keinen Eintrag für ${ENTRY}`);
   }
 
   return {
-    js: [`/${entry.file}`],
-    css: (entry.css ?? []).map(file => `/${file}`),
-  }
+    js: [`/static/${entry.file}`],
+    css: (entry.css ?? []).map(file => `/static/${file}`),
+  };
 }

@@ -1,35 +1,60 @@
+
+import buildVercel from '@hono/vite-build/vercel';
 import devServer, { defaultOptions } from '@hono/vite-dev-server';
 import nodeAdapter from '@hono/vite-dev-server/node';
 import tailwindcss from '@tailwindcss/vite';
-import { defineConfig } from 'vite';
-// import { logViteReloads } from './src/utils/logViteReloads.js';
+import { defineConfig, type PluginOption } from 'vite';
 import logger from './src/utils/vite.logger.js';
 
+const serverEntry = './src/index.ts';
+const clientEntry = './src/www/index.ts';
 
-// Vite-Logger
-// const viteLogger = mylogger.child({ module: 'Vite' });
-
-
-export default defineConfig({
-  customLogger: logger,
-  plugins: [
-    // logViteReloads(),
+export default defineConfig(({ command, mode }) => {
+  const plugins: PluginOption[] = [
     tailwindcss(),
-    devServer({
-      entry: 'src/app.ts', // The file path of your application.
-      adapter: nodeAdapter, // Use the Node.js adapter for Hono.
-      exclude: [...defaultOptions.exclude], // Exclude node_modules and public directories from the dev server.
-    }),
-  ],
-  build: {
-    outDir: 'build/client',
-    emptyOutDir: true,
-    manifest: true, // erzeugt build/client/.vite/manifest.json
-    rollupOptions: {
-      input: 'src/www/index.ts',
+  ];
+
+  // Client-Build
+  if (mode === 'client') {
+    return {
+      customLogger: logger,
+      plugins: [tailwindcss()],
+      build: {
+        outDir: 'public/static',
+        emptyOutDir: true,
+        copyPublicDir: false,
+        manifest: true,
+        rollupOptions: {
+          input: clientEntry,
+        },
+      },
+    };
+  }
+
+  // Lokale Entwicklung (Plugin: Vite-DevServer)
+  if (command === 'serve') {
+    plugins.push(
+      devServer({
+        entry: serverEntry,
+        adapter: nodeAdapter,
+        exclude: [...defaultOptions.exclude],
+      }),
+    );
+  }
+  // Produktions-Build für Vercel (Plugin: buildVercel)
+  else {
+    plugins.push(
+      buildVercel({
+        entry: serverEntry,
+      }),
+    );
+  }
+
+  return {
+    customLogger: logger,
+    plugins,
+    server: {
+      port: 3001,
     },
-  },
-  server: {
-    port: 3001,
-  },
-})
+  };
+});

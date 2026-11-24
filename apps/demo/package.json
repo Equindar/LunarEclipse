@@ -5,19 +5,20 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build && tsc -p tsconfig.build.json",
-    "build:client": "vite build",
-    "build:server": "tsc -p tsconfig.build.json",
-    "start": "NODE_ENV=production node build/server/index.js",
+    "start": "tsx src/bootstrap.ts",
+    "build": "vite build --mode client && vite build",
+    "build:client": "vite build --mode client",
+    "build:server": "vite build",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@lunareclipse/logging": "workspace:*",
     "@hono/node-server": "^1.13.0",
+    "@lunareclipse/logging": "workspace:*",
     "hono": "^4.6.0",
     "zod": "^4.0.0"
   },
   "devDependencies": {
+    "@hono/vite-build": "^1.11.1",
     "@hono/vite-dev-server": "^0.26.1",
     "@lunareclipse/database": "workspace:*",
     "@lunareclipse/design": "workspace:*",
