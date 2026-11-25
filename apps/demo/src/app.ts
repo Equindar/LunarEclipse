@@ -5,9 +5,11 @@ import { requestId, type RequestIdVariables } from 'hono/request-id';
 import { secureHeaders } from 'hono/secure-headers';
 import type { ApplicationDependencies } from './lifecycle/initialize.js';
 import { languageMiddleware } from './middleware/language.middleware.js';
+import { combatRouter } from './routes/combatlog.route.js';
 import { defaultRouter } from './routes/default.route.js';
 import { helloRouter } from './routes/hello.route.js';
 import languageRouter from './routes/language.route.js';
+import { newsRouter } from './routes/news.route.js';
 import { ordersRouter } from './routes/orders.route.js';
 import logger from './utils/logger.js';
 
@@ -45,6 +47,8 @@ export function createApp({
   app.route('/hello', helloRouter);
   app.route('/language', languageRouter);
   app.route('/orders', ordersRouter);
+  app.route('/news', newsRouter);
+  app.route('/combat', combatRouter);
   app.route('/', defaultRouter);
 
   // Error Handling
