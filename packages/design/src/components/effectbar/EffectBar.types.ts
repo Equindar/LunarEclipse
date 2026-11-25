@@ -1,3 +1,5 @@
+import type { IconName } from "../../ui/icon";
+
 export type EffectKind = 'buff' | 'debuff';
 
 export interface EffectItem {
@@ -8,7 +10,7 @@ export interface EffectItem {
   /** Name des Effekttyps, z. B. "Gift", "Segen" */
   typeLabel: string;
   /** Name des SVG-Icons im zentralen Icon-Ordner */
-  icon: string;
+  icon: IconName;
   /** Stack-Anzahl, Badge erscheint ab 2 */
   stacks?: number;
   /** Ablaufzeitpunkt in ms seit Epoch, ohne Wert gilt der Effekt als dauerhaft */

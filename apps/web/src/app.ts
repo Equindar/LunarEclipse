@@ -6,11 +6,13 @@ import type { HonoOptions } from 'hono/hono-base';
 import { requestId, type RequestIdVariables } from 'hono/request-id';
 import { secureHeaders } from 'hono/secure-headers';
 import { languageMiddleware } from './middleware/language.middleware.js';
+import combatRouter from './routes/combat.route.js';
 import databaseRouter from './routes/database.route.js';
 import { defaultRouter } from './routes/default.route.js';
 import { helloRouter } from './routes/hello.route.js';
 import languageRouter from './routes/language.route.js';
 import { ordersRouter } from './routes/orders.route.js';
+
 import logger from './utils/logger.js';
 
 const i18nLogger = logger.child({ module: 'i18n' });
@@ -44,6 +46,8 @@ app.route('/hello', helloRouter);
 app.route('/language', languageRouter);
 app.route('/database', databaseRouter);
 app.route('/orders', ordersRouter);
+app.route('/combat', combatRouter);
+
 
 app.route('/', defaultRouter);
 

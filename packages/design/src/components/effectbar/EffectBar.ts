@@ -1,11 +1,11 @@
 import { Badge } from '../../ui/badge';
-import { HoverCard, HoverCardTrigger } from '../../ui/hovercard';
-import { Tooltip } from '../../ui/tooltip';
+import { HoverCard, HoverCardContent, HoverCardTrigger } from '../../ui/hovercard';
+import { Icon } from '../../ui/icon';
 import { cn } from '../../utils/cn';
 import { escapeHtml } from '../../utils/escapeHtml';
 import { renderIcon } from '../../utils/renderIcon';
 import { nowSignals, nowTick, remainingTextExpr } from './EffectBar.expressions';
-import type { EffectBarArgs, EffectItem } from './EffectBar.types';
+import type { EffectBarArgs, EffectItem, EffectKind } from './EffectBar.types';
 
 const DEFAULT_MAX_VISIBLE = 5;
 
@@ -14,19 +14,32 @@ const effectTw = {
   tile:
     'relative flex size-9 items-center justify-center rounded-md border-2 bg-card ' +
     'text-foreground outline-none focus-visible:ring-2 focus-visible:ring-ring',
-  buff: 'border-green-500',
-  debuff: 'border-red-500',
   overflow: 'border-dashed border-border text-xs font-medium tabular-nums text-muted-foreground',
   stacks:
     'absolute -right-1.5 -top-1.5 min-w-4 justify-center rounded-full px-1 ' +
     'text-[10px] leading-4 tabular-nums',
-  tip: 'flex max-w-56 flex-col gap-1.5 text-left',
-  tipTitle: 'text-sm font-medium',
-  tipText: 'text-xs text-muted-foreground',
-  tipMeta: 'flex items-center justify-between gap-3 text-xs',
-  tipTime: 'tabular-nums',
-  tipList: 'flex flex-col gap-0.5 text-xs',
+
+  card: 'flex w-64 flex-col gap-3',
+  cardHead: 'flex items-center gap-3',
+  cardIcon: 'flex size-10 shrink-0 items-center justify-center rounded-md border-2 bg-card',
+  cardHeadText: 'flex min-w-0 flex-col items-start gap-1.5',
+  cardTitle: 'text-sm font-medium leading-none',
+  cardText: 'text-sm text-muted-foreground',
+  cardFoot: 'flex items-center justify-between border-t pt-2 text-xs text-muted-foreground',
+  cardTime: 'font-medium tabular-nums text-foreground',
+
+  list: 'flex w-60 flex-col gap-2',
+  listHead: 'text-xs font-medium text-muted-foreground',
+  row: 'flex items-center gap-2 text-sm',
+  rowIcon: 'size-4 shrink-0',
+  rowTitle: 'min-w-0 flex-1 truncate',
+  rowTime: 'text-xs tabular-nums text-muted-foreground',
 } as const;
+
+const kindTw: Record<EffectKind, { border: string; text: string }> = {
+  buff: { border: 'border-green-500', text: 'text-green-500' },
+  debuff: { border: 'border-red-500', text: 'text-red-500' },
+};
 
 /** Reine Aufteilung in sichtbare und versteckte Effekte. */
 export const splitEffects = (
@@ -37,52 +50,77 @@ export const splitEffects = (
   hidden: effects.slice(maxVisible),
 });
 
-const effectTooltip = (effect: EffectItem): string => `
-  <div class="${effectTw.tip}">
-    <span class="${effectTw.tipTitle}">${escapeHtml(effect.title)}</span>
-    <span class="${effectTw.tipText}">${escapeHtml(effect.description)}</span>
-    <div class="${effectTw.tipMeta}">
-      ${Badge({
-        variant: effect.kind === 'debuff' ? 'destructive' : 'secondary',
-        children: escapeHtml(effect.typeLabel),
-      })}
-      <span class="${effectTw.tipTime}" ${
-        effect.expiresAt
-          ? `data-text="${remainingTextExpr(effect.expiresAt)}"`
-          : ''
-      }>${effect.expiresAt ? '' : 'Dauerhaft'}</span>
+const timeSpan = (effect: EffectItem, className: string): string =>
+  effect.expiresAt
+    ? `<span class="${className}" data-text="${remainingTextExpr(effect.expiresAt)}"></span>`
+    : `<span class="${className}">Dauerhaft</span>`;
+
+const hoverCard = (trigger: string, content: string): string =>
+  HoverCard({
+    id: `hoverCard-id_`,
+    children: [
+      HoverCardTrigger({
+        id: `hoverCardTrigger-id_`,
+        delay: 150,
+        closeDelay: 100,
+        children: trigger }),
+      HoverCardContent({
+        id: `hoverCardContentTrigger-id_`,
+        side: "top",
+        align: "start",
+        children: content }),
+    ].join(''),
+  });
+
+const effectCardContent = (effect: EffectItem): string => `
+  <div class="${effectTw.card}">
+    <div class="${effectTw.cardHead}">
+      <div class="${cn(effectTw.cardIcon, kindTw[effect.kind].border)}">
+        ${Icon({ name: effect.icon, class: 'size-5' })}
+      </div>
+      <div class="${effectTw.cardHeadText}">
+        <span class="${effectTw.cardTitle}">${escapeHtml(effect.title)}</span>
+        ${Badge({
+          variant: effect.kind === 'debuff' ? 'destructive' : 'secondary',
+          children: escapeHtml(effect.typeLabel),
+        })}
+      </div>
     </div>
+    <p class="${effectTw.cardText}">${escapeHtml(effect.description)}</p>
+    <div class="${effectTw.cardFoot}">
+      <span>Verbleibend</span>
+      ${timeSpan(effect, effectTw.cardTime)}
+    </div>
+  </div>`;
+
+const overflowCardContent = (hidden: EffectItem[]): string => `
+  <div class="${effectTw.list}">
+    <span class="${effectTw.listHead}">Weitere Effekte</span>
+    ${hidden
+      .map(
+        (effect) => `
+      <div class="${effectTw.row}">
+        ${renderIcon(effect.icon, {
+          class: cn(effectTw.rowIcon, kindTw[effect.kind].text),
+        })}
+        <span class="${effectTw.rowTitle}">${escapeHtml(effect.title)}</span>
+        ${timeSpan(effect, effectTw.rowTime)}
+      </div>`,
+      )
+      .join('')}
   </div>`;
 
 const effectTile = (effect: EffectItem): string => {
   const stacks = effect.stacks ?? 1;
   const trigger = `
-    <button type="button" class="${cn(
-      effectTw.tile,
-      effect.kind === 'debuff' ? effectTw.debuff : effectTw.buff,
-    )}" aria-label="${escapeHtml(effect.title)}">
+    <button type="button"
+      class="${cn(effectTw.tile, kindTw[effect.kind].border)}"
+      aria-label="${escapeHtml(effect.title)}">
       ${renderIcon(effect.icon, { class: 'size-5' })}
-      ${
-        stacks > 1
-          ? Badge({ class: effectTw.stacks, children: String(stacks) })
-          : ''
-      }
+      ${stacks > 1 ? Badge({ class: effectTw.stacks, children: String(stacks) }) : ''}
     </button>`;
 
-  return HoverCard({
-    id: `hover-card_effect${effect.id}`,
-    children: [
-      HoverCardTrigger({
-        id: `hover-card-trigger_effect${effect.id}`,
-        delay: 100,
-        asChild: true,
-        closeDelay: 100
-        children:
-
-      })
-    ]
-
-    side: 'top', content: effectTooltip(effect), children: trigger });
+  return hoverCard(trigger, effectCardContent(effect));
 };
 
 const overflowTile = (hidden: EffectItem[]): string => {
@@ -91,21 +129,17 @@ const overflowTile = (hidden: EffectItem[]): string => {
       aria-label="${hidden.length} weitere Effekte">
       +${hidden.length}
     </button>`;
-  const content = `
-    <ul class="${effectTw.tipList}">
-      ${hidden.map((e) => `<li>${escapeHtml(e.title)}</li>`).join('')}
-    </ul>`;
 
-  return Tooltip({ side: 'top', content, children: trigger });
+  return hoverCard(trigger, overflowCardContent(hidden));
 };
 
 export function EffectBar(args: EffectBarArgs): string {
+  if (args.effects.length === 0) return '';
+
   const { visible, hidden } = splitEffects(
     args.effects,
     args.maxVisible ?? DEFAULT_MAX_VISIBLE,
   );
-
-  if (args.effects.length === 0) return '';
 
   return `
     <div ${args.id ? `id="${args.id}"` : ''}
