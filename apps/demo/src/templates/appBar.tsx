@@ -42,7 +42,7 @@ export function AppBar({ currentLang, currentPath }: AppBarProps) {
                 </a>
               ))}
             </div>
-          {raw(Button({ variant: "default", size: "lg", children: "Einloggen" }))}
+          {raw(Button({ variant: "default", size: "lg", children: "Einloggen", disabled: true}))}
         </div>
 
         <div class="flex md:hidden">

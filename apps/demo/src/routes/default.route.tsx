@@ -12,7 +12,7 @@ export const defaultRouter = new Hono().get('/', async (c) => {
 
   const countdownCard = CountdownCard({
     id: "jksdnkvnd",
-    targetMs: Date.now() + 3 * 60 * 100 * 1000
+    targetMs: Date.now() + 3 * 100 * 1000
    });
 
 
