@@ -51,4 +51,5 @@ export * from "./ui/tooltip";
 // Components
 export * from "./components/countdown";
 export * from "./components/darkmodetoggle";
+export * from "./components/logcard";
 export * from "./components/login";
