@@ -1,6 +1,5 @@
 import { setMissingKeyHandler } from '@lunareclipse/i18n';
 import { Hono } from 'hono';
-import { csrf } from 'hono/csrf';
 import { requestId, type RequestIdVariables } from 'hono/request-id';
 import { secureHeaders } from 'hono/secure-headers';
 import type { ApplicationDependencies } from './lifecycle/initialize.js';
@@ -9,6 +8,7 @@ import { combatRouter } from './routes/combatlog.route.js';
 import { defaultRouter } from './routes/default.route.js';
 import { helloRouter } from './routes/hello.route.js';
 import languageRouter from './routes/language.route.js';
+import { mockLogCardRouter } from './routes/mockLogCard.route.js';
 import { newsRouter } from './routes/news.route.js';
 import { ordersRouter } from './routes/orders.route.js';
 import logger from './utils/logger.js';
@@ -32,7 +32,7 @@ export function createApp({
   // --- Registering Middlewares
   app.use('*', requestId());
   app.use('*', secureHeaders());
-  app.use('*', csrf());
+  // app.use('*', csrf());
   app.use('*', languageMiddleware);
   // app.use('/datastar-1.0.4.js', serveStatic({ root: './public' }))
   // hier z.B. Session-Middleware (Cookies)
@@ -49,6 +49,7 @@ export function createApp({
   app.route('/orders', ordersRouter);
   app.route('/news', newsRouter);
   app.route('/combat', combatRouter);
+  app.route('/mock', mockLogCardRouter);
   app.route('/', defaultRouter);
 
   // Error Handling

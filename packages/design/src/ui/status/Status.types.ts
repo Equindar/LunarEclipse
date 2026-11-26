@@ -11,16 +11,18 @@ export interface StatusArgs {
   class?: string;
   /** Wenn gesetzt, wird der Status als Link (`<a>`) statt als `<div>` gerendert */
   href?: string;
-  /** Zusätzliche HTML-Attribute (werden von den Standard-Attributen überschrieben) */
+  /** Zusätzliche HTML-Attribute (z. B. `id`, `data-show`); ein `data-slot` ersetzt den Standardwert "status" */
   attributes?: HtmlAttributes;
   /** Inhalt des Status, üblicherweise `StatusIndicator()` und `StatusLabel()` */
   children?: Children;
 }
 
 export interface StatusIndicatorArgs {
+  /** Ping-Animation des Indikators (Standard: true); mit false bleibt der Punkt ruhig */
+  pulse?: boolean;
   /** Zusätzliche CSS-Klassen */
   class?: string;
-  /** Zusätzliche HTML-Attribute (werden von den Standard-Attributen überschrieben) */
+  /** Zusätzliche HTML-Attribute; `aria-hidden="true"` ist Standard und lässt sich hier ersetzen, `data-slot` ist fest */
   attributes?: HtmlAttributes;
   /** Inhalt des Indikators (in der Regel leer) */
   children?: Children;
@@ -29,7 +31,7 @@ export interface StatusIndicatorArgs {
 export interface StatusLabelArgs {
   /** Zusätzliche CSS-Klassen */
   class?: string;
-  /** Zusätzliche HTML-Attribute (werden von den Standard-Attributen überschrieben) */
+  /** Zusätzliche HTML-Attribute; ein `data-slot` ersetzt den Standardwert "status-label" */
   attributes?: HtmlAttributes;
   /** Text des Labels */
   children?: Children;
