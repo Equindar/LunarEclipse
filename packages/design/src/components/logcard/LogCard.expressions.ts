@@ -6,9 +6,7 @@ import type { LogCardSignals, LogCardStart, LogEntryTone, LogTimeMode } from "./
  * Datastar-Expressions und Hilfen der LogCard.
  * Interne Datei: wird bewusst nicht über index.ts exportiert.
  *
- * Signal-Modell: pro Card ein Signal-Objekt $<id> mit { from, to, clock }.
- * - from und to: gewählter Bereich in Sekunden seit dem Start (beide Grenzen inklusive)
- * - clock: false zeigt Dauern [mm:ss], true zeigt Uhrzeiten in UTC [HH:MM:SS]
+ * Signal-Modell: pro Card ein Signal-Objekt $<id> (siehe LogCardSignals).
  * Der Startzeitpunkt ist kein Signal, er steht fest in den Expressions (Millisekunden seit Epoch).
  */
 
@@ -16,10 +14,30 @@ export const DEFAULT_RANGE_LABEL = "Zeitraum";
 export const DEFAULT_TONE: LogEntryTone = "default";
 export const DEFAULT_STEP_SECONDS = 10;
 export const DEFAULT_TIME_MODE: LogTimeMode = "duration";
+export const DEFAULT_SCROLLER_CLASS = "max-h-96";
+/** Abstand zum unteren Rand (px), bis zu dem der Nutzer als "am neuesten Eintrag" gilt */
+export const FOLLOW_THRESHOLD_PX = 24;
 
-/** Signal-Manager einer LogCard (Signal-Name = ID mit "-" zu "_") */
-export const logCardSignals = (id: string, from = 0, to = 0, clock = false) =>
-  createSignals<LogCardSignals>(id, { from, to, clock });
+const EMPTY_SIGNALS: LogCardSignals = {
+  from: 0,
+  to: 0,
+  max: 0,
+  clock: false,
+  live: false,
+  follow: false,
+  tail: false,
+  count: 0,
+};
+
+/** Signal-Manager einer LogCard (Signal-Name = ID mit "-" zu "_"). Ohne state nur zum Bilden der Signal-Verweise */
+export const logCardSignals = (id: string, state: LogCardSignals = EMPTY_SIGNALS) =>
+  createSignals<LogCardSignals>(id, state);
+
+/** Name des Signal-Objekts einer Card, z. B. "my_card" für die ID "my-card" */
+export function signalKey(id: string): string {
+  const reference = logCardSignals(id).signal("from");
+  return reference.slice(1, reference.length - ".from".length);
+}
 
 /** Zufällige ID: log_card_<8 Hex-Zeichen> */
 export function createLogCardId(): string {
@@ -114,12 +132,12 @@ export function formatRangeLabel(from: number, to: number, mode: LogTimeMode, st
   return from === to ? format(from) : `${format(from)} bis ${format(to)}`;
 }
 
-/** Sichtbar, wenn sich [start, end] mit dem gewählten Bereich überschneidet (für eine einzelne Zeile ist start = end) */
+/** Liegt [start, end] (für eine einzelne Zeile start = end) im gewählten Bereich? */
 export function isInRange(from: number, to: number, start: number, end: number): boolean {
   return from <= end && start <= to;
 }
 
-/** Sichtbarkeit per data-show, z. B. $card.from <= 252 && 252 <= $card.to */
+/** Sichtbarkeit einer Zeile per data-show, z. B. $card.from <= 252 && 252 <= $card.to */
 export function buildVisibleExpression(id: string, start: number, end: number): string {
   const s = logCardSignals(id);
   return `${s.signal("from")} <= ${end} && ${start} <= ${s.signal("to")}`;
@@ -137,30 +155,57 @@ export function buildFromInputHandler(id: string): string {
   ].join("; ");
 }
 
-/** Handler der oberen Grenze: darf die untere nicht unterschreiten */
+/**
+ * Handler der oberen Grenze: darf die untere nicht unterschreiten.
+ * Liegt sie danach am Maximum, bleibt sie dort und wandert mit neuen Einträgen mit (tail).
+ */
 export function buildToInputHandler(id: string): string {
   const s = logCardSignals(id);
   return [
     s.set("to", `Math.max(Number(el.value), ${s.signal("from")})`),
     `el.value = ${s.signal("to")}`,
+    s.set("tail", `${s.signal("to")} === ${s.signal("max")}`),
   ].join("; ");
 }
 
-/** Style des farbigen Streifens zwischen den Reglern (left/right in Prozent) */
-export function buildRangeStyleExpression(id: string, min: number, max: number): string {
+/**
+ * Effekt auf einem Slider-Input: hält Maximum, Sperre und Wert des Inputs mit den Signalen synchron.
+ * Nötig, weil sich max (neue Einträge) und to (tail) ohne Nutzereingabe ändern und ein Input,
+ * der schon bedient wurde, auf geänderte Attribute nicht mehr reagiert.
+ * max steht vor value, sonst würde ein größerer Wert noch am alten Maximum abgeschnitten.
+ */
+export function buildInputEffect(id: string, key: "from" | "to", min: number): string {
   const s = logCardSignals(id);
-  const span = Math.max(max - min, 1);
-  return `'left: ' + ((${s.signal("from")} - ${min}) / ${span} * 100) + '%; right: ' + ((${max} - ${s.signal("to")}) / ${span} * 100) + '%'`;
+  return [
+    `el.max = ${s.signal("max")}`,
+    `el.disabled = ${s.signal("max")} <= ${min}`,
+    `el.value = ${s.signal(key)}`,
+  ].join("; ");
+}
+
+/** Effekt am Root: ist tail gesetzt, folgt die obere Grenze dem Maximum */
+export function buildTailEffect(id: string): string {
+  const s = logCardSignals(id);
+  return `${s.signal("tail")} && (${s.signal("to")} = ${s.signal("max")})`;
+}
+
+/** Style des farbigen Streifens zwischen den Reglern (left/right in Prozent) */
+export function buildRangeStyleExpression(id: string, min: number): string {
+  const s = logCardSignals(id);
+  const from = s.signal("from");
+  const to = s.signal("to");
+  const max = s.signal("max");
+  const span = `Math.max(${max} - ${min}, 1)`;
+  return `'left: ' + ((${from} - ${min}) / ${span} * 100) + '%; right: ' + ((${max} - ${to}) / ${span} * 100) + '%'`;
 }
 
 /**
  * Stapelreihenfolge des unteren Reglers: Liegen beide Regler am rechten Ende,
  * muss der untere oben liegen, sonst lässt er sich nicht mehr greifen.
  */
-export function buildFromLayerExpression(id: string, min: number, max: number): string {
+export function buildFromLayerExpression(id: string, min: number): string {
   const s = logCardSignals(id);
-  const middle = (min + max) / 2;
-  return `${s.signal("from")} >= ${middle} ? 'z-index: 30' : 'z-index: 10'`;
+  return `${s.signal("from")} >= (${s.signal("max")} + ${min}) / 2 ? 'z-index: 30' : 'z-index: 10'`;
 }
 
 /** JS-Ausdruck für "mm:ss" aus einem Sekundenwert (identisch zu formatDuration) */
@@ -205,4 +250,61 @@ export function buildPressedExpression(id: string, forClock: boolean): string {
 /** Klick-Handler der Toggle-Buttons */
 export function buildSetClockHandler(id: string, clock: boolean): string {
   return logCardSignals(id).set("clock", String(clock));
+}
+
+/**
+ * data-init einer nachträglich eingefügten Zeile: hebt das Maximum des Sliders an und erhöht count.
+ * Dadurch genügt dem Server ein einziger Patch (die Zeile selbst), kein zusätzlicher Signal-Patch.
+ * ceilSeconds ist die Zeit der Zeile, auf die Schrittweite aufgerundet.
+ */
+export function buildEntryAnnounceExpression(id: string, ceilSeconds: number): string {
+  const s = logCardSignals(id);
+  return [
+    s.set("max", `Math.max(${s.signal("max")}, ${ceilSeconds})`),
+    s.set("count", `${s.signal("count")} + 1`),
+  ].join("; ");
+}
+
+/** Scroll-Handler des Scrollers: follow ist true, solange der Nutzer am unteren Rand steht */
+export function buildFollowHandler(id: string): string {
+  const s = logCardSignals(id);
+  return s.set("follow", `el.scrollHeight - el.scrollTop - el.clientHeight < ${FOLLOW_THRESHOLD_PX}`);
+}
+
+/**
+ * Effekt des Scrollers: scrollt nach unten, wenn die Card live ist und folgt.
+ * Läuft beim Start, bei jedem neuen Eintrag (count) und wenn follow wieder gesetzt wird.
+ * requestAnimationFrame wartet, bis der neue Eintrag eingeblendet ist; sofortiges Scrollen statt "smooth",
+ * damit der Scroll-Handler mitten in der Animation follow nicht auf false setzt.
+ */
+export function buildScrollEffect(id: string): string {
+  const s = logCardSignals(id);
+  return `${s.signal("count")}; ${s.signal("live")} && ${s.signal("follow")} && requestAnimationFrame(() => el.scrollTo(0, el.scrollHeight))`;
+}
+
+/** Klick-Handler des "Zum Neuesten"-Buttons: setzt follow, der Scroll-Effekt scrollt dann nach unten */
+export function buildJumpToLatestHandler(id: string): string {
+  return logCardSignals(id).set("follow", "true");
+}
+
+/** data-show des "Zum Neuesten"-Buttons: nur live und solange die Ansicht nicht am Ende steht */
+export function buildJumpVisibleExpression(id: string): string {
+  const s = logCardSignals(id);
+  return `${s.signal("live")} && !${s.signal("follow")}`;
+}
+
+/** data-show des Live-Hinweises */
+export function buildLiveVisibleExpression(id: string): string {
+  return logCardSignals(id).signal("live");
+}
+
+/** data-show des Leer-Hinweises, solange noch kein Eintrag da ist */
+export function buildEmptyVisibleExpression(id: string): string {
+  const s = logCardSignals(id);
+  return `${s.signal("count")} === 0`;
+}
+
+/** data-init des Roots: öffnet den SSE-Stream. openWhenHidden verhindert ein Neuverbinden (und doppelte Zeilen) beim Tab-Wechsel */
+export function buildSseInitExpression(url: string): string {
+  return `@get(${JSON.stringify(url)}, {openWhenHidden: true})`;
 }

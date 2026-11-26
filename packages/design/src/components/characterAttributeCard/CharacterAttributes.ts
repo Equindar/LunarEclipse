@@ -12,7 +12,9 @@ import {
     ATTRIBUTE_STEPS,
     buildAddDisabled,
     buildAddHandler,
+    buildBarValue,
     buildDeltaExpression,
+    buildOverflowCondition,
     buildResetHandler,
     buildSubmitDisabled,
     characterSignals,
@@ -26,7 +28,8 @@ import type {
 } from "./CharacterAttributes.types";
 
 const DEFAULT_POINTS_PER_LEVEL = 5;
-const DEFAULT_MAX_VALUE = 20;
+const DEFAULT_VISIBLE_SEGMENTS = 20;
+const MAX_SAFE_VALUE = 999_999;
 const DEFAULT_SUBMIT_ACTION = "@post('/api/character/attributes')";
 
 /** Standardwerte eines frischen Charakters */
@@ -47,6 +50,7 @@ export const characterAttributeDefinitions: readonly CharacterAttributeDefinitio
 
 export const characterAttributeRowTw = tw`grid gap-2`;
 export const characterAttributeValueTw = tw`flex shrink-0 items-baseline gap-1 text-sm tabular-nums`;
+export const characterAttributeEllipsisTw = tw`shrink-0 select-none text-sm leading-none text-muted-foreground transition-colors`;
 
 /** Zufalls-ID: character_attributes_<8 Hex-Zeichen> */
 function randomId(): string {
@@ -62,35 +66,47 @@ function clampInt(value: number | undefined, min: number, max: number): number {
 
 /**
  * Einzige Stelle, die SegmentedProgress aufruft.
- * Der Fortschritt folgt dem Signal `valueSignal` (reaktiv), der Startwert dient dem Server-Rendering.
+ * Die Leiste zeigt `visibleSegments` Segmente und folgt dem Signal (reaktiv). Der Wert ist nach oben
+ * offen: Ein Ellipsis-Element hinter der Leiste markiert das offene Ende und wird hervorgehoben,
+ * sobald der Wert das Anzeigefenster übersteigt.
  */
 function renderAttributeBar(args: {
   label: string;
   value: number;
-  max: number;
+  visibleSegments: number;
   shape: CharacterAttributeShape;
+  barValue: string;
   valueSignal: string;
+  overflow: string;
 }): string {
   const attributes: HtmlAttributes = {
     "aria-label": args.label,
     "aria-valuemin": 0,
-    "aria-valuemax": args.max,
     "data-attr:aria-valuenow": args.valueSignal,
   };
 
-  return SegmentedProgress({
-    value: args.value,
-    max: args.max,
-    valueSignal: args.valueSignal,
+  const bar = SegmentedProgress({
+    value: Math.min(args.value, args.visibleSegments),
+    max: args.visibleSegments,
+    valueSignal: args.barValue,
     attributes,
   });
+
+  const ellipsisAttrs: HtmlAttributes = {
+    "data-slot": "segmented-progress-ellipsis",
+    "aria-hidden": "true",
+    class: cn(characterAttributeEllipsisTw, args.value > args.visibleSegments && "text-primary!"),
+    "data-class": `{'text-primary!': ${args.overflow}}`,
+  };
+
+  return `<div class="flex min-w-0 flex-1 items-center gap-2"><div class="min-w-0 flex-1">${bar}</div><span${renderAttributes(ellipsisAttrs)}>&hellip;</span></div>`;
 }
 
 function renderAttributeRow(
   definition: CharacterAttributeDefinition,
   signals: SignalManager<CharacterAttributeSignals>,
   baseValue: number,
-  maxValue: number,
+  visibleSegments: number,
   shape: CharacterAttributeShape
 ): string {
   const { key, label, description } = definition;
@@ -105,8 +121,8 @@ function renderAttributeRow(
       attributes: {
         type: "button",
         "aria-label": `${label} um ${amount} erhöhen`,
-        "data-on:click": buildAddHandler(signals, key, amount, maxValue),
-        "data-attr:disabled": buildAddDisabled(signals, key, amount, maxValue),
+        "data-on:click": buildAddHandler(signals, key, amount),
+        "data-attr:disabled": buildAddDisabled(signals, amount),
       },
     })
   ).join("");
@@ -121,12 +137,19 @@ function renderAttributeRow(
     </div>
     <div class="${characterAttributeValueTw}">
       <span data-text="${escapeHtml(valueSignal)}">${baseValue}</span>
-      <span class="text-muted-foreground">/ ${maxValue}</span>
       <span class="text-xs font-medium text-primary" data-text="'+' + (${escapeHtml(delta)})" data-show="${escapeHtml(delta)} > 0" style="display: none;"></span>
     </div>
   </div>
   <div class="flex items-center gap-3">
-    <div class="min-w-0 flex-1">${renderAttributeBar({ label, value: baseValue, max: maxValue, shape, valueSignal })}</div>
+    ${renderAttributeBar({
+      label,
+      value: baseValue,
+      visibleSegments,
+      shape,
+      barValue: buildBarValue(signals, key, visibleSegments),
+      valueSignal,
+      overflow: buildOverflowCondition(signals, key, visibleSegments),
+    })}
     <div class="flex shrink-0 gap-1">${buttons}</div>
   </div>
 </div>`;
@@ -139,7 +162,7 @@ function renderAttributeRow(
  */
 export function CharacterAttributesCard(args: CharacterAttributesCardArgs = {}): string {
   const id = args.id || randomId();
-  const maxValue = Math.max(1, clampInt(args.maxValue ?? DEFAULT_MAX_VALUE, 1, 999));
+  const visibleSegments = clampInt(args.visibleSegments ?? DEFAULT_VISIBLE_SEGMENTS, 1, 100);
   const pointsPerLevel = clampInt(args.pointsPerLevel ?? DEFAULT_POINTS_PER_LEVEL, 0, 999);
   const shape = args.shape ?? "rounded";
   const requireAllPoints = args.requireAllPoints ?? true;
@@ -147,14 +170,14 @@ export function CharacterAttributesCard(args: CharacterAttributesCardArgs = {}):
   const values = Object.fromEntries(
     characterAttributeDefinitions.map(({ key }) => [
       key,
-      clampInt(args.values?.[key] ?? defaultCharacterValues[key], 0, maxValue),
+      clampInt(args.values?.[key] ?? defaultCharacterValues[key], 0, MAX_SAFE_VALUE),
     ])
   ) as CharacterAttributeValues;
 
   const signals = characterSignals(id, values, pointsPerLevel);
 
   const rows = characterAttributeDefinitions
-    .map((definition) => renderAttributeRow(definition, signals, values[definition.key], maxValue, shape))
+    .map((definition) => renderAttributeRow(definition, signals, values[definition.key], visibleSegments, shape))
     .join("");
 
   const pointsBadge = Badge({

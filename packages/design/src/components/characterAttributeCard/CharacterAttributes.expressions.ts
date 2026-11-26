@@ -18,41 +18,27 @@ export function characterSignals(
   return createSignals<CharacterAttributeSignals>(id, { ...values, points });
 }
 
-/**
- * Bedingung, ob `amount` Punkte auf das Attribut gebucht werden können:
- * genug freie Punkte und der Maximalwert wird nicht überschritten.
- */
-export function buildCanAddCondition(
-  signals: SignalManager<CharacterAttributeSignals>,
-  key: CharacterAttributeKey,
-  amount: number,
-  maxValue: number
-): string {
-  return `${signals.signal("points")} >= ${amount} && ${signals.signal(key)} + ${amount} <= ${maxValue}`;
+/** Bedingung, ob `amount` Punkte gebucht werden können (es zählt nur der Vorrat, ein Maximum gibt es nicht) */
+export function buildCanAddCondition(signals: SignalManager<CharacterAttributeSignals>, amount: number): string {
+  return `${signals.signal("points")} >= ${amount}`;
 }
 
 /** Click-Handler eines +N-Buttons: bucht N Punkte vom Vorrat auf das Attribut */
 export function buildAddHandler(
   signals: SignalManager<CharacterAttributeSignals>,
   key: CharacterAttributeKey,
-  amount: number,
-  maxValue: number
+  amount: number
 ): string {
   return signals.conditionalMultiAction(
-    buildCanAddCondition(signals, key, amount, maxValue),
+    buildCanAddCondition(signals, amount),
     `${signals.signal(key)} += ${amount}`,
     `${signals.signal("points")} -= ${amount}`
   );
 }
 
 /** Wert für `data-attr:disabled` eines +N-Buttons */
-export function buildAddDisabled(
-  signals: SignalManager<CharacterAttributeSignals>,
-  key: CharacterAttributeKey,
-  amount: number,
-  maxValue: number
-): string {
-  return `!(${buildCanAddCondition(signals, key, amount, maxValue)})`;
+export function buildAddDisabled(signals: SignalManager<CharacterAttributeSignals>, amount: number): string {
+  return `!(${buildCanAddCondition(signals, amount)})`;
 }
 
 /** Setzt alle Attribute und die freien Punkte auf den Stand beim Rendern zurück */
@@ -74,6 +60,24 @@ export function buildDeltaExpression(
   baseValue: number
 ): string {
   return `${signals.signal(key)} - ${baseValue}`;
+}
+
+/** Wert der Leiste: auf das Anzeigefenster begrenzt, der Signalwert selbst bleibt unbegrenzt */
+export function buildBarValue(
+  signals: SignalManager<CharacterAttributeSignals>,
+  key: CharacterAttributeKey,
+  visibleSegments: number
+): string {
+  return `Math.min(${signals.signal(key)}, ${visibleSegments})`;
+}
+
+/** Bedingung für das hervorgehobene Ellipsis-Element: der Wert liegt über dem Anzeigefenster */
+export function buildOverflowCondition(
+  signals: SignalManager<CharacterAttributeSignals>,
+  key: CharacterAttributeKey,
+  visibleSegments: number
+): string {
+  return `${signals.signal(key)} > ${visibleSegments}`;
 }
 
 /** Wert für `data-attr:disabled` des Submit-Buttons */

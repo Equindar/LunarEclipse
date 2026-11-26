@@ -4,7 +4,7 @@ import { escapeHtml } from "../../utils/escapeHtml";
 import { Status, StatusIndicator, StatusLabel } from "./Status";
 import type { StatusArgs, StatusVariant } from "./Status.types";
 
-type StatusStoryArgs = StatusArgs & { text?: string; showIndicator?: boolean };
+type StatusStoryArgs = StatusArgs & { text?: string; showIndicator?: boolean; pulse?: boolean };
 
 const variants: StatusVariant[] = ["default", "success", "error", "warning", "info"];
 
@@ -25,16 +25,18 @@ const meta: Meta<StatusStoryArgs> = {
     href: { control: "text" },
     text: { control: "text" },
     showIndicator: { control: "boolean" },
+    pulse: { control: "boolean" },
   },
   args: {
     variant: "success",
     text: "Online",
     showIndicator: true,
+    pulse: true,
   },
-  render: ({ text, showIndicator, ...args }) =>
+  render: ({ text, showIndicator, pulse, ...args }) =>
     Status({
       ...args,
-      children: [...(showIndicator ? [StatusIndicator()] : []), StatusLabel({ children: escapeHtml(text ?? "") })],
+      children: [...(showIndicator ? [StatusIndicator({ pulse })] : []), StatusLabel({ children: escapeHtml(text ?? "") })],
     }),
 };
 
@@ -109,5 +111,30 @@ export const AsLink: Story = {
       variant: "success",
       href: "#status-page",
       children: [StatusIndicator(), StatusLabel({ children: "Alle Systeme laufen" })],
+    }),
+};
+
+/** Mit `pulse: false` blinkt der Indikator nicht (ruhiger Punkt) */
+export const StaticIndicator: Story = {
+  render: () =>
+    `<div class="flex flex-wrap items-center gap-2">${(["success", "error", "warning", "info", "default"] as StatusVariant[])
+      .map((variant) =>
+        Status({ variant, children: [StatusIndicator({ pulse: false }), StatusLabel({ children: variant })] }),
+      )
+      .join("")}</div>`,
+};
+
+/** `id`, eigener `data-slot` und Datastar-Attribute laufen über `attributes` */
+export const WithAttributes: Story = {
+  render: () =>
+    Status({
+      variant: "success",
+      attributes: {
+        id: "status-live",
+        "data-slot": "log-card-live",
+        "data-signals": "{statusLive: true}",
+        "data-show": "$statusLive",
+      },
+      children: [StatusIndicator(), StatusLabel({ children: "Live" })],
     }),
 };

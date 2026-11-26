@@ -1,12 +1,20 @@
 import type { Meta, StoryObj } from "@storybook/html-vite";
 
-import { LogCard } from "./LogCard";
+import {
+    LogCard,
+    LogCardEntry,
+    LogCardSection,
+    logCardContentSelector,
+    logCardEntriesSelector,
+    logCardSectionId,
+    logCardSignalsPatch,
+} from "./LogCard";
 import type { LogCardArgs, LogCardSectionArgs } from "./LogCard.types";
 
 type LogSection = Omit<LogCardSectionArgs, "id" | "startedAt">;
 
 /** Beginn des Kampfes in UTC (Epoch in Millisekunden); die Zeilen enthalten nur das Delta dazu */
-const combatStart = Date.UTC(2026, 10, 24, 23, 58, 0);
+const combatStart = Date.UTC(2026, 10, 24, 20, 15, 0);
 
 /** Kampfbericht: Ronan (Schwertkämpfer, 100 LP) gegen einen Werwolf (120 LP) */
 const combatSections: LogSection[] = [
@@ -85,7 +93,7 @@ const meta: Meta<LogCardArgs> = {
     docs: {
       description: {
         component:
-          "Eine Card, deren Content aus Sections mit Log-Zeilen besteht. Die Zeilen enthalten nur das Delta zum Start (`mm:ss`), die Card bekommt den Startzeitpunkt in UTC (`startedAt`). Ein Toggle wechselt zwischen Dauer `[mm:ss]` und Uhrzeit `[HH:MM:SS]` (UTC). Der RangeSlider über dem Content wählt den Zeitraum in 10-Sekunden-Schritten, nur Zeilen und Sections in diesem Bereich (beide Grenzen inklusive) werden angezeigt. Slider, Toggle und Zeilen teilen sich das Signal-Objekt `$<id>` mit `from`, `to` (Sekunden) und `clock`. Funktioniert nur mit geladenem Datastar, ohne Datastar sind alle Zeilen im Startbereich sichtbar und Slider und Toggle wirkungslos.",
+          "Eine Card, deren Content aus Sections mit Log-Zeilen besteht und in einem Scroller liegt. Die Zeilen enthalten nur das Delta zum Start (`mm:ss`), die Card bekommt den Startzeitpunkt in UTC (`startedAt`). Ein Toggle wechselt zwischen Dauer `[mm:ss]` und Uhrzeit `[HH:MM:SS]` (UTC). Der RangeSlider über dem Content wählt den Zeitraum in 10-Sekunden-Schritten, nur Zeilen und Sections in diesem Bereich (beide Grenzen inklusive) werden angezeigt. Slider, Toggle und Zeilen teilen sich das Signal-Objekt `$<id>`. Live-Betrieb (`live`, `sseUrl`): Neue Zeilen kommen per SSE, der Slider wächst mit, und der Scroller bleibt auf dem neuesten Eintrag, bis der Nutzer nach oben scrollt. Die Live-Stories simulieren den Server mit einem gemockten Stream. Funktioniert nur mit geladenem Datastar, ohne Datastar sind alle Zeilen im Startbereich sichtbar und Slider und Toggle wirkungslos.",
       },
     },
   },
@@ -170,4 +178,179 @@ export const Tonfarben: Story = {
       },
     ],
   },
+};
+
+/* ---------------------------------------------------------------------------------------------
+ * Live-Simulation
+ *
+ * Der Server wird nachgestellt: Die Card öffnet per data-init einen SSE-Stream (@get). Ein gemocktes fetch
+ * liefert dafür einen echten text/event-stream mit Datastar-Events. Die Events sind dieselben, die ein
+ * Server schicken würde, und werden mit denselben Bausteinen erzeugt (LogCardSection, LogCardEntry,
+ * die Selector-Helfer und logCardSignalsPatch).
+ * ------------------------------------------------------------------------------------------- */
+
+/** Zeitraffer: 1 Sekunde echte Zeit entspricht so vielen Sekunden Kampfzeit */
+const LIVE_SPEED = 6;
+/** Mindestabstand zwischen zwei Zeilen in Millisekunden */
+const LIVE_MIN_GAP_MS = 150;
+const MOCK_PREFIX = "/mock/log-card/";
+
+interface SimulatedEntry {
+  sectionIndex: number;
+  /** Erste Zeile ihrer Section: dann kommt die ganze Section neu in die Card */
+  first: boolean;
+  section: LogSection;
+  entry: NonNullable<LogSection["entries"]>[number];
+  seconds: number;
+}
+
+/** Alle Zeilen des Kampfes in zeitlicher Reihenfolge */
+const simulation: SimulatedEntry[] = combatSections.flatMap((section, sectionIndex) =>
+  (section.entries ?? []).map((entry, index) => ({
+    sectionIndex,
+    first: index === 0,
+    section,
+    entry,
+    seconds: Number(entry.time.slice(0, 2)) * 60 + Number(entry.time.slice(3, 5)),
+  }))
+);
+
+/** Ein SSE-Frame im Datastar-Format */
+const sseFrame = (event: string, lines: string[]): string =>
+  `event: ${event}\n${lines.map((line) => `data: ${line}`).join("\n")}\n\n`;
+
+const patchElementsFrame = (selector: string, elements: string): string =>
+  sseFrame("datastar-patch-elements", ["mode append", `selector ${selector}`, `elements ${elements}`]);
+
+const patchSignalsFrame = (signals: string): string => sseFrame("datastar-patch-signals", [`signals ${signals}`]);
+
+/** Ein neuer Eintrag: die erste Zeile einer Section bringt die Section mit, alle weiteren hängen sich an */
+function entryFrame(cardId: string, startedAt: number, item: SimulatedEntry): string {
+  if (item.first) {
+    const section = LogCardSection({
+      ...item.section,
+      id: cardId,
+      sectionId: logCardSectionId(cardId, item.sectionIndex),
+      startedAt,
+      entries: [item.entry],
+      announce: true,
+    });
+    return patchElementsFrame(logCardContentSelector(cardId), section);
+  }
+  const entry = LogCardEntry({ ...item.entry, cardId, startedAt, announce: true });
+  return patchElementsFrame(logCardEntriesSelector(cardId, item.sectionIndex), entry);
+}
+
+/** Streamt die Zeilen ab Position skip im Zeitraffer und beendet den Kampf am Ende mit { live: false } */
+function createMockStream(url: URL, signal?: AbortSignal | null): Response {
+  const cardId = decodeURIComponent(url.pathname.slice(MOCK_PREFIX.length));
+  const skip = Number(url.searchParams.get("skip") ?? 0);
+  const startedAt = Number(url.searchParams.get("start"));
+  const speed = Number(url.searchParams.get("speed") ?? LIVE_SPEED);
+
+  const encoder = new TextEncoder();
+  const timers: number[] = [];
+  const stop = (): void => timers.forEach((timer) => window.clearTimeout(timer));
+
+  const stream = new ReadableStream<Uint8Array>({
+    start(controller) {
+      const send = (frame: string): void => {
+        try {
+          controller.enqueue(encoder.encode(frame));
+        } catch {
+          // Stream ist schon geschlossen (Story gewechselt)
+        }
+      };
+
+      let previous = skip > 0 ? simulation[skip - 1]!.seconds : 0;
+      let elapsed = 0;
+      for (const item of simulation.slice(skip)) {
+        elapsed += Math.max(((item.seconds - previous) / speed) * 1000, LIVE_MIN_GAP_MS);
+        previous = item.seconds;
+        timers.push(window.setTimeout(() => send(entryFrame(cardId, startedAt, item)), elapsed));
+      }
+
+      timers.push(
+        window.setTimeout(() => {
+          send(patchSignalsFrame(logCardSignalsPatch(cardId, { live: false })));
+          try {
+            controller.close();
+          } catch {
+            // schon geschlossen
+          }
+        }, elapsed + 500)
+      );
+
+      signal?.addEventListener("abort", () => {
+        stop();
+        try {
+          controller.close();
+        } catch {
+          // schon geschlossen
+        }
+      });
+    },
+    cancel: stop,
+  });
+
+  return new Response(stream, { headers: { "Content-Type": "text/event-stream" } });
+}
+
+let mockInstalled = false;
+
+/** Leitet fetch-Aufrufe an /mock/log-card/ auf den Mock-Stream um, alles andere läuft normal weiter */
+function installMockSse(): void {
+  if (mockInstalled || typeof window === "undefined") return;
+  mockInstalled = true;
+
+  const realFetch = window.fetch.bind(window);
+  window.fetch = (input, init) => {
+    const href = typeof input === "string" ? input : input instanceof URL ? input.href : input.url;
+    const url = new URL(href, window.location.href);
+    if (url.pathname.startsWith(MOCK_PREFIX)) return Promise.resolve(createMockStream(url, init?.signal));
+    return realFetch(input, init);
+  };
+}
+
+/** Rendert eine Live-Card: bereits vorhandene Sections kommen im HTML, der Rest über den simulierten Stream */
+function renderLive(args: LogCardArgs): string {
+  installMockSse();
+
+  const skip = (args.sections ?? []).reduce((sum, section) => sum + (section.entries?.length ?? 0), 0);
+  const lastSeconds = skip > 0 ? simulation[skip - 1]!.seconds : 0;
+  // Der Kampf hat vor lastSeconds Sekunden begonnen, damit die Uhrzeit-Darstellung zur aktuellen Zeit passt
+  const startedAt = Date.now() - lastSeconds * 1000;
+  const id = args.id ?? "log-card-live";
+  const url = `${MOCK_PREFIX}${encodeURIComponent(id)}?skip=${skip}&start=${startedAt}&speed=${LIVE_SPEED}`;
+
+  return `<div class="max-w-xl">${LogCard({ ...args, id, startedAt, sseUrl: url })}</div>`;
+}
+
+const liveCard = {
+  title: "Kampfbericht",
+  description: "Live: Ronan gegen den Werwolf der Mondlichtung",
+  scrollerClass: "max-h-72",
+  live: true,
+};
+
+/**
+ * Live-Kampf im Zeitraffer (6x): Die Card startet mit der ersten Section, der Rest kommt per SSE.
+ * Die Ansicht bleibt auf dem neuesten Eintrag. Scrollt man nach oben, hört das Folgen auf und
+ * "Zum Neuesten" erscheint. Die obere Grenze des Sliders wandert mit, solange sie am Maximum steht.
+ */
+export const LiveKampf: Story = {
+  args: { ...liveCard, id: "log-card-live", sections: combatSections.slice(0, 1) },
+  render: renderLive,
+};
+
+/** Beitritt mitten im Kampf: drei Sections sind schon da, der Scroller steht direkt beim neuesten Eintrag */
+export const LiveKampfBeitritt: Story = {
+  args: { ...liveCard, id: "log-card-live-join", sections: combatSections.slice(0, 3) },
+  render: renderLive,
+};
+
+/** Live-Kampf in der Uhrzeit-Darstellung */
+export const LiveKampfUhrzeit: Story = {
+  args: { ...liveCard, id: "log-card-live-clock", timeMode: "clock", sections: combatSections.slice(0, 1) },
+  render: renderLive,
 };

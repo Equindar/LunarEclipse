@@ -7,11 +7,12 @@ export type CharacterAttributeKey = "strength" | "dexterity" | "vitality" | "int
 export type CharacterAttributeValues = Record<CharacterAttributeKey, number>;
 
 /** Form der Segmente (wird an SegmentedProgress durchgereicht) */
-export type CharacterAttributeShape = "rounded" | "slanted";
+export type CharacterAttributeShape = "rounded" | "parallelogram";
 
 /**
  * Signal-State der Card. Die Attribute enthalten den Wert inklusive der bereits
  * verteilten, aber noch nicht abgeschickten Punkte. `points` sind die noch freien Punkte.
+ * Es gibt kein Maximum pro Attribut.
  */
 export interface CharacterAttributeSignals extends CharacterAttributeValues {
   points: number;
@@ -32,8 +33,11 @@ export interface CharacterAttributesCardArgs {
   values?: Partial<CharacterAttributeValues>;
   /** Punkte, die pro Level-Up verteilt werden dürfen (Standard: 5) */
   pointsPerLevel?: number;
-  /** Maximalwert je Attribut, entspricht der Segmentanzahl (Standard: 20) */
-  maxValue?: number;
+  /**
+   * Anzahl der Segmente, die die Leiste zeigt (Standard: 20). Das ist nur das Anzeigefenster,
+   * der Wert selbst ist nicht begrenzt. Darüber steht das Ellipsis-Element hervorgehoben.
+   */
+  visibleSegments?: number;
   /** Form der Segmente (Standard: rounded) */
   shape?: CharacterAttributeShape;
   /** Absenden erst erlauben, wenn alle Punkte verteilt sind (Standard: true) */

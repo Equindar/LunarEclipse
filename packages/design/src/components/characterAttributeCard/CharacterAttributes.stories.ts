@@ -1,46 +1,55 @@
 import type { Meta, StoryObj } from "@storybook/html-vite";
-import { CharacterAttributesCard } from "./CharacterAttributes";
+
+import { characterAttributeDefinitions, CharacterAttributesCard, defaultCharacterValues } from "./CharacterAttributes";
+import { characterSignals } from "./CharacterAttributes.expressions";
 import type { CharacterAttributesCardArgs } from "./CharacterAttributes.types";
 
 /**
- * Stories nutzen statt eines POST eine Konsolen-Ausgabe der Signale.
- * Die Signal-ID entspricht der Story-ID mit "_" statt "-".
+ * Statt eines POST schreibt die Story die abgeschickte Skillung in einen Text unter der Card.
+ * Referenziert werden nur die einzelnen Signale (`$id.strength` usw.), nie das ganze Signal-Objekt.
  */
-const logAction = (id: string): string => ""
-  // `console.log('Skillung uebernommen', JSON.stringify($${id.replaceAll("-", "_")}))`;
+const summaryAction = (id: string, outputId: string): string => {
+  const signals = characterSignals(id, defaultCharacterValues, 0);
+  const parts = characterAttributeDefinitions.map(({ key, label }) => `'${label} ' + ${signals.signal(key)}`);
+  return `document.getElementById('${outputId}').textContent = 'Uebernommen: ' + ${parts.join(" + ', ' + ")}`;
+};
 
-const card = (args: CharacterAttributesCardArgs): string =>
-  `<div class="p-8">${CharacterAttributesCard({
+const card = (args: CharacterAttributesCardArgs): string => {
+  const id = args.id ?? "character-attributes-story";
+  const outputId = `${id}-output`;
+  return `<div class="grid gap-3 p-8">${CharacterAttributesCard({
     ...args,
-    submitAction: args.submitAction ?? logAction(args.id ?? ""),
+    id,
+    submitAction: args.submitAction ?? summaryAction(id, outputId),
     attributes: { onsubmit: "return false;", ...args.attributes },
-  })}</div>`;
+  })}<p id="${outputId}" class="max-w-md text-sm text-muted-foreground" aria-live="polite"></p></div>`;
+};
 
 const meta: Meta<CharacterAttributesCardArgs> = {
-  title: "Components/CharacterAttributes",
+  title: "Examples/CharacterAttributes",
   tags: ["autodocs"],
   parameters: {
     docs: {
       description: {
         component:
-          "Beispiel-Card zur Verteilung von Attributspunkten nach einem Level-Up. Jede Zeile zeigt ein SegmentedProgress mit +1 und +5, die Card steckt in einem Formular. Funktioniert nur mit geladenem Datastar.",
+          "Beispiel-Card zur Verteilung von Attributspunkten nach einem Level-Up. Jede Zeile zeigt ein SegmentedProgress mit +1 und +5, die Card steckt in einem Formular. Attribute haben kein Maximum: Die Leiste zeigt ein Anzeigefenster, ein Ellipsis-Element markiert das offene Ende. Funktioniert nur mit geladenem Datastar.",
       },
     },
   },
   argTypes: {
     pointsPerLevel: { control: { type: "number", min: 0, max: 20 } },
-    maxValue: { control: { type: "number", min: 1, max: 30 } },
-    shape: { control: "select", options: ["rounded", "slanted"] },
+    visibleSegments: { control: { type: "number", min: 1, max: 40 } },
+    shape: { control: "select", options: ["rounded", "parallelogram"] },
     requireAllPoints: { control: "boolean" },
   },
   args: {
     id: "character-attributes-playground",
     pointsPerLevel: 5,
-    maxValue: 20,
+    visibleSegments: 20,
     shape: "rounded",
     requireAllPoints: true,
   },
-  render: (args) => card(args)
+  render: (args) => card(args),
 };
 
 export default meta;
@@ -49,22 +58,22 @@ type Story = StoryObj<CharacterAttributesCardArgs>;
 export const Playground: Story = {};
 
 export const Parallelogram: Story = {
-  args: { id: "character-attributes-parallelogram", shape: "slanted" },
-  render: (args) => card(args)
+  args: { id: "character-attributes-parallelogram", shape: "parallelogram" },
 };
 
-export const NearLimit: Story = {
-  name: "Nahe am Maximum",
+export const AboveVisibleRange: Story = {
+  name: "Wert über dem Anzeigefenster",
   parameters: {
     docs: {
       description: {
-        story: "Strength steht auf 18 von 20: +5 ist gesperrt, +1 geht noch zweimal.",
+        story:
+          "Stärke steht auf 27, das Fenster zeigt 20 Segmente: Die Leiste ist voll, das Ellipsis-Element ist hervorgehoben, der genaue Wert steht daneben.",
       },
     },
   },
   args: {
-    id: "character-attributes-near-limit",
-    values: { strength: 18, dexterity: 15, vitality: 9, intelligence: 4 },
+    id: "character-attributes-above-range",
+    values: { strength: 27, dexterity: 15, vitality: 9, intelligence: 4 },
   },
 };
 
