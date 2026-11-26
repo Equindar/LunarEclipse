@@ -237,7 +237,6 @@ const combatCardLive: LogCardArgs = {
   description: "Ronan, der Schwertkämpfer, gegen den Werwolf der Mondlichtung",
   rangeLabel: "Zeitraum",
   sections: combatSections.slice(0, 1),
-  scrollerClass: "max-h-72",
   step: 10,
   live: true,
 };
