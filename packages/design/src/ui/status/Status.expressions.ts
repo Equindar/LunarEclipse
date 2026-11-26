@@ -1,4 +1,5 @@
 import type { HtmlAttributes } from "../../utils/renderHtmlAttributes";
+import { withSlot } from "../../utils/withSlot";
 import type { StatusVariant } from "./Status.types";
 
 /**
@@ -9,22 +10,26 @@ import type { StatusVariant } from "./Status.types";
 export const DEFAULT_STATUS_VARIANT: StatusVariant = "default";
 
 /**
- * Standard-Attribute des Status: data-slot und data-variant.
+ * Attribute des Status-Roots: data-slot (aus `attributes` ersetzbar, z. B. "log-card-live") und data-variant.
  * In der Quelle setzt Base UI diese beiden Attribute über `state`.
  */
-export function buildStatusDataAttributes(variant: StatusVariant = DEFAULT_STATUS_VARIANT): HtmlAttributes {
-  return { "data-slot": "status", "data-variant": variant };
+export function buildStatusDataAttributes(
+  variant: StatusVariant = DEFAULT_STATUS_VARIANT,
+  attributes?: HtmlAttributes,
+): HtmlAttributes {
+  return { ...withSlot(attributes, "status"), "data-variant": variant };
 }
 
 /**
- * data-slot des Indikators. Die Variantenklassen des Status färben den Indikator über
- * `**:data-[slot=status-indicator]`, der Wert ist deshalb fest und nicht überschreibbar.
+ * Attribute des Indikators: dekorativ (aria-hidden="true", per `attributes` überschreibbar)
+ * und ein fester data-slot. Die Variantenklassen des Status färben den Indikator über
+ * `**:data-[slot=status-indicator]`, der Slot ist deshalb nicht überschreibbar.
  */
-export function buildStatusIndicatorDataAttributes(): HtmlAttributes {
-  return { "data-slot": "status-indicator" };
+export function buildStatusIndicatorAttributes(attributes?: HtmlAttributes): HtmlAttributes {
+  return { "aria-hidden": "true", ...attributes, "data-slot": "status-indicator" };
 }
 
-/** data-slot des Labels */
-export function buildStatusLabelDataAttributes(): HtmlAttributes {
-  return { "data-slot": "status-label" };
+/** Attribute des Labels: data-slot (aus `attributes` ersetzbar) */
+export function buildStatusLabelDataAttributes(attributes?: HtmlAttributes): HtmlAttributes {
+  return withSlot(attributes, "status-label");
 }

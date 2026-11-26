@@ -5,7 +5,7 @@ import { safeUrl } from "../../utils/safeUrl";
 import { tw } from "../../utils/tw";
 import {
     buildStatusDataAttributes,
-    buildStatusIndicatorDataAttributes,
+    buildStatusIndicatorAttributes,
     buildStatusLabelDataAttributes,
     DEFAULT_STATUS_VARIANT,
 } from "./Status.expressions";
@@ -38,14 +38,14 @@ export function statusVariants(args: Pick<StatusArgs, "variant" | "class"> = {})
 
 /**
  * Status: `<div>` oder, mit `href`, ein Link (`<a>`).
- * Nutzer-Attribute werden zuerst übernommen und von den Standard-Attributen überschrieben.
+ * Nutzer-Attribute werden zuerst übernommen und von den Standard-Attributen überschrieben,
+ * nur `data-slot` darf per `attributes` ersetzt werden.
  */
 export function Status(args: StatusArgs = {}): string {
   const variant = args.variant ?? DEFAULT_STATUS_VARIANT;
 
   const attrs: HtmlAttributes = {
-    ...args.attributes,
-    ...buildStatusDataAttributes(variant),
+    ...buildStatusDataAttributes(variant, args.attributes),
     class: statusVariants({ variant, class: args.class }),
   };
 
@@ -57,12 +57,14 @@ export function Status(args: StatusArgs = {}): string {
   return `<${tag}${renderAttributes(attrs)}>${renderChildren(args.children)}</${tag}>`;
 }
 
-/** Animierter Punkt; seine Farbe kommt von der Variante des umgebenden Status */
+/**
+ * Punkt mit Ping-Animation; seine Farbe kommt von der Variante des umgebenden Status.
+ * Mit `pulse: false` blinkt er nicht. Standardmässig ist er dekorativ (`aria-hidden="true"`).
+ */
 export function StatusIndicator(args: StatusIndicatorArgs = {}): string {
   const attrs: HtmlAttributes = {
-    ...args.attributes,
-    ...buildStatusIndicatorDataAttributes(),
-    class: cn(statusIndicatorTw, args.class),
+    ...buildStatusIndicatorAttributes(args.attributes),
+    class: cn(statusIndicatorTw, args.pulse === false && "before:animate-none", args.class),
   };
 
   return `<div${renderAttributes(attrs)}>${renderChildren(args.children)}</div>`;
@@ -71,8 +73,7 @@ export function StatusIndicator(args: StatusIndicatorArgs = {}): string {
 /** Text des Status */
 export function StatusLabel(args: StatusLabelArgs = {}): string {
   const attrs: HtmlAttributes = {
-    ...args.attributes,
-    ...buildStatusLabelDataAttributes(),
+    ...buildStatusLabelDataAttributes(args.attributes),
     class: cn(statusLabelTw, args.class),
   };
 
