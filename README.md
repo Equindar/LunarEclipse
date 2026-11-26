@@ -20,6 +20,7 @@ LunarEclipse/
 │   ├── bot/           # Discord-Bot (discord.js)
 │   ├── web/           # Browsergame (Hono + Datastar)
 │   ├── api/           # Daten-API (Hono)
+│   ├── demo/          # Browsergame (Demo)
 │   └── knowledge/     # Internes Wiki (im Aufbau)
 ├── packages/
 │   ├── design/        # UI-Bibliothek (Tailwind CSS + Storybook)
@@ -39,6 +40,7 @@ LunarEclipse/
 | `apps/bot` | Discord-Bot auf Basis von discord.js. |
 | `apps/web` | Browsergame mit Hono als Webframework und Datastar für die Benutzeroberfläche. |
 | `apps/api` | Eigenständige Daten-API auf Basis von Hono. |
+| `apps/demo` | Demo des Browsergames, identisches Framework, autoDeploy auf vercel (serverless) |
 | `apps/knowledge` | Internes Wiki, das sich noch im Aufbau befindet. |
 
 ### Gemeinsame Packages (`packages/`)
