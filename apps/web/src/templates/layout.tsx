@@ -49,7 +49,7 @@ export const Layout = ({
       </head>
 
       <body class="min-h-screen">
-        <main id="app">
+        <main id="app" class="p-5">
           {children}
         </main>
       </body>

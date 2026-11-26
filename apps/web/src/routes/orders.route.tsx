@@ -1,4 +1,4 @@
-import { Button, Card, CardContent, CardFooter, CardHeader, CardTitle, Checkbox, Field, FieldContent, FieldDescription, FieldError, FieldGroup, FieldLabel, FieldLegend, FieldSeparator, FieldSet, Icon, IconName, Input, Item, ItemActions, ItemContent, ItemDescription, ItemMedia, ItemTitle, Sortable, SortableContent, SortableItem, SortableItemHandle } from '@lunareclipse/design';
+import { Button, Card, CardAction, CardContent, CardDescription, CardFooter, CardHeader, CardTitle, Checkbox, Field, FieldContent, FieldDescription, FieldError, FieldGroup, FieldLabel, FieldLegend, FieldSeparator, FieldSet, Icon, IconName, Input, Item, ItemActions, ItemContent, ItemDescription, ItemMedia, ItemTitle, Sortable, SortableContent, SortableItem, SortableItemHandle } from '@lunareclipse/design';
 import createI18n, { toSupportedLanguage } from '@lunareclipse/i18n';
 import { Hono } from 'hono';
 import { raw } from 'hono/html';
@@ -104,15 +104,18 @@ export const ordersRouter = new Hono().get('/', async (c) => {
         CardHeader({
           children: [
             CardTitle({ children: "Gruppenaufträge" }),
-            // CardDescription({ children: "Das macht deine Gruppe als nächstes..." }),
+            CardDescription({ children: "Das macht deine Gruppe als nächstes..." }),
+            CardAction({
+              children: Button({ variant: "outline", size: "sm", children: Icon({ name: "settings"}) }),
+            }),
           ],
         }),
         CardContent({ children: sortable }),
         CardFooter({
-          class: "flex-col gap-2",
+          class: "flex justify-end",
           children:  [
             Button({
-              children: "Button",
+              children: "Anpassen",
               type: "button",
               variant: "default"
             })]
