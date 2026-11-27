@@ -87,7 +87,7 @@ const combatCard = {
 };
 
 const meta: Meta<LogCardArgs> = {
-  title: "UI-Library/LogCard",
+  title: "Components/Combat/LogCard",
   tags: ["autodocs"],
   parameters: {
     docs: {

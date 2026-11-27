@@ -1,5 +1,4 @@
 import type { Meta, StoryObj } from "@storybook/html-vite";
-
 import { DarkModeToggle } from "./DarkModeToggle";
 import type { DarkModeToggleArgs } from "./DarkModeToggle.types";
 
@@ -32,8 +31,3 @@ type Story = StoryObj<DarkModeToggleArgs>;
 
 /** Alle Controls auf einen Blick */
 export const Playground: Story = {};
-
-/** Mit Rahmen (`variant: "outline"`) */
-export const Outline: Story = {
-  render: () => DarkModeToggle({ variant: "outline" }),
-};
