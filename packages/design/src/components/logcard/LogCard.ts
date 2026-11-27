@@ -1,5 +1,4 @@
 import { Scroller } from "../../ui/scroller";
-import { Status, StatusIndicator, StatusLabel } from "../../ui/status";
 import { cn } from "../../utils/cn";
 import { escapeHtml } from "../../utils/escapeHtml";
 import { renderAttributes, type HtmlAttributes } from "../../utils/renderHtmlAttributes";
@@ -61,6 +60,10 @@ const logCardHeaderActionsTw = tw`ml-auto flex shrink-0 items-center gap-3`;
 const logCardTitleTw = tw`leading-none font-semibold`;
 const logCardDescriptionTw = tw`text-muted-foreground text-sm`;
 
+/** Live-Hinweis mit pulsierendem Punkt (ohne Animation bei reduzierter Bewegung) */
+const logCardLiveTw = tw`text-destructive inline-flex items-center gap-1.5 text-xs font-medium`;
+const logCardLiveDotTw = tw`bg-destructive size-2 rounded-full motion-safe:animate-pulse`;
+
 /** Umschalter Dauer / Uhrzeit: aktiv ist der Button, der zum data-mode der Card passt */
 const logCardToggleTw = tw`inline-flex shrink-0 items-center rounded-md border p-0.5 text-xs`;
 const logCardToggleButtonTw = tw`text-muted-foreground hover:text-foreground focus-visible:ring-ring/50 rounded-sm px-2 py-1 font-medium transition-colors outline-none focus-visible:ring-[3px]`;
@@ -92,9 +95,14 @@ const logCardEmptyTw = tw`text-muted-foreground px-6 text-sm`;
  */
 const logCardSectionTw = tw`flex flex-col gap-1.5 [&:not(:has(li:not([style*='display:_none'])))]:hidden`;
 const logCardSectionTitleTw = tw`text-muted-foreground text-xs font-medium tracking-wide uppercase`;
-const logCardEntriesTw = tw`flex flex-col gap-1 font-mono text-sm`;
-const logCardEntryTw = tw`flex gap-2`;
+/**
+ * Zeilen: ab sm eine Reihe "[Zeit] Nachricht". Darunter (Mobile) steht die Zeit allein in der ersten Zeile und die
+ * Nachricht, leicht eingerückt, in der zweiten. Der größere Abstand zwischen den Einträgen zeigt dort, was zusammengehört.
+ */
+const logCardEntriesTw = tw`flex flex-col gap-2.5 font-mono text-sm sm:gap-1`;
+const logCardEntryTw = tw`flex flex-col gap-0.5 sm:flex-row sm:gap-2`;
 const logCardTimeTw = tw`text-muted-foreground shrink-0 tabular-nums`;
+const logCardMessageTw = tw`min-w-0 pl-3 wrap-break-word sm:pl-0`;
 /** Dauer ist sichtbar, solange die Card nicht im Modus "clock" ist; die Uhrzeit umgekehrt */
 const logCardTimeDurationTw = tw`group-data-[mode=clock]/log-card:hidden`;
 const logCardTimeClockTw = tw`hidden group-data-[mode=clock]/log-card:inline`;
@@ -160,7 +168,7 @@ export function LogCardEntry(args: LogCardEntryArgs): string {
       ? ""
       : `<span class="${escapeHtml(logCardTimeClockTw)}">[${escapeHtml(formatClock(startMs, seconds))}]</span>`;
 
-  return `<li${renderAttributes(attrs)}><span class="${escapeHtml(logCardTimeTw)}">${duration}${clock}</span><span>${escapeHtml(args.message)}</span></li>`;
+  return `<li${renderAttributes(attrs)}><span class="${escapeHtml(logCardTimeTw)}">${duration}${clock}</span><span class="${escapeHtml(logCardMessageTw)}">${escapeHtml(args.message)}</span></li>`;
 }
 
 /**
@@ -359,15 +367,9 @@ export function LogCard(args: LogCardArgs = {}): string {
   // Header: Titel und Beschreibung links, Live-Hinweis und Toggle rechts
   const hasText = Boolean(args.title || args.description);
   const toggle = hasClock && hasRange ? LogCardTimeToggle({ id, mode }) : "";
-
-  const liveBadge = live ?
-    Status({ variant: "error",
-      attributes: { "data-slot": "log-card-live", "data-show": buildLiveVisibleExpression(id) },
-      children: [StatusIndicator(), StatusLabel({ children: "live" })]}) :
-    Status({ variant: "default", children: [StatusIndicator({ pulse: false}), StatusLabel({ children: "beendet" })]});
-  // const liveBadge = live
-  //   ? `<span class="${escapeHtml(logCardLiveTw)}" data-slot="log-card-live" data-show="${escapeHtml(buildLiveVisibleExpression(id))}"><span class="${escapeHtml(logCardLiveDotTw)}" aria-hidden="true"></span>Live</span>`
-  //   : "";
+  const liveBadge = live
+    ? `<span class="${escapeHtml(logCardLiveTw)}" data-slot="log-card-live" data-show="${escapeHtml(buildLiveVisibleExpression(id))}"><span class="${escapeHtml(logCardLiveDotTw)}" aria-hidden="true"></span>Live</span>`
+    : "";
   const actions = liveBadge || toggle ? `<div class="${escapeHtml(logCardHeaderActionsTw)}">${liveBadge}${toggle}</div>` : "";
   const headerText = hasText
     ? `<div class="${escapeHtml(logCardHeaderTextTw)}">${

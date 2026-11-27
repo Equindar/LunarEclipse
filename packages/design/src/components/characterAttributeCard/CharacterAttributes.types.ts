@@ -1,3 +1,4 @@
+import type { SegmentedProgressShape } from "../../ui/segmentedprogress";
 import type { HtmlAttributes } from "../../utils/renderHtmlAttributes";
 
 /** Die vier verteilbaren Attribute */
@@ -6,8 +7,8 @@ export type CharacterAttributeKey = "strength" | "dexterity" | "vitality" | "int
 /** Aktuelle Attributswerte des Charakters */
 export type CharacterAttributeValues = Record<CharacterAttributeKey, number>;
 
-/** Form der Segmente (wird an SegmentedProgress durchgereicht) */
-export type CharacterAttributeShape = "rounded" | "parallelogram";
+/** Form der Segmente: abgerundet oder nach rechts geneigt (wird an SegmentedProgress durchgereicht) */
+export type CharacterAttributeShape = SegmentedProgressShape;
 
 /**
  * Signal-State der Card. Die Attribute enthalten den Wert inklusive der bereits
@@ -33,11 +34,10 @@ export interface CharacterAttributesCardArgs {
   values?: Partial<CharacterAttributeValues>;
   /** Punkte, die pro Level-Up verteilt werden dürfen (Standard: 5) */
   pointsPerLevel?: number;
-  /**
-   * Anzahl der Segmente, die die Leiste zeigt (Standard: 20). Das ist nur das Anzeigefenster,
-   * der Wert selbst ist nicht begrenzt. Darüber steht das Ellipsis-Element hervorgehoben.
-   */
-  visibleSegments?: number;
+  /** Segmente am Anfang der Leiste, vor dem Ellipsis-Element (Standard: 5) */
+  headSegments?: number;
+  /** Segmente am Ende der Leiste, nach dem Ellipsis-Element (Standard: 3) */
+  tailSegments?: number;
   /** Form der Segmente (Standard: rounded) */
   shape?: CharacterAttributeShape;
   /** Absenden erst erlauben, wenn alle Punkte verteilt sind (Standard: true) */

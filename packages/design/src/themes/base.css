@@ -37,13 +37,16 @@
   /* Utility */
   --color-success: var(--success);
   --color-success-foreground: var(--success-foreground);
-
   --color-info: var(--info);
   --color-info-foreground: var(--info-foreground);
-
   --color-warning: var(--warning);
   --color-warning-foreground: var(--warning-foreground);
-
   --color-danger: var(--danger);
   --color-danger-foreground: var(--danger-foreground);
+
+  /* Utility */
+  --color-strength: var(--strength);
+  --color-dexterity: var(--dexterity);
+  --color-vitality: var(--vitality);
+  --color-intelligence: var(--intelligence);
 }

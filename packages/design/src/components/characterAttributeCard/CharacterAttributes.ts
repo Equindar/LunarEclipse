@@ -12,15 +12,16 @@ import {
     ATTRIBUTE_STEPS,
     buildAddDisabled,
     buildAddHandler,
-    buildBarValue,
     buildDeltaExpression,
-    buildOverflowCondition,
+    buildRemoveDisabled,
+    buildRemoveHandler,
     buildResetHandler,
     buildSubmitDisabled,
     characterSignals,
 } from "./CharacterAttributes.expressions";
 import type {
     CharacterAttributeDefinition,
+    CharacterAttributeKey,
     CharacterAttributeShape,
     CharacterAttributeSignals,
     CharacterAttributeValues,
@@ -28,7 +29,8 @@ import type {
 } from "./CharacterAttributes.types";
 
 const DEFAULT_POINTS_PER_LEVEL = 5;
-const DEFAULT_VISIBLE_SEGMENTS = 20;
+const DEFAULT_HEAD_SEGMENTS = 8;
+const DEFAULT_TAIL_SEGMENTS = 7;
 const MAX_SAFE_VALUE = 999_999;
 const DEFAULT_SUBMIT_ACTION = "@post('/api/character/attributes')";
 
@@ -48,9 +50,19 @@ export const characterAttributeDefinitions: readonly CharacterAttributeDefinitio
   { key: "intelligence", label: "Intelligenz", description: "Erhöht Magieschaden und Manapool." },
 ];
 
+/**
+ * Farbe der Leiste je Attribut (Theme-Variablen --color-strength usw.). Die Klassen stehen vollständig
+ * im Code, damit Tailwind sie findet; sie überschreiben bg-primary am Indicator der Segmente.
+ */
+export const characterAttributeColorTw: Record<CharacterAttributeKey, string> = {
+  strength: tw`**:data-[slot=segmented-progress-indicator]:bg-strength`,
+  dexterity: tw`**:data-[slot=segmented-progress-indicator]:bg-dexterity`,
+  vitality: tw`**:data-[slot=segmented-progress-indicator]:bg-vitality`,
+  intelligence: tw`**:data-[slot=segmented-progress-indicator]:bg-intelligence`,
+};
+
 export const characterAttributeRowTw = tw`grid gap-2`;
 export const characterAttributeValueTw = tw`flex shrink-0 items-baseline gap-1 text-sm tabular-nums`;
-export const characterAttributeEllipsisTw = tw`shrink-0 select-none text-sm leading-none text-muted-foreground transition-colors`;
 
 /** Zufalls-ID: character_attributes_<8 Hex-Zeichen> */
 function randomId(): string {
@@ -65,55 +77,58 @@ function clampInt(value: number | undefined, min: number, max: number): number {
 }
 
 /**
- * Einzige Stelle, die SegmentedProgress aufruft.
- * Die Leiste zeigt `visibleSegments` Segmente und folgt dem Signal (reaktiv). Der Wert ist nach oben
- * offen: Ein Ellipsis-Element hinter der Leiste markiert das offene Ende und wird hervorgehoben,
- * sobald der Wert das Anzeigefenster übersteigt.
+ * Einzige Stelle, die SegmentedProgress aufruft. Jedes Segment steht für einen Punkt. Die Leiste zeigt die
+ * ersten `head` und die letzten `tail` Punkte, dazwischen steht bei Bedarf das Ellipsis-Element.
+ * Es gibt kein Maximum: `max` ist nur eine hohe Obergrenze, damit Wert und ARIA-Werte nicht begrenzt werden.
  */
 function renderAttributeBar(args: {
+  attribute: CharacterAttributeKey;
   label: string;
   value: number;
-  visibleSegments: number;
+  head: number;
+  tail: number;
   shape: CharacterAttributeShape;
-  barValue: string;
   valueSignal: string;
-  overflow: string;
 }): string {
-  const attributes: HtmlAttributes = {
-    "aria-label": args.label,
-    "aria-valuemin": 0,
-    "data-attr:aria-valuenow": args.valueSignal,
-  };
-
-  const bar = SegmentedProgress({
-    value: Math.min(args.value, args.visibleSegments),
-    max: args.visibleSegments,
-    valueSignal: args.barValue,
-    attributes,
+  return SegmentedProgress({
+    value: args.value,
+    max: MAX_SAFE_VALUE,
+    valueSignal: args.valueSignal,
+    baseline: args.value,
+    shape: args.shape,
+    class: characterAttributeColorTw[args.attribute],
+    ellipsis: { head: args.head, tail: args.tail, label: "{count} weitere" },
+    format: { maximumFractionDigits: 0 },
+    attributes: { "aria-label": args.label },
   });
-
-  const ellipsisAttrs: HtmlAttributes = {
-    "data-slot": "segmented-progress-ellipsis",
-    "aria-hidden": "true",
-    class: cn(characterAttributeEllipsisTw, args.value > args.visibleSegments && "text-primary!"),
-    "data-class": `{'text-primary!': ${args.overflow}}`,
-  };
-
-  return `<div class="flex min-w-0 flex-1 items-center gap-2"><div class="min-w-0 flex-1">${bar}</div><span${renderAttributes(ellipsisAttrs)}>&hellip;</span></div>`;
 }
 
 function renderAttributeRow(
   definition: CharacterAttributeDefinition,
   signals: SignalManager<CharacterAttributeSignals>,
   baseValue: number,
-  visibleSegments: number,
+  head: number,
+  tail: number,
   shape: CharacterAttributeShape
 ): string {
   const { key, label, description } = definition;
   const valueSignal = signals.signal(key);
   const delta = buildDeltaExpression(signals, key, baseValue);
 
-  const buttons = ATTRIBUTE_STEPS.map((amount) =>
+  const removeButton = Button({
+    children: "\u22121",
+    variant: "outline",
+    size: "sm",
+    attributes: {
+      type: "button",
+      "aria-label": `${label} um 1 verringern`,
+      disabled: true,
+      "data-on:click": buildRemoveHandler(signals, key, baseValue),
+      "data-attr:disabled": buildRemoveDisabled(signals, key, baseValue),
+    },
+  });
+
+  const addButtons = ATTRIBUTE_STEPS.map((amount) =>
     Button({
       children: `+${amount}`,
       variant: "outline",
@@ -141,16 +156,8 @@ function renderAttributeRow(
     </div>
   </div>
   <div class="flex items-center gap-3">
-    ${renderAttributeBar({
-      label,
-      value: baseValue,
-      visibleSegments,
-      shape,
-      barValue: buildBarValue(signals, key, visibleSegments),
-      valueSignal,
-      overflow: buildOverflowCondition(signals, key, visibleSegments),
-    })}
-    <div class="flex shrink-0 gap-1">${buttons}</div>
+    <div class="min-w-0 flex-1">${renderAttributeBar({ attribute: key, label, value: baseValue, head, tail, shape, valueSignal })}</div>
+    <div class="flex shrink-0 gap-1">${removeButton}${addButtons}</div>
   </div>
 </div>`;
 }
@@ -162,7 +169,8 @@ function renderAttributeRow(
  */
 export function CharacterAttributesCard(args: CharacterAttributesCardArgs = {}): string {
   const id = args.id || randomId();
-  const visibleSegments = clampInt(args.visibleSegments ?? DEFAULT_VISIBLE_SEGMENTS, 1, 100);
+  const head = clampInt(args.headSegments ?? DEFAULT_HEAD_SEGMENTS, 1, 50);
+  const tail = clampInt(args.tailSegments ?? DEFAULT_TAIL_SEGMENTS, 1, 50);
   const pointsPerLevel = clampInt(args.pointsPerLevel ?? DEFAULT_POINTS_PER_LEVEL, 0, 999);
   const shape = args.shape ?? "rounded";
   const requireAllPoints = args.requireAllPoints ?? true;
@@ -177,7 +185,7 @@ export function CharacterAttributesCard(args: CharacterAttributesCardArgs = {}):
   const signals = characterSignals(id, values, pointsPerLevel);
 
   const rows = characterAttributeDefinitions
-    .map((definition) => renderAttributeRow(definition, signals, values[definition.key], visibleSegments, shape))
+    .map((definition) => renderAttributeRow(definition, signals, values[definition.key], head, tail, shape))
     .join("");
 
   const pointsBadge = Badge({
@@ -212,7 +220,7 @@ export function CharacterAttributesCard(args: CharacterAttributesCardArgs = {}):
         },
       }),
       Button({
-        children: "Skillung übernehmen",
+        children: "Übernehmen",
         attributes: {
           type: "submit",
           "data-attr:disabled": buildSubmitDisabled(signals, requireAllPoints, pointsPerLevel),

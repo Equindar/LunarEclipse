@@ -17,39 +17,42 @@ const summaryAction = (id: string, outputId: string): string => {
 const card = (args: CharacterAttributesCardArgs): string => {
   const id = args.id ?? "character-attributes-story";
   const outputId = `${id}-output`;
-  return `<div class="grid gap-3 p-8">${CharacterAttributesCard({
+  return `${CharacterAttributesCard({
     ...args,
     id,
     submitAction: args.submitAction ?? summaryAction(id, outputId),
     attributes: { onsubmit: "return false;", ...args.attributes },
-  })}<p id="${outputId}" class="max-w-md text-sm text-muted-foreground" aria-live="polite"></p></div>`;
+  })}<p id="${outputId}" class="max-w-md text-sm text-muted-foreground" aria-live="polite"></p>`;
 };
 
 const meta: Meta<CharacterAttributesCardArgs> = {
-  title: "Examples/CharacterAttributes",
+  title: "Components/Character/CharacterAttributes",
   tags: ["autodocs"],
   parameters: {
     docs: {
       description: {
         component:
-          "Beispiel-Card zur Verteilung von Attributspunkten nach einem Level-Up. Jede Zeile zeigt ein SegmentedProgress mit +1 und +5, die Card steckt in einem Formular. Attribute haben kein Maximum: Die Leiste zeigt ein Anzeigefenster, ein Ellipsis-Element markiert das offene Ende. Funktioniert nur mit geladenem Datastar.",
+          "Beispiel-Card zur Verteilung von Attributspunkten nach einem Level-Up. Jede Zeile zeigt ein SegmentedProgress mit +1 und +5, die Card steckt in einem Formular. Attribute haben kein Maximum: Jedes Segment ist ein Punkt, die Leiste zeigt Anfang und Ende, bei hohen Werten steht dazwischen ein Ellipsis-Element. Funktioniert nur mit geladenem Datastar.",
       },
     },
   },
   argTypes: {
     pointsPerLevel: { control: { type: "number", min: 0, max: 20 } },
-    visibleSegments: { control: { type: "number", min: 1, max: 40 } },
-    shape: { control: "select", options: ["rounded", "parallelogram"] },
+    headSegments: { control: { type: "number", min: 1, max: 20 } },
+    tailSegments: { control: { type: "number", min: 1, max: 20 } },
+    shape: { control: "select", options: ["rounded", "slanted"] },
     requireAllPoints: { control: "boolean" },
   },
   args: {
     id: "character-attributes-playground",
     pointsPerLevel: 5,
-    visibleSegments: 20,
+    headSegments: 5,
+    tailSegments: 3,
     shape: "rounded",
     requireAllPoints: true,
+    class: "w-xl"
   },
-  render: (args) => card(args),
+  render: (args) => `<div class="max-w-xl">${card(args)}</div>`,
 };
 
 export default meta;
@@ -57,23 +60,24 @@ type Story = StoryObj<CharacterAttributesCardArgs>;
 
 export const Playground: Story = {};
 
-export const Parallelogram: Story = {
-  args: { id: "character-attributes-parallelogram", shape: "parallelogram" },
+export const Slanted: Story = {
+  name: "Geneigte Segmente",
+  args: { id: "character-attributes-slanted", shape: "slanted" },
 };
 
-export const AboveVisibleRange: Story = {
-  name: "Wert über dem Anzeigefenster",
+export const ExtremeBuild: Story = {
+  name: "Extreme Skillung",
   parameters: {
     docs: {
       description: {
         story:
-          "Stärke steht auf 27, das Fenster zeigt 20 Segmente: Die Leiste ist voll, das Ellipsis-Element ist hervorgehoben, der genaue Wert steht daneben.",
+          "Intelligenz steht auf 48, Stärke auf 5: Die Leiste zeigt die Punkte 1 bis 5, ein Ellipsis-Element für 40 ausgeblendete Punkte und die Punkte 46 bis 48. Das Ellipsis erscheint ab mehr Punkten als Segmenten (5 + 3).",
       },
     },
   },
   args: {
-    id: "character-attributes-above-range",
-    values: { strength: 27, dexterity: 15, vitality: 9, intelligence: 4 },
+    id: "character-attributes-extreme",
+    values: { strength: 5, dexterity: 8, vitality: 12, intelligence: 48 },
   },
 };
 

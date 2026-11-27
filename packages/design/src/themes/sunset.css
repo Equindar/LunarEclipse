@@ -29,15 +29,18 @@
   /* Utility */
   --success: #367747;
   --success-foreground: #ffffff;
-
   --info: #397a91;
   --info-foreground: #ffffff;
-
   --warning: #b96a16;
   --warning-foreground: #ffffff;
-
   --danger: #b9382b;
   --danger-foreground: #ffffff;
+
+  /* Custom  */
+  --strength: hsl(6 48% 49%);
+  --dexterity: hsl(123 21% 43%);
+  --vitality: hsl(281 27% 52%);
+  --intelligence: hsl(207 30% 48%);
 }
 
 [data-theme='sunset'].dark {
@@ -71,13 +74,16 @@
   /* Utility */
   --success: #86c995;
   --success-foreground: #193b23;
-
   --info: #86c5d9;
   --info-foreground: #173642;
-
   --warning: #f1bd72;
   --warning-foreground: #48280b;
-
   --danger: #f18b7f;
   --danger-foreground: #4a1712;
+
+  /* Custom  */
+  --strength: hsl(8 63% 69%);
+  --dexterity: hsl(116 25% 65%);
+  --vitality: hsl(281 34% 72%);
+  --intelligence: hsl(204 39% 68%);
 }

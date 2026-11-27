@@ -29,15 +29,18 @@
   /* Utility */
   --success: #16a34a;
   --success-foreground: #ffffff;
-
   --info: #0284c7;
   --info-foreground: #ffffff;
-
   --warning: #d97706;
   --warning-foreground: #ffffff;
-
   --danger: #dc2626;
   --danger-foreground: #ffffff;
+
+  /* Custom  */
+  --strength: hsl(0 68% 57%);
+  --dexterity: hsl(150 63% 37%);
+  --vitality: hsl(267 61% 62%);
+  --intelligence: hsl(217 74% 55%);
 }
 
 [data-theme='classic'].dark {
@@ -71,13 +74,16 @@
   /* Utility */
   --success: #4ade80;
   --success-foreground: #14532d;
-
   --info: #38bdf8;
   --info-foreground: #082f49;
-
   --warning: #fbbf24;
   --warning-foreground: #422006;
-
   --danger: #f87171;
   --danger-foreground: #450a0a;
+
+  /* Custom  */
+  --strength: hsl(0 82% 71%);
+  --dexterity: hsl(148 52% 56%);
+  --vitality: hsl(267 72% 76%);
+  --intelligence: hsl(215 83% 72%);
 }
