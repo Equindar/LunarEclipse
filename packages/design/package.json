@@ -17,12 +17,16 @@
   },
   "dependencies": {
     "clsx": "^2.1.1",
+    "d3-scale": "^4.0.3",
+    "d3-shape": "^3.2.1",
     "tailwind-merge": "^3.0.0"
   },
   "devDependencies": {
     "@storybook/addon-docs": "^10.6.2",
     "@storybook/html-vite": "^10.6.1",
     "@tailwindcss/vite": "^4.3.3",
+    "@types/d3-scale": "^4.0.9",
+    "@types/d3-shape": "^3.2.0",
     "msw-storybook-addon": "^3.0.3",
     "react": "19.3.0",
     "react-dom": "19.3.0",
